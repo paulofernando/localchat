@@ -36,7 +36,7 @@ class MainActivity : BaseActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
 
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
 
         recyclerView.adapter = ribotsAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)

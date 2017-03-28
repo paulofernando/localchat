@@ -1,5 +1,35 @@
 <resources>
-    <string name="app_name">Android Boilerplate</string>
+
+    <string name="app_name">Local Chat</string>
+    <string name="lb_login">Login</string>
+    <string name="lb_password">Password</string>
+    <string name="lb_email">Email</string>
+    <string name="lb_name">Name</string>
+    <string name="lb_create_account">Create Account</string>
+    <string name="lb_already_member">Already a member? Login</string>
+    <string name="lb_no_account_yet">No account yet? Create one</string>
+
+    <string name="error_chars_least_number">at least 3 characters</string>
+    <string name="error_email_valid">enter a valid email address</string>
+    <string name="error_chars_bet_numbers">between 4 and 10 alphanumeric characters</string>
+
+    <string name="sign_in">Sign in</string>
+    <string name="signing_in">Signing in...</string>
+    <string name="signing_up">Signing up...</string>
+    <string name="signing_up_failed">Sign up failed. Try another email!</string>
+    <string name="sign_out">Sign out</string>
+
+    <string name="chars_range">between 6 and 15 alphanumeric characters</string>
+    <string name="enter_valid_email">enter a valid email address</string>
+    <string name="auth_failed">Auth failed!</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="tab_title_1">SEARCH</string>
+    <string name="tab_title_2">CHATS</string>
+    <string name="tab_title_3">SETTINGS</string>
+
     <string name="empty_ribots">There aren\'t any ribots</string>
     <string name="error_loading_ribots">There was a problem loading the ribots</string>
+
 </resources>
