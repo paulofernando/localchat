@@ -8,6 +8,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import site.paulo.localchat.BuildConfig
+import site.paulo.localchat.data.remote.ForecastService
 import site.paulo.localchat.data.remote.RibotsService
 import javax.inject.Singleton
 
@@ -38,5 +40,17 @@ class ApiModule {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
                 .create(RibotsService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideForecastService(): ForecastService {
+        val retrofit = Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .baseUrl(BuildConfig.API_URL)
+                .build()
+
+        return retrofit.create(ForecastService::class.java)
     }
 }

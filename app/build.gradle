@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
@@ -39,11 +40,15 @@ android {
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "API_URL", "\"http://api.openweathermap.org/data/2.5/\""
         }
 
         debug {
             versionNameSuffix " Debug"
             debuggable true
+
+            buildConfigField "String", "API_URL", "\"http://api.openweathermap.org/data/2.5/\""
         }
     }
 
@@ -98,7 +103,7 @@ dependencies {
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt daggerCompiler
 
-
+    compile "org.jetbrains.anko:anko-sdk15:$anko_version"
 
     compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
@@ -136,6 +141,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.4.0'
     compile 'com.squareup.sqlbrite:sqlbrite:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.squareup.picasso:picasso:2.5.2"
     testCompile 'org.robolectric:robolectric:3.1.4'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 }
