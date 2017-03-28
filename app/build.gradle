@@ -6,7 +6,7 @@ android {
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "uk.co.ribot.androidboilerplate"
+        applicationId "site.paulo.localchat"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
