@@ -6,6 +6,7 @@ import dagger.Component
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.SyncService
 import site.paulo.localchat.data.local.DatabaseHelper
+import site.paulo.localchat.data.remote.ForecastsService
 import site.paulo.localchat.data.remote.RibotsService
 import site.paulo.localchat.injection.ApplicationContext
 import site.paulo.localchat.injection.module.ApplicationModule
@@ -21,6 +22,7 @@ interface ApplicationComponent {
     @ApplicationContext fun context(): Context
     fun application(): Application
     fun ribotsService(): RibotsService
+    fun forecastService(): ForecastsService
     fun databaseHelper(): DatabaseHelper
     fun dataManager(): DataManager
 }
