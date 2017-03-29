@@ -9,7 +9,7 @@ import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.injection.ConfigPersistent
 
 @ConfigPersistent

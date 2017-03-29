@@ -1,46 +1,45 @@
 package site.paulo.localchat.ui.forecast
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.view.WindowManager
+import android.widget.Toast
+import butterknife.BindView
 import butterknife.ButterKnife
-import kotlinx.android.synthetic.main.activity_forecast.*
-import org.jetbrains.anko.toast
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.ForecastList
+import site.paulo.localchat.data.model.forecast.ForecastList
+import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.base.BaseActivity
+import site.paulo.localchat.ui.main.ForecastAdapter
+import site.paulo.localchat.ui.main.RibotsAdapter
 import javax.inject.Inject
 
 class ForecastActivity : BaseActivity(), ForecastContract.View {
 
-        @Inject
-        lateinit var presenter: ForecastPresenter
+    @Inject
+    lateinit var presenter: ForecastPresenter
 
-        @Inject
-        lateinit var forecastsAdapter: ForecastAdapter
+    @Inject
+    lateinit var forecastsAdapter: ForecastAdapter
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            activityComponent.inject(this)
-            ButterKnife.bind(this)
-            setContentView(R.layout.activity_forecast)
+    @BindView(R.id.forecastList)
+    lateinit var forecastList: RecyclerView
 
-            forecastList.adapter = forecastsAdapter
-            forecastList.layoutManager = LinearLayoutManager(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activityComponent.inject(this)
+        setContentView(R.layout.activity_forecast)
+        ButterKnife.bind(this)
 
-            presenter.attachView(this)
-            presenter.loadForecasts()
+        forecastList.adapter = forecastsAdapter
+        forecastList.layoutManager = LinearLayoutManager(this)
 
-        }
+        presenter.attachView(this)
+        presenter.loadForecasts()
 
-    override fun showForecasts(list: ForecastList) {
-        forecastsAdapter.forecasts = list
-        forecastsAdapter.notifyDataSetChanged()
-    }
-
-    override fun showForecastEmpty() {
-        //forecastsAdapter.forecasts = emptyList()
-        forecastsAdapter.notifyDataSetChanged()
-        toast(R.string.empty_ribots)
     }
 
     override fun onDestroy() {
@@ -48,8 +47,19 @@ class ForecastActivity : BaseActivity(), ForecastContract.View {
         presenter.detachView()
     }
 
+    override fun showForecasts(f: ForecastList) {
+        forecastsAdapter.forecasts = listOf(f) //TODO change later
+        forecastsAdapter.notifyDataSetChanged()
+    }
+
+    override fun showForecastsEmpty() {
+        forecastsAdapter.forecasts = emptyList()
+        forecastsAdapter.notifyDataSetChanged()
+        Toast.makeText(this, R.string.empty_ribots, Toast.LENGTH_LONG).show()
+    }
+
     override fun showError() {
-        toast(R.string.error_loading_ribots);
+        Toast.makeText(this, R.string.error_loading_ribots, Toast.LENGTH_LONG).show()
     }
 
 }

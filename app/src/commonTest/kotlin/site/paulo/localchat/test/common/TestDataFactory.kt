@@ -1,8 +1,8 @@
 package site.paulo.localchat.test.common
 
-import site.paulo.localchat.data.model.Name
-import site.paulo.localchat.data.model.Profile
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Name
+import site.paulo.localchat.data.model.ribot.Profile
+import site.paulo.localchat.data.model.ribot.Ribot
 import java.util.*
 
 object TestDataFactory {

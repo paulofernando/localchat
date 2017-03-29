@@ -11,7 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner
 
 import rx.Observable
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.main.MainPresenter
 
 import org.mockito.Mockito.anyListOf

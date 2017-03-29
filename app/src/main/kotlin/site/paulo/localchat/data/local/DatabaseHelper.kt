@@ -6,8 +6,9 @@ import com.squareup.sqlbrite.BriteDatabase
 import rx.Observable
 import rx.lang.kotlin.observable
 import timber.log.Timber
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 import java.sql.SQLException
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,4 +47,5 @@ class DatabaseHelper @Inject constructor(val db: BriteDatabase) {
                 "SELECT * FROM ${Db.RibotProfileTable.TABLE_NAME}")
                 .mapToList { Ribot(Db.RibotProfileTable.parseCursor(it)) }
     }
+
 }

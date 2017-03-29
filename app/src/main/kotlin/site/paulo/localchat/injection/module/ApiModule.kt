@@ -9,7 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import site.paulo.localchat.BuildConfig
-import site.paulo.localchat.data.remote.ForecastService
+import site.paulo.localchat.data.remote.ForecastsService
+import site.paulo.localchat.data.remote.PlaceService
 import site.paulo.localchat.data.remote.RibotsService
 import javax.inject.Singleton
 
@@ -44,13 +45,27 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideForecastService(): ForecastService {
+    fun provideForecastsService(okHttpClient: OkHttpClient, gson: Gson): ForecastsService {
+        return Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl("http://http://samples.openweathermap.org/data/2.5/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build()
+                .create(ForecastsService::class.java)
+
+    }
+
+    @Provides
+    @Singleton
+    fun provideAPIService(): PlaceService {
         val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .baseUrl(BuildConfig.API_URL)
+                .baseUrl("https://wheretoeat-python.herokuapp.com/")
                 .build()
 
-        return retrofit.create(ForecastService::class.java)
+        return retrofit.create(PlaceService::class.java)
     }
+
 }
