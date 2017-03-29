@@ -2,8 +2,8 @@ package site.paulo.localchat.data.local
 
 import android.content.ContentValues
 import android.database.Cursor
-import site.paulo.localchat.data.model.Name
-import site.paulo.localchat.data.model.Profile
+import site.paulo.localchat.data.model.ribot.Name
+import site.paulo.localchat.data.model.ribot.Profile
 import site.paulo.localchat.extension.getLong
 import site.paulo.localchat.extension.getString
 import java.util.*

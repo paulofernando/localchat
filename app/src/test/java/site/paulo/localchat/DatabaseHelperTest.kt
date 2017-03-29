@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 import rx.observers.TestSubscriber
 import site.paulo.localchat.data.local.DatabaseHelper
 import site.paulo.localchat.data.local.DbOpenHelper
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 
 import junit.framework.Assert.assertEquals
 import rx.android.schedulers.AndroidSchedulers

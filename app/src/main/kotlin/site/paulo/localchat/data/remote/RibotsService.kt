@@ -2,7 +2,7 @@ package site.paulo.localchat.data.remote
 
 import retrofit2.http.GET
 import rx.Observable
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 
 interface RibotsService {
     @GET("ribots")

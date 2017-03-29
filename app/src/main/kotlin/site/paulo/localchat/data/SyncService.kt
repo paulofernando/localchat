@@ -14,7 +14,7 @@ import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
 import timber.log.Timber
 import site.paulo.localchat.BoilerplateApplication
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.extension.isNetworkConnected
 import site.paulo.localchat.extension.toggleAndroidComponent
 

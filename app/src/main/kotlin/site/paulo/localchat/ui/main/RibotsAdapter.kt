@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 import butterknife.BindView
 import butterknife.ButterKnife
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.R
 
 class RibotsAdapter

@@ -1,46 +1,53 @@
-package site.paulo.localchat.ui.forecast
+package site.paulo.localchat.ui.main
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_forecast.view.*
-import site.paulo.localchat.R
-import site.paulo.localchat.data.model.Forecast
-import site.paulo.localchat.data.model.ForecastList
-import site.paulo.localchat.ui.utils.ctx
+import android.widget.TextView
+
 import javax.inject.Inject
+
+import butterknife.BindView
+import butterknife.ButterKnife
+
+import site.paulo.localchat.data.model.ribot.Ribot
+import site.paulo.localchat.R
+import site.paulo.localchat.data.model.forecast.ForecastList
 
 class ForecastAdapter
 @Inject
-constructor(var forecasts: ForecastList, val itemClick: (Forecast) -> Unit) : RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
+constructor() : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastAdapter.ViewHolder {
+    var forecasts = emptyList<ForecastList>()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastAdapter.ForecastViewHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_forecast, parent, false)
-        return ForecastAdapter.ViewHolder(itemView, itemClick);
+        return ForecastViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ForecastAdapter.ViewHolder, position: Int) {
-        holder.bindForecast(forecasts[position])
+    override fun onBindViewHolder(holder: ForecastAdapter.ForecastViewHolder, position: Int) {
+        val forecast = forecasts[position]
+
+        holder.dateTextView.text = forecast.name;
     }
 
-    override fun getItemCount(): Int = forecasts.size()
+    override fun getItemCount(): Int {
+        return forecasts.size
+    }
 
-    class ViewHolder(view: View, val itemClick: (Forecast) -> Unit) :
-            RecyclerView.ViewHolder(view) {
+    inner class ForecastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindForecast(forecast: Forecast) {
-            with(forecast) {
-                Picasso.with(itemView.ctx).load(iconUrl).into(itemView.icon)
-                itemView.date.text = date
-                itemView.description.text = description
-                itemView.maxTemperature.text = "${high.toString()}"
-                itemView.minTemperature.text = "${low.toString()}"
-                itemView.setOnClickListener { itemClick(this) }
-            }
+        @BindView(R.id.description)
+        lateinit var descriptionTextView: View
+
+        @BindView(R.id.date)
+        lateinit var dateTextView: TextView
+
+        init {
+            ButterKnife.bind(this, itemView)
         }
     }
-
 }

@@ -9,7 +9,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
 import site.paulo.localchat.data.SyncService
-import site.paulo.localchat.data.model.Ribot
+import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.base.BaseActivity
 import javax.inject.Inject
 

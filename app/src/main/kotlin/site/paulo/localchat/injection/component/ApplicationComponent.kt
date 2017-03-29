@@ -22,7 +22,7 @@ interface ApplicationComponent {
     @ApplicationContext fun context(): Context
     fun application(): Application
     fun ribotsService(): RibotsService
-    fun forecastService(): ForecastsService
+    fun forecastsService(): ForecastsService
     fun databaseHelper(): DatabaseHelper
     fun dataManager(): DataManager
 }
