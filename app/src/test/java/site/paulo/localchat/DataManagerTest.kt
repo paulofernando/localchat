@@ -18,6 +18,7 @@ import site.paulo.localchat.data.remote.RibotsService
 
 import org.mockito.Mockito.anyListOf
 import site.paulo.localchat.data.remote.ForecastsService
+import site.paulo.localchat.data.remote.PlaceService
 import site.paulo.localchat.test.common.TestDataFactory
 
 /**
@@ -40,11 +41,14 @@ class DataManagerTest {
     @Mock
     lateinit var mockForecastsService: ForecastsService
 
+    @Mock
+    lateinit var mockPlaceService: PlaceService
+
     lateinit var dataManager: DataManager
 
     @Before
     fun setUp() {
-        dataManager = DataManager(mockRibotsService, mockForecastsService, mockDatabaseHelper)
+        dataManager = DataManager(mockRibotsService, mockForecastsService, mockPlaceService, mockDatabaseHelper)
     }
 
     @Test
