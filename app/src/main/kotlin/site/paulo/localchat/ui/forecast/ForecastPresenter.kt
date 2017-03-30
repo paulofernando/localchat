@@ -7,6 +7,7 @@ import rx.lang.kotlin.addTo
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.data.model.forecast.ForecastList
 import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.injection.ConfigPersistent
@@ -31,7 +32,7 @@ constructor(private val dataManager: DataManager) : ForecastContract.Presenter()
                             view.showError()
                         }
                 ).addTo(compositeSubscription)*/
-        dataManager.getPlaces()
+        /*dataManager.getPlaces()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate {
@@ -40,7 +41,20 @@ constructor(private val dataManager: DataManager) : ForecastContract.Presenter()
                     println(places);
                 }, { error ->
                     println(error);
-                })
+                })*/
+
+        dataManager.getUsers()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(FunctionSubscriber<List<User>>()
+                        .onNext {
+                            println(it.toString());
+                        }
+                        .onError {
+                            Timber.e(it, "There was an error loading the users.")
+                            view.showError()
+                        }
+                ).addTo(compositeSubscription)
 
         /*dataManager.getWeatherInfo("27.6988910", "84.430396084", "10", "b1b15e88fa797225412429c1c50c122a1")
                 .subscribeOn(Schedulers.newThread())
