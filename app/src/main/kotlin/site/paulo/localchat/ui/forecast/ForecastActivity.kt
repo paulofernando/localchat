@@ -10,11 +10,13 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
+import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.data.model.forecast.ForecastList
 import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.main.ForecastAdapter
 import site.paulo.localchat.ui.main.RibotsAdapter
+import site.paulo.localchat.ui.user.UsersAdapter
 import javax.inject.Inject
 
 class ForecastActivity : BaseActivity(), ForecastContract.View {
@@ -23,7 +25,7 @@ class ForecastActivity : BaseActivity(), ForecastContract.View {
     lateinit var presenter: ForecastPresenter
 
     @Inject
-    lateinit var forecastsAdapter: ForecastAdapter
+    lateinit var usersAdapter: UsersAdapter
 
     @BindView(R.id.forecastList)
     lateinit var forecastList: RecyclerView
@@ -34,7 +36,7 @@ class ForecastActivity : BaseActivity(), ForecastContract.View {
         setContentView(R.layout.activity_forecast)
         ButterKnife.bind(this)
 
-        forecastList.adapter = forecastsAdapter
+        forecastList.adapter = usersAdapter
         forecastList.layoutManager = LinearLayoutManager(this)
 
         presenter.attachView(this)
@@ -47,14 +49,14 @@ class ForecastActivity : BaseActivity(), ForecastContract.View {
         presenter.detachView()
     }
 
-    override fun showForecasts(f: ForecastList) {
-        forecastsAdapter.forecasts = listOf(f) //TODO change later
-        forecastsAdapter.notifyDataSetChanged()
+    override fun showForecasts(f: List<User>) {
+        usersAdapter.users = f //TODO change later
+        usersAdapter.notifyDataSetChanged()
     }
 
     override fun showForecastsEmpty() {
-        forecastsAdapter.forecasts = emptyList()
-        forecastsAdapter.notifyDataSetChanged()
+        usersAdapter.users = emptyList()
+        usersAdapter.notifyDataSetChanged()
         Toast.makeText(this, R.string.empty_ribots, Toast.LENGTH_LONG).show()
     }
 

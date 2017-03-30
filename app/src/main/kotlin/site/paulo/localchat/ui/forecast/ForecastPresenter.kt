@@ -48,7 +48,8 @@ constructor(private val dataManager: DataManager) : ForecastContract.Presenter()
                 .subscribeOn(Schedulers.io())
                 .subscribe(FunctionSubscriber<List<User>>()
                         .onNext {
-                            println(it.toString());
+                            //println(it.toString());
+                            if (it.isEmpty()) view.showForecastsEmpty() else view.showForecasts(it)
                         }
                         .onError {
                             Timber.e(it, "There was an error loading the users.")
