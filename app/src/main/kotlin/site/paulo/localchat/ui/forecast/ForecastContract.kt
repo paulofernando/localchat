@@ -1,5 +1,6 @@
 package site.paulo.localchat.ui.forecast
 
+import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.data.model.forecast.ForecastList
 import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.base.BaseMvpPresenter
@@ -8,7 +9,7 @@ import site.paulo.localchat.ui.base.MvpView
 object ForecastContract {
 
     interface View: MvpView {
-        fun showForecasts(forecasts: ForecastList)
+        fun showForecasts(forecasts: List<User>)
         fun showForecastsEmpty()
         fun showError()
     }
