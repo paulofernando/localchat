@@ -6,10 +6,12 @@ import javax.inject.Singleton
 
 import rx.Observable
 import site.paulo.localchat.data.local.DatabaseHelper
+import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.data.model.forecast.ForecastList
 import site.paulo.localchat.data.model.forecast.WeatherData
 import site.paulo.localchat.data.model.place.Place
 import site.paulo.localchat.data.model.ribot.Ribot
+import site.paulo.localchat.data.remote.ChatGeoService
 import site.paulo.localchat.data.remote.ForecastsService
 import site.paulo.localchat.data.remote.PlaceService
 import site.paulo.localchat.data.remote.RibotsService
@@ -18,6 +20,7 @@ import site.paulo.localchat.data.remote.RibotsService
 class DataManager
 @Inject constructor(private val ribotsService: RibotsService,
                     private val forecastService: ForecastsService,
+                    private val chatGeoService: ChatGeoService,
                     private val placeService: PlaceService,
                     private val databaseHelper: DatabaseHelper) {
 
@@ -43,5 +46,9 @@ class DataManager
                        cnt: String,
                        appid: String): Observable<WeatherData> {
         return forecastService.getWeatherInfo(latitude, longitude, cnt, appid);
+    }
+
+    fun getUsers(): Observable<List<User>> {
+        return chatGeoService.getUsers();
     }
 }

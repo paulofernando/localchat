@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import site.paulo.localchat.BuildConfig
+import site.paulo.localchat.data.remote.ChatGeoService
 import site.paulo.localchat.data.remote.ForecastsService
 import site.paulo.localchat.data.remote.PlaceService
 import site.paulo.localchat.data.remote.RibotsService
@@ -48,7 +49,7 @@ class ApiModule {
     fun provideForecastsService(okHttpClient: OkHttpClient, gson: Gson): ForecastsService {
         return Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("http://http://samples.openweathermap.org/data/2.5/")
+                .baseUrl("http://samples.openweathermap.org/data/2.5/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
@@ -66,6 +67,20 @@ class ApiModule {
                 .build()
 
         return retrofit.create(PlaceService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatGeoService(): ChatGeoService {
+        val retrofit = Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .baseUrl("https://chatgeo.herokuapp.com/user/")
+                .build()
+
+        System.out.println("ChatGeoService base URL: " + retrofit.baseUrl());
+
+        return retrofit.create(ChatGeoService::class.java)
     }
 
 }
