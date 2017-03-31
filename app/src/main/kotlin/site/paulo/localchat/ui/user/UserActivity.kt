@@ -1,28 +1,21 @@
-package site.paulo.localchat.ui.forecast
+package site.paulo.localchat.ui.user
 
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
-import site.paulo.localchat.data.model.forecast.ForecastList
-import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.main.ForecastAdapter
-import site.paulo.localchat.ui.main.RibotsAdapter
 import site.paulo.localchat.ui.user.UsersAdapter
 import javax.inject.Inject
 
-class ForecastActivity : BaseActivity(), ForecastContract.View {
+class UserActivity : BaseActivity(), UserContract.View {
 
     @Inject
-    lateinit var presenter: ForecastPresenter
+    lateinit var presenter: UserPresenter
 
     @Inject
     lateinit var usersAdapter: UsersAdapter
@@ -40,7 +33,7 @@ class ForecastActivity : BaseActivity(), ForecastContract.View {
         forecastList.layoutManager = LinearLayoutManager(this)
 
         presenter.attachView(this)
-        presenter.loadForecasts()
+        presenter.loadUsers()
 
     }
 
@@ -49,12 +42,12 @@ class ForecastActivity : BaseActivity(), ForecastContract.View {
         presenter.detachView()
     }
 
-    override fun showForecasts(f: List<User>) {
-        usersAdapter.users = f //TODO change later
+    override fun showUsers(users: List<User>) {
+        usersAdapter.users = users
         usersAdapter.notifyDataSetChanged()
     }
 
-    override fun showForecastsEmpty() {
+    override fun showUsersEmpty() {
         usersAdapter.users = emptyList()
         usersAdapter.notifyDataSetChanged()
         Toast.makeText(this, R.string.empty_ribots, Toast.LENGTH_LONG).show()

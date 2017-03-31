@@ -98,7 +98,7 @@ dependencies {
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt daggerCompiler
 
-
+    compile "org.jetbrains.anko:anko-sdk15:$anko_version"
 
     compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"

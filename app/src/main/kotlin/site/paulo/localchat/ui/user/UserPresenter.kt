@@ -1,6 +1,5 @@
-package site.paulo.localchat.ui.forecast
+package site.paulo.localchat.ui.user
 
-import android.text.TextUtils.isEmpty
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.lang.kotlin.addTo
@@ -8,18 +7,16 @@ import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.chatgeo.User
-import site.paulo.localchat.data.model.forecast.ForecastList
-import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
 import javax.inject.Inject
 
 @ConfigPersistent
-class ForecastPresenter
+class UserPresenter
 @Inject
-constructor(private val dataManager: DataManager) : ForecastContract.Presenter() {
+constructor(private val dataManager: DataManager) : UserContract.Presenter() {
 
-    override fun loadForecasts() {
+    override fun loadUsers() {
         /*dataManager.getForecasts()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -49,7 +46,7 @@ constructor(private val dataManager: DataManager) : ForecastContract.Presenter()
                 .subscribe(FunctionSubscriber<List<User>>()
                         .onNext {
                             //println(it.toString());
-                            if (it.isEmpty()) view.showForecastsEmpty() else view.showForecasts(it)
+                            if (it.isEmpty()) view.showUsersEmpty() else view.showUsers(it)
                         }
                         .onError {
                             Timber.e(it, "There was an error loading the users.")
