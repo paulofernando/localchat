@@ -16,16 +16,16 @@
 
         <activity android:name=".ui.signin.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <activity android:name=".ui.main.MainActivity" />
-
-        <activity android:name=".ui.forecast.ForecastActivity">
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.main.MainActivity" />
+
+        <activity android:name=".ui.user.UserActivity" />
 
         <service android:name=".data.SyncService" />
 
