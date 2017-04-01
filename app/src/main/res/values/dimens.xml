@@ -11,4 +11,8 @@
     <dimen name="spacing_large">16dp</dimen>
     <dimen name="spacing_xlarge">32dp</dimen>
     <dimen name="spacing_huge">48dp</dimen>
+
+    <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
+    <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
+
 </resources>
