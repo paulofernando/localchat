@@ -27,6 +27,8 @@
 
         <activity android:name=".ui.user.UserActivity" />
 
+        <activity android:name=".ui.dashboard.DashboardActivity" />
+
         <service android:name=".data.SyncService" />
 
         <receiver
