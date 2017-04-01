@@ -1,18 +1,21 @@
 package site.paulo.localchat.ui.dashboard
 
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.*
-import kotlinx.android.synthetic.main.fragment_dashboard.*
+import rx.exceptions.AssemblyStackTraceException.find
 import site.paulo.localchat.R
+import site.paulo.localchat.ui.base.BaseActivity
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : BaseActivity() {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -35,10 +38,17 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_dashboard)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val params = toolbar.layoutParams as AppBarLayout.LayoutParams
+        params.scrollFlags = 0
         setSupportActionBar(toolbar)
+
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
@@ -51,12 +61,12 @@ class DashboardActivity : AppCompatActivity() {
         tabLayout!!.setupWithViewPager(mViewPager)
         setupTabIcons()
 
+
     }
 
     private fun setupTabIcons() {
         tabLayout!!.getTabAt(0)!!.setIcon(tabIcons[0])
         tabLayout!!.getTabAt(1)!!.setIcon(tabIcons[1])
-        tabLayout!!.getTabAt(2)!!.setIcon(tabIcons[2])
     }
 
 
@@ -88,7 +98,6 @@ class DashboardActivity : AppCompatActivity() {
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
-            section_label.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
             return rootView
         }
 
@@ -126,15 +135,14 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
+            // Show 2 total pages.
+            return 2
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
                 0 -> return resources.getString(R.string.tab_title_1)
                 1 -> return resources.getString(R.string.tab_title_2)
-                2 -> return resources.getString(R.string.tab_title_3)
             }
             return null
         }
