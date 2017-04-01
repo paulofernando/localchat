@@ -14,5 +14,6 @@
 
     <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 
 </resources>
