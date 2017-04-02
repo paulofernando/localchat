@@ -14,6 +14,7 @@ import android.view.*
 import rx.exceptions.AssemblyStackTraceException.find
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
+import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 
 class DashboardActivity : BaseActivity() {
 
@@ -131,7 +132,8 @@ class DashboardActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
+            return UsersNearbyFragment() as Fragment;
+            //else return PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
