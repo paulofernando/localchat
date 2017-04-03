@@ -6,17 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager.CONNECTIVITY_ACTION
 import android.os.IBinder
-
-import javax.inject.Inject
-
 import rx.Subscription
 import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
-import timber.log.Timber
 import site.paulo.localchat.BoilerplateApplication
 import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.extension.isNetworkConnected
 import site.paulo.localchat.extension.toggleAndroidComponent
+import timber.log.Timber
+import javax.inject.Inject
 
 class SyncService : Service() {
 

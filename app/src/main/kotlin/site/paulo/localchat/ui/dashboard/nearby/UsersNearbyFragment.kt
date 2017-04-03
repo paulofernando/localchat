@@ -16,7 +16,6 @@ import site.paulo.localchat.ui.user.UserNearbyPresenter
 import site.paulo.localchat.ui.user.UsersNearbyAdapter
 import javax.inject.Inject
 
-
 class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
 
     @Inject
