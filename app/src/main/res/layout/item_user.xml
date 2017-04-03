@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="6dp"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
-    android:layout_marginTop="6dp"
+    android:layout_marginBottom="@dimen/spacing_micro"
+    android:layout_marginLeft="@dimen/spacing_micro"
+    android:layout_marginRight="@dimen/spacing_micro"
+    android:layout_marginTop="@dimen/spacing_micro"
     app:cardCornerRadius="2dp">
 
     <RelativeLayout
@@ -19,31 +19,36 @@
 
         <ImageView
             android:id="@+id/image_profile_nearby"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@android:color/holo_blue_dark" />
+            android:layout_width="@dimen/image_width_user"
+            android:layout_height="@dimen/image_height_user"
+            android:background="@android:color/white" />
 
-        <TextView
-            android:id="@+id/text_first_name_user"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_profile_nearby"
-            android:layout_toEndOf="@id/image_profile_nearby"
-            android:textSize="@dimen/text_body"
-            tools:text="Antony Ribot" />
+            android:orientation="vertical"
+            android:layout_below="@id/image_profile_nearby"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
-        <TextView
-            android:id="@+id/text_email_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_first_name_user"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/image_profile_nearby"
-            android:layout_toEndOf="@id/image_profile_nearby"
-            android:textSize="@dimen/text_small_body"
-            tools:text="developer" />
+            <TextView
+                android:id="@+id/text_first_name_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_body"
+                tools:text="Antony Ribot"
+                 />
+
+            <TextView
+                android:id="@+id/text_email_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_first_name_user"
+                android:textSize="@dimen/text_small_body"
+                tools:text="developer" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
