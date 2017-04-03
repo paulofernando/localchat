@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "uk.co.ribot.androidboilerplate"
+        applicationId "site.paulo.localchat"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -95,15 +96,10 @@ dependencies {
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
 
-    provided "org.glassfish:javax.annotation:10.0-b28"
-    compile  "com.google.dagger:dagger:$DAGGER_VERSION"
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt daggerCompiler
 
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'io.reactivex:rxkotlin:0.60.0'
-
-    compile 'com.jakewharton.timber:timber:4.4.0'
+    compile "org.jetbrains.anko:anko-sdk15:$anko_version"
 
     compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
@@ -120,8 +116,6 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
 
-    compile 'com.squareup.sqlbrite:sqlbrite:1.0.0'
-
     // Unit tests dependencies
     testCompile jUnit
     testCompile mockito
@@ -129,7 +123,6 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-core:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-library:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-integration:$HAMCREST_VERSION"
-    testCompile 'org.robolectric:robolectric:3.1.4'
 
     // Instrumentation test dependencies
     androidTestCompile jUnit
@@ -138,6 +131,15 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxkotlin:0.60.0'
+    compile 'com.jakewharton.timber:timber:4.4.0'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    testCompile 'org.robolectric:robolectric:3.1.4'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 }
 
 kapt {
@@ -145,6 +147,6 @@ kapt {
 }
 
 // Log out test results to console
-tasks.matching {it instanceof Test}.all {
+tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
