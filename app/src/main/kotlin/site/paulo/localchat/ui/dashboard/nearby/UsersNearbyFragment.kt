@@ -1,6 +1,7 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -24,8 +25,8 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     @Inject
     lateinit var usersAdapter: UsersNearbyAdapter
 
-    @BindView(R.id.forecastList)
-    lateinit var forecastList: RecyclerView
+    @BindView(R.id.usersNearbyList)
+    lateinit var usersNearbyList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -33,8 +34,8 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
         ButterKnife.bind(this, rootView)
 
-        forecastList.adapter = usersAdapter
-        forecastList.layoutManager = LinearLayoutManager(activity)
+        usersNearbyList.adapter = usersAdapter
+        usersNearbyList.layoutManager = GridLayoutManager(activity, 2)
 
         presenter.attachView(this)
         presenter.loadNearbyUsers()

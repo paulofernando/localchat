@@ -9,7 +9,7 @@
     tools:context="site.paulo.localchat.ui.dashboard.DashboardActivity$PlaceholderFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/forecastList"
+        android:id="@+id/usersNearbyList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>
