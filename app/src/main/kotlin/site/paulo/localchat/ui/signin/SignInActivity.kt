@@ -13,7 +13,7 @@ import butterknife.ButterKnife
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.user.UserActivity
+import site.paulo.localchat.ui.dashboard.DashboardActivity
 import javax.inject.Inject
 
 class SignInActivity : BaseActivity(), SignInContract.View {
@@ -43,7 +43,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         presenter.attachView(this)
 
         btnLogin.setOnClickListener {
-            startActivity<UserActivity>()
+            startActivity<DashboardActivity>()
         }
     }
 
