@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_user.view.*
 import site.paulo.localchat.R
+import site.paulo.localchat.R.id.*
 import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.ui.utils.ctx
 import javax.inject.Inject
 
 class UsersNearbyAdapter
@@ -24,10 +28,7 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: UsersNearbyAdapter.UserViewHolder, position: Int) {
-        val user = users[position]
-
-        holder.firstNameTextView.text = user.first_name
-        holder.emailTextView.text = user.email
+        holder.bindUser(users[position])
     }
 
     override fun getItemCount(): Int {
@@ -36,17 +37,13 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        @BindView(R.id.view_hex_color)
-        lateinit var hexColorView: View
-
-        @BindView(R.id.text_first_name_user)
-        lateinit var firstNameTextView: TextView
-
-        @BindView(R.id.text_email_user)
-        lateinit var emailTextView: TextView
-
-        init {
-            ButterKnife.bind(this, itemView)
+        fun bindUser(user: User) {
+            with(user) {
+                Picasso.with(itemView.ctx).load(profilePic).resize(100, 150).centerCrop().into(itemView.image_profile_nearby)
+                itemView.text_first_name_user.text = firstName
+                itemView.text_email_user.text = email
+                //itemView.setOnClickListener { itemClick(this) }
+            }
         }
     }
 }

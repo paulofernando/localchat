@@ -48,6 +48,7 @@ class ApiModule {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
                 .baseUrl("https://chatgeo.herokuapp.com/user/")
+                //.baseUrl("http://localhost:1337/user/")
                 .build()
 
         System.out.println("ChatGeoService base URL: " + retrofit.baseUrl());
