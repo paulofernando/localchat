@@ -15,6 +15,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    lintOptions {
+        //checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+        warning 'InvalidPackage'
+    }
+
     signingConfigs {
         // You must set up an environment var before release signing
         // Run: export APP_KEY={password}
@@ -61,10 +69,6 @@ android {
         }
     }
 
-    // https://github.com/square/okio/issues/58
-    lintOptions {
-        warning 'InvalidPackage'
-    }
 }
 
 repositories {
@@ -138,6 +142,7 @@ dependencies {
     compile 'com.squareup.sqlbrite:sqlbrite:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.firebase:firebase-database:10.0.1'
     testCompile 'org.robolectric:robolectric:3.1.4'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 }
@@ -150,3 +155,5 @@ kapt {
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
+
+apply plugin: 'com.google.gms.google-services'
