@@ -1,6 +1,8 @@
 package site.paulo.localchat.injection.module
 
 import android.app.Application
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.SqlBrite
 import javax.inject.Singleton
@@ -35,4 +37,5 @@ class DbModule {
         db.setLoggingEnabled(true)
         return db
     }
+
 }

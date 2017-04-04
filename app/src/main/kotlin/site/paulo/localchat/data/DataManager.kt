@@ -25,6 +25,6 @@ class DataManager
     }
 
     fun getUsers(): Observable<List<User>> {
-        return chatGeoService.getUsers();
+        return chatGeoService.getUsers()
     }
 }
