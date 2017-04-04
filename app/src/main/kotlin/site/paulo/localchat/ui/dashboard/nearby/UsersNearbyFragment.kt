@@ -29,7 +29,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     lateinit var usersNearbyList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
         val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
         ButterKnife.bind(this, rootView)

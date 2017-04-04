@@ -26,17 +26,17 @@ constructor(private val dataManager: DataManager) : MainContract.Presenter() {
 
     override fun loadRibots() {
         dataManager.getRibots()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(FunctionSubscriber<List<Ribot>>()
-                        .onNext {
-                            if (it.isEmpty()) view.showRibotsEmpty() else view.showRibots(it)
-                        }
-                        .onError {
-                            Timber.e(it, "There was an error loading the ribots.")
-                            view.showError()
-                        }
-                ).addTo(compositeSubscription)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(FunctionSubscriber<List<Ribot>>()
+                .onNext {
+                    if (it.isEmpty()) view.showRibotsEmpty() else view.showRibots(it)
+                }
+                .onError {
+                    Timber.e(it, "There was an error loading the ribots.")
+                    view.showError()
+                }
+            ).addTo(compositeSubscription)
     }
 
 }

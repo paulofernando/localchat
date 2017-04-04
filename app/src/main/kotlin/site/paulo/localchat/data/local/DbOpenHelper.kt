@@ -7,8 +7,8 @@ import timber.log.Timber
 
 import java.sql.SQLException
 
-class DbOpenHelper constructor(val context: Context):
-        SQLiteOpenHelper(context, DbOpenHelper.Companion.DATABASE_NAME, null, DbOpenHelper.Companion.DATABASE_VERSION) {
+class DbOpenHelper constructor(val context: Context) :
+    SQLiteOpenHelper(context, DbOpenHelper.Companion.DATABASE_NAME, null, DbOpenHelper.Companion.DATABASE_VERSION) {
 
     companion object {
         val DATABASE_NAME = "ribots.db"

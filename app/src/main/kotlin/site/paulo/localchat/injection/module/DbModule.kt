@@ -24,8 +24,8 @@ class DbModule {
     @Singleton
     fun provideSqlBrite(): SqlBrite {
         return SqlBrite.Builder()
-                .logger({ Timber.tag("Database").v(it) })
-                .build()
+            .logger({ Timber.tag("Database").v(it) })
+            .build()
     }
 
     @Provides

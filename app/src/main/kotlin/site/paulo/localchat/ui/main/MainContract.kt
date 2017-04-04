@@ -6,13 +6,13 @@ import site.paulo.localchat.ui.base.MvpView
 
 object MainContract {
 
-    interface View: MvpView {
+    interface View : MvpView {
         fun showRibots(ribots: List<Ribot>)
         fun showRibotsEmpty()
         fun showError()
     }
 
-    abstract class Presenter: BaseMvpPresenter<View>() {
+    abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadRibots()
     }
 }

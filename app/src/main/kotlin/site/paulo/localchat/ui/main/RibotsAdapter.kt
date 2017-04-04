@@ -22,7 +22,7 @@ constructor() : RecyclerView.Adapter<RibotsAdapter.RibotViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RibotsAdapter.RibotViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_ribot, parent, false)
+            .inflate(R.layout.item_ribot, parent, false)
         return RibotViewHolder(itemView)
     }
 

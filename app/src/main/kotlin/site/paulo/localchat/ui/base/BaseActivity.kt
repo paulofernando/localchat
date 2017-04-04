@@ -11,7 +11,7 @@ import site.paulo.localchat.injection.module.ActivityModule
 import java.util.HashMap
 import java.util.concurrent.atomic.AtomicLong
 
-open class BaseActivity: AppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
 
     companion object {
         @JvmStatic private val KEY_ACTIVITY_ID = "KEY_ACTIVITY_ID"
@@ -40,8 +40,8 @@ open class BaseActivity: AppCompatActivity() {
             val component = (applicationContext as BoilerplateApplication).applicationComponent
 
             DaggerConfigPersistentComponent.builder()
-                    .applicationComponent(component)
-                    .build()
+                .applicationComponent(component)
+                .build()
         })
 
         activityComponent = configPersistentComponent.activityComponent(ActivityModule(this))
