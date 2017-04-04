@@ -13,10 +13,12 @@ import rx.lang.kotlin.addTo
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
 import timber.log.Timber
+import java.security.acl.Group
 import javax.inject.Inject
 
 
@@ -39,7 +41,6 @@ constructor(private val dataManager: DataManager,
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<List<User>>()
                 .onNext {
-                    //println(it.toString());
                     if (it.isEmpty()) view.showChatsEmpty() else view.showChats(it)
                 }
                 .onError {
@@ -50,15 +51,22 @@ constructor(private val dataManager: DataManager,
     }
 
     override fun loadMessages() {
-        firebaseDatabase.getReference("chats").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                println(dataSnapshot.toString())
-                println("We're done loading groups")
+        val childEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
+                //val chat = snapshot.getValue(Chat::class.java)
+                println(s)
             }
-            override fun onCancelled(databaseError: DatabaseError) {
 
-            }
-        })
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {}
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+
+        firebaseDatabase.getReference("chats").addChildEventListener(childEventListener)
 
     }
 
