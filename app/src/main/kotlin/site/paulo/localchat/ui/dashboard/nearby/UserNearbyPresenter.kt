@@ -19,18 +19,18 @@ constructor(private val dataManager: DataManager) : UsersNearbyContract.Presente
 
     override fun loadNearbyUsers() {
         dataManager.getUsers()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(FunctionSubscriber<List<User>>()
-                        .onNext {
-                            //println(it.toString());
-                            if (it.isEmpty()) view.showNearbyUsersEmpty() else view.showNearbyUsers(it)
-                        }
-                        .onError {
-                            Timber.e(it, "There was an error loading the users.")
-                            view.showError()
-                        }
-                ).addTo(compositeSubscription)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(FunctionSubscriber<List<User>>()
+                .onNext {
+                    //println(it.toString());
+                    if (it.isEmpty()) view.showNearbyUsersEmpty() else view.showNearbyUsers(it)
+                }
+                .onError {
+                    Timber.e(it, "There was an error loading the users.")
+                    view.showError()
+                }
+            ).addTo(compositeSubscription)
     }
 
     private val compositeSubscription = CompositeSubscription()

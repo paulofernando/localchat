@@ -23,7 +23,7 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersNearbyAdapter.UserViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_user, parent, false)
+            .inflate(R.layout.item_user, parent, false)
         return UserViewHolder(itemView)
     }
 
@@ -40,9 +40,9 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
         fun bindUser(user: User) {
             with(user) {
                 Picasso.with(itemView.ctx).load(profilePic)
-                        .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
-                                itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
-                        .centerCrop().into(itemView.image_profile_nearby)
+                    .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
+                        itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
+                    .centerCrop().into(itemView.image_profile_nearby)
                 itemView.text_first_name_user.text = firstName
                 itemView.text_email_user.text = email
                 //itemView.setOnClickListener { itemClick(this) }

@@ -19,8 +19,8 @@ class ApiModule {
     @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                .create()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .create()
     }
 
     @Provides
@@ -33,23 +33,23 @@ class ApiModule {
     @Singleton
     fun provideRibotsService(okHttpClient: OkHttpClient, gson: Gson): RibotsService {
         return Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl("https://api.ribot.io/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build()
-                .create(RibotsService::class.java)
+            .client(okHttpClient)
+            .baseUrl("https://api.ribot.io/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+            .create(RibotsService::class.java)
     }
 
     @Provides
     @Singleton
     fun provideChatGeoService(): ChatGeoService {
         val retrofit = Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .baseUrl("https://chatgeo.herokuapp.com/user/")
-                //.baseUrl("http://localhost:1337/user/")
-                .build()
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .baseUrl("https://chatgeo.herokuapp.com/user/")
+            //.baseUrl("http://localhost:1337/user/")
+            .build()
 
         System.out.println("ChatGeoService base URL: " + retrofit.baseUrl());
 
