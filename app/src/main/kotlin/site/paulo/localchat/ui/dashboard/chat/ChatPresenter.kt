@@ -1,6 +1,6 @@
 package site.paulo.localchat.ui.user
 
-import com.google.firebase.FirebaseApp
+import android.util.Log
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,7 +18,6 @@ import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
 import timber.log.Timber
-import java.security.acl.Group
 import javax.inject.Inject
 
 
@@ -36,37 +35,23 @@ constructor(private val dataManager: DataManager,
     private val groupsChildEventListener: ChildEventListener? = null
 
     override fun loadChats() {
-        dataManager.getUsers()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<List<User>>()
-                .onNext {
-                    if (it.isEmpty()) view.showChatsEmpty() else view.showChats(it)
-                }
-                .onError {
-                    Timber.e(it, "There was an error loading the users.")
-                    view.showError()
-                }
-            ).addTo(compositeSubscription)
-    }
+        val valueEventListener = object : ValueEventListener {
 
-    override fun loadMessages() {
-        val childEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                val chat = snapshot.getValue(Chat::class.java)
-                println(chat.name)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var chatList: MutableList<Chat> = mutableListOf<Chat>()
+                for (chatSnapshot in dataSnapshot.children) {
+                    chatList.add(chatSnapshot.getValue(Chat::class.java))
+                }
+                view.showChats(chatList.toList())
             }
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {}
-
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
-
-            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                Log.w("loadMessages", "loadPost:onCancelled", databaseError.toException())
+            }
         }
 
-        firebaseDatabase.getReference("chats").addChildEventListener(childEventListener)
+        firebaseDatabase.getReference("chats").addValueEventListener(valueEventListener)
 
     }
 

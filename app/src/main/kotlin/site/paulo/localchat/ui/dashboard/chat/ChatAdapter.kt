@@ -7,39 +7,44 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_chat.view.*
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx
 import javax.inject.Inject
 
 class ChatAdapter
 @Inject
-constructor() : RecyclerView.Adapter<ChatAdapter.UserViewHolder>() {
+constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
-    var users = emptyList<User>()
+    var chats = emptyList<Chat>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.UserViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_chat, parent, false)
-        return UserViewHolder(itemView)
+        return ChatViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ChatAdapter.UserViewHolder, position: Int) {
-        holder.bindUser(users[position])
+    override fun onBindViewHolder(holder: ChatAdapter.ChatViewHolder, position: Int) {
+        holder.bindChat(chats[position])
     }
 
     override fun getItemCount(): Int {
-        return users.size
+        return chats.size
     }
 
-    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindUser(user: User) {
-            with(user) {
-                Picasso.with(itemView.ctx).load(profilePic)
+        fun bindChat(chat: Chat) {
+            with(chat) {
+                Picasso.with(itemView.ctx)
+                    .load(chatPic)
                     .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt(),
                         itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
-                    .centerCrop().into(itemView.image_chat)
-                itemView.text_name_chat.text = firstName
+                    .centerCrop()
+                    .transform(CircleTransform())
+                    .into(itemView.image_chat)
+
+                itemView.text_name_chat.text = name
                 //itemView.setOnClickListener { itemClick(this) }
             }
         }
