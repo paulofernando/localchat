@@ -34,9 +34,9 @@
                 android:id="@+id/text_name_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_large"
                 android:textSize="@dimen/text_body"
-                tools:text="Antony"
-                 />
+                tools:text="Antony"/>
 
             <TextView
                 android:id="@+id/text_last_message_chat"

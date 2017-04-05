@@ -11,6 +11,7 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
+import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.ChatAdapter
@@ -39,18 +40,17 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
         presenter.attachView(this)
         presenter.loadChats()
-        presenter.loadMessages()
 
         return rootView
     }
 
-    override fun showChats(users: List<User>) {
-        chatsAdapter.users = users
+    override fun showChats(chats: List<Chat>) {
+        chatsAdapter.chats = chats
         chatsAdapter.notifyDataSetChanged()
     }
 
     override fun showChatsEmpty() {
-        chatsAdapter.users = emptyList()
+        chatsAdapter.chats = emptyList()
         chatsAdapter.notifyDataSetChanged()
         Toast.makeText(activity, R.string.empty_ribots, Toast.LENGTH_LONG).show()
     }
