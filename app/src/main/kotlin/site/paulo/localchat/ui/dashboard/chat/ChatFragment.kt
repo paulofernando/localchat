@@ -2,6 +2,7 @@ package site.paulo.localchat.ui.dashboard.nearby
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         ButterKnife.bind(this, rootView)
 
         chatsList.adapter = chatsAdapter
-        chatsList.layoutManager = GridLayoutManager(activity!!, 2)
+        chatsList.layoutManager = LinearLayoutManager(activity)
 
         presenter.attachView(this)
         presenter.loadChats()

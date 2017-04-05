@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_user.view.*
+import kotlinx.android.synthetic.main.item_chat.view.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.utils.ctx
@@ -19,7 +19,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.UserViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user, parent, false)
+            .inflate(R.layout.item_chat, parent, false)
         return UserViewHolder(itemView)
     }
 
@@ -36,11 +36,10 @@ constructor() : RecyclerView.Adapter<ChatAdapter.UserViewHolder>() {
         fun bindUser(user: User) {
             with(user) {
                 Picasso.with(itemView.ctx).load(profilePic)
-                    .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
-                        itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
-                    .centerCrop().into(itemView.image_profile_nearby)
-                itemView.text_first_name_user.text = firstName
-                itemView.text_email_user.text = email
+                    .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt(),
+                        itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
+                    .centerCrop().into(itemView.image_chat)
+                itemView.text_name_chat.text = firstName
                 //itemView.setOnClickListener { itemClick(this) }
             }
         }

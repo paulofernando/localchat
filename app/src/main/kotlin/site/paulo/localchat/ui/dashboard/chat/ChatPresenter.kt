@@ -53,8 +53,8 @@ constructor(private val dataManager: DataManager,
     override fun loadMessages() {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                //val chat = snapshot.getValue(Chat::class.java)
-                println(s)
+                val chat = snapshot.getValue(Chat::class.java)
+                println(chat.name)
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {}
