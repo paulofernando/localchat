@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_chat.view.*
+import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx
 import javax.inject.Inject
@@ -45,7 +47,10 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                     .into(itemView.image_chat)
 
                 itemView.text_name_chat.text = name
-                //itemView.setOnClickListener { itemClick(this) }
+
+                itemView.setOnClickListener {
+                    itemView.ctx.startActivity<RoomActivity>("chat" to chat)
+                }
             }
         }
     }

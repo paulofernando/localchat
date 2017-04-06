@@ -30,5 +30,6 @@
 
     <string name="empty_ribots">There aren\'t any ribots</string>
     <string name="error_loading_ribots">There was a problem loading the ribots</string>
+    <string name="button_send">Send</string>
 
 </resources>
