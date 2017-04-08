@@ -26,13 +26,13 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     @Inject
     lateinit var chatsAdapter: ChatAdapter
 
-    @BindView(R.id.usersNearbyList)
+    @BindView(R.id.chatRoomsList)
     lateinit var chatsList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
-        val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
+        val rootView = inflater!!.inflate(R.layout.fragment_dashboard_chats, container, false)
         ButterKnife.bind(this, rootView)
 
         chatsList.adapter = chatsAdapter

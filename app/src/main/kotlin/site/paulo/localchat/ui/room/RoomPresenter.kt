@@ -1,14 +1,11 @@
 package site.paulo.localchat.ui.signin
 
-import android.os.UserManager
-import android.util.Log
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.squareup.leakcanary.internal.LeakCanaryInternals.showNotification
+import com.google.firebase.database.ServerValue
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import java.util.ArrayList
 import javax.inject.Inject
 
 class RoomPresenter
@@ -19,9 +16,16 @@ constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
         //view.showMessages()
     }
 
-    override fun sendMessage(message: ChatMessage) {
-        firebase.getReference("chats").child("General").child("messages").push().setValue(message)
-        view.cleanMessageField()
+    override fun sendMessage(msg: ChatMessage) {
+        if(!msg.message.equals("")) {
+            val value = mutableMapOf<String, Any>()
+            value.put("name", msg.name)
+            value.put("message", msg.message)
+            value.put("timestamp", ServerValue.TIMESTAMP)
+
+            firebase.getReference("chats").child("General").child("messages").push().setValue(value)
+            view.cleanMessageField()
+        }
     }
 
     override fun registerRoomListener() {
