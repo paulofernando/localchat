@@ -7,7 +7,7 @@ import site.paulo.localchat.ui.base.MvpView
 object RoomContract {
 
     interface View : MvpView {
-        fun showMessages()
+        fun addMessage(message: ChatMessage)
         fun cleanMessageField()
     }
 

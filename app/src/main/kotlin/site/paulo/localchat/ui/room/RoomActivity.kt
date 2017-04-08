@@ -1,6 +1,8 @@
 package site.paulo.localchat.ui.room
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.Button
 import android.widget.EditText
@@ -19,14 +21,20 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     @Inject
     lateinit var presenter: RoomPresenter
 
+    @Inject
+    lateinit var roomAdapter: RoomAdapter
+
     @BindView(R.id.messageTxt)
     lateinit var messageText: EditText
 
     @BindView(R.id.sendBtn)
     lateinit var sendBtn: Button
 
-    @BindView(R.id.toolbar_room)
+    @BindView(R.id.toolbarRoom)
     lateinit var toolbar: Toolbar
+
+    @BindView(R.id.messagesList)
+    lateinit var messagesList: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +47,20 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
+        messagesList.adapter = roomAdapter
+        messagesList.layoutManager = LinearLayoutManager(this)
+
         presenter.attachView(this)
+        presenter.registerRoomListener()
 
         sendBtn.setOnClickListener {
             presenter.sendMessage(ChatMessage("Name test", "Message test"))
         }
     }
 
-    override fun showMessages() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun addMessage(message: ChatMessage) {
+        println(message.toString())
+        roomAdapter.messages.add(message)
     }
 
     override fun cleanMessageField() {
