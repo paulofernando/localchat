@@ -121,6 +121,8 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
 
+    compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
+
     // Unit tests dependencies
     testCompile jUnit
     testCompile mockito
