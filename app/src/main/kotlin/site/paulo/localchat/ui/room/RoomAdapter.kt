@@ -32,6 +32,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
     inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindMessages(message: ChatMessage) {
+            itemView.roomMessageUserName.text = message.name
             itemView.roomMessage.text = message.message
         }
     }

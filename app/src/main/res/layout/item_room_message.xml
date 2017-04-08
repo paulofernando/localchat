@@ -56,12 +56,6 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/roomMessageImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                tools:visibility="gone"/>
-
         </LinearLayout>
 
     </me.himanshusoni.chatmessageview.ChatMessageView>

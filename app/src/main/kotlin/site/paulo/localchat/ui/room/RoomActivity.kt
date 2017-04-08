@@ -54,12 +54,11 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         presenter.registerRoomListener()
 
         sendBtn.setOnClickListener {
-            presenter.sendMessage(ChatMessage("Name test", "Message test"))
+            presenter.sendMessage(ChatMessage("Username", messageText.text.toString()))
         }
     }
 
     override fun addMessage(message: ChatMessage) {
-        println(message.toString())
         roomAdapter.messages.add(message)
     }
 

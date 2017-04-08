@@ -1,5 +1,6 @@
 package site.paulo.localchat.data.model.chatgeo
 
+import com.google.firebase.database.Exclude
 import nz.bradcampbell.paperparcel.PaperParcelable
 
 data class ChatMessage(val name: String = "", val message: String = "",
