@@ -14,5 +14,6 @@ object RoomContract {
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadMessages()
         abstract fun sendMessage(message: ChatMessage)
+        abstract fun registerRoomListener()
     }
 }
