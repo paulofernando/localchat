@@ -13,7 +13,7 @@ class RoomAdapter
 @Inject
 constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
-    var messages = emptyList<ChatMessage>()
+    var messages =  mutableListOf<ChatMessage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomAdapter.RoomViewHolder {
         val itemView = LayoutInflater.from(parent.context)

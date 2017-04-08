@@ -16,7 +16,7 @@ class RoomPresenter
 constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
 
     override fun loadMessages() {
-        view.showMessages()
+        //view.showMessages()
     }
 
     override fun sendMessage(message: ChatMessage) {
@@ -26,9 +26,8 @@ constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
 
     override fun registerRoomListener() {
         val childEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, s: String) {
-                val chat = snapshot.getValue(ChatMessage::class.java)
-
+            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
+                view.addMessage(snapshot.getValue(ChatMessage::class.java))
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {}
@@ -40,6 +39,10 @@ constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
+        firebase.getReference("chats")
+            .child("General")
+            .child("messages")
+            .addChildEventListener(childEventListener)
     }
 
 }
