@@ -8,6 +8,7 @@
     <string name="lb_create_account">Create Account</string>
     <string name="lb_already_member">Already a member? Login</string>
     <string name="lb_no_account_yet">No account yet? Create one</string>
+    <string name="lb_today">today</string>
 
     <string name="error_chars_least_number">at least 3 characters</string>
     <string name="error_email_valid">enter a valid email address</string>
