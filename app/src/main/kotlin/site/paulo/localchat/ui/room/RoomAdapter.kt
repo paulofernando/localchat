@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_room_message.view.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
+import site.paulo.localchat.ui.utils.ctx
+import site.paulo.localchat.ui.utils.formattedTime
+import java.util.Date
 import javax.inject.Inject
 
 class RoomAdapter
@@ -34,6 +37,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
         fun bindMessages(message: ChatMessage) {
             itemView.roomMessageUserName.text = message.name
             itemView.roomMessage.text = message.message
+            itemView.roomMessageTime.text = Date().formattedTime(itemView.ctx, message.timestamp)
         }
     }
 }
