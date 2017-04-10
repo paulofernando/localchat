@@ -38,13 +38,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
         fun bindChat(chat: Chat) {
             with(chat) {
-                Picasso.with(itemView.ctx)
+
+                /*Picasso.with(itemView.ctx)
                     .load(chatPic)
                     .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt(),
                         itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
                     .centerCrop()
                     .transform(CircleTransform())
-                    .into(itemView.image_chat)
+                    .into(itemView.image_chat)*/
 
                 itemView.text_name_chat.text = name
 
