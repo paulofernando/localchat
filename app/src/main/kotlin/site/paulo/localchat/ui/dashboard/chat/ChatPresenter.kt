@@ -42,6 +42,7 @@ constructor(private val dataManager: DataManager,
                 for (chatSnapshot in dataSnapshot.children) {
                     chatList.add(chatSnapshot.getValue(Chat::class.java))
                 }
+                loadProfilePicture(chatList)
                 view.showChats(chatList.toList())
             }
 
@@ -52,7 +53,10 @@ constructor(private val dataManager: DataManager,
         }
 
         firebaseDatabase.getReference("chats").addValueEventListener(valueEventListener)
+    }
 
+    override fun loadProfilePicture(chatList: List<Chat>) {
+        //TODO
     }
 
     private val compositeSubscription = CompositeSubscription()
