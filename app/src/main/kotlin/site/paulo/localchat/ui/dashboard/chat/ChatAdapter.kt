@@ -18,7 +18,7 @@ class ChatAdapter
 @Inject
 constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
-    var chats = emptyList<Chat>()
+    var chats = mutableListOf<Chat>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -37,22 +37,26 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
-            with(chat) {
 
-                /*Picasso.with(itemView.ctx)
-                    .load(chatPic)
-                    .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt(),
-                        itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
-                    .centerCrop()
-                    .transform(CircleTransform())
-                    .into(itemView.image_chat)*/
+            //chat.users.keys.indexOf("kGbfdjuhsug") //TODO change to getCurrentUserId
+            var otherUserIndex: Int = 0;
+            if (chat.users.keys.indexOf("kGbfdjuhsug") == 0) otherUserIndex = 1
 
-                itemView.text_name_chat.text = name
+            itemView.text_name_chat.text =
+                chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
 
-                itemView.setOnClickListener {
-                    itemView.ctx.startActivity<RoomActivity>("chat" to chat)
-                }
+            Picasso.with(itemView.ctx)
+                .load(chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.profilePic)
+                .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt(),
+                    itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
+                .centerCrop()
+                .transform(CircleTransform())
+                .into(itemView.image_chat)
+
+            itemView.setOnClickListener {
+                itemView.ctx.startActivity<RoomActivity>("chat" to chat)
             }
+
         }
     }
 }
