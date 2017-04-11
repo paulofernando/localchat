@@ -1,23 +1,15 @@
 package site.paulo.localchat.ui.user
 
-import android.util.Log
-import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.FunctionSubscriber
-import rx.lang.kotlin.addTo
-import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -27,16 +19,24 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val firebaseDatabase: FirebaseDatabase) : ChatContract.Presenter() {
 
-    val CHILD_MESSAGES = "messages"
+    val CHILD_CHATS = "chats"
     val CHILD_USERS = "users"
 
-    private lateinit var databaseRef: DatabaseReference
+    override fun loadChatRooms() {
+        firebaseDatabase.getReference(CHILD_USERS).child("kGbfdjuhsug")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                println("We're done loading user information")
+                val user = dataSnapshot.getValue(User::class.java)
+                loadChat(user.chats.keys.elementAt(0)) //TODO
+            }
 
-    private val groupsChildEventListener: ChildEventListener? = null
+            override fun onCancelled(databaseError: DatabaseError) {
+                println(databaseError.toString())
+            }
+        })
 
-    override fun loadChats() {
-        val valueEventListener = object : ValueEventListener {
-
+        /*val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var chatList: MutableList<Chat> = mutableListOf<Chat>()
                 for (chatSnapshot in dataSnapshot.children) {
@@ -52,7 +52,20 @@ constructor(private val dataManager: DataManager,
             }
         }
 
-        firebaseDatabase.getReference("chats").addValueEventListener(valueEventListener)
+        firebaseDatabase.getReference("chats").addValueEventListener(valueEventListener)*/
+    }
+
+    override fun loadChat(chatId: String) {
+        firebaseDatabase.getReference(CHILD_CHATS).child(chatId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    view.showChat(dataSnapshot.getValue(Chat::class.java))
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    println(databaseError.toString())
+                }
+            })
     }
 
     override fun loadProfilePicture(chatList: List<Chat>) {

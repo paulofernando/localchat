@@ -39,18 +39,23 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         chatsList.layoutManager = LinearLayoutManager(activity)
 
         presenter.attachView(this)
-        presenter.loadChats()
+        presenter.loadChatRooms()
 
         return rootView
     }
 
     override fun showChats(chats: List<Chat>) {
-        chatsAdapter.chats = chats
+        chatsAdapter.chats = chats.toMutableList()
+        chatsAdapter.notifyDataSetChanged()
+    }
+
+    override fun showChat(chat: Chat) {
+        chatsAdapter.chats.add(chat)
         chatsAdapter.notifyDataSetChanged()
     }
 
     override fun showChatsEmpty() {
-        chatsAdapter.chats = emptyList()
+        chatsAdapter.chats = mutableListOf<Chat>()
         chatsAdapter.notifyDataSetChanged()
         Toast.makeText(activity, R.string.empty_ribots, Toast.LENGTH_LONG).show()
     }
