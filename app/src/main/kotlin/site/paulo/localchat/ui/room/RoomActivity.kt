@@ -12,8 +12,8 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.signin.RoomContract
-import site.paulo.localchat.ui.signin.RoomPresenter
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getCurrentUserId
 import javax.inject.Inject
 
 class RoomActivity : BaseActivity() , RoomContract.View {
@@ -42,7 +42,11 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         setContentView(R.layout.activity_room)
         ButterKnife.bind(this)
 
-        toolbar.title = intent.getParcelableExtra<Chat>("chat").name
+        var otherUserIndex: Int = 0;
+        var chat: Chat = intent.getParcelableExtra<Chat>("chat");
+        if (chat.users.keys.indexOf(Utils.getCurrentUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
+        toolbar.title = chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
+
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -51,16 +55,17 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         messagesList.layoutManager = LinearLayoutManager(this)
 
         presenter.attachView(this)
-        presenter.registerRoomListener()
+        presenter.registerRoomListener(chat.id)
 
         sendBtn.setOnClickListener {
-            presenter.sendMessage(ChatMessage("Username", messageText.text.toString()), "cH58hajvh")
+            presenter.sendMessage(ChatMessage(Utils.getCurrentUserId(), messageText.text.toString()), "cH58hajvh")
         }
     }
 
     override fun addMessage(message: ChatMessage) {
         roomAdapter.messages.add(message)
         messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
+        roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
     }
 
     override fun cleanMessageField() {
