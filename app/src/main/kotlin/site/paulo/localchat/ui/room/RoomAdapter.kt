@@ -35,7 +35,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
     inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindMessages(message: ChatMessage) {
-            itemView.roomMessageUserName.text = message.name
+            itemView.roomMessageUserName.text = message.owner
             itemView.roomMessage.text = message.message
             itemView.roomMessageTime.text = Date().formattedTime(itemView.ctx, message.timestamp)
         }

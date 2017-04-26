@@ -11,7 +11,9 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
+import site.paulo.localchat.ui.utils.getCurrentUserId
 import javax.inject.Inject
 
 class ChatAdapter
@@ -38,9 +40,8 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
         fun bindChat(chat: Chat) {
 
-            //chat.users.keys.indexOf("kGbfdjuhsug") //TODO change to getCurrentUserId
             var otherUserIndex: Int = 0;
-            if (chat.users.keys.indexOf("kGbfdjuhsug") == 0) otherUserIndex = 1
+            if (chat.users.keys.indexOf(Utils.getCurrentUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
 
             itemView.text_name_chat.text =
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
