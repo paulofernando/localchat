@@ -40,11 +40,13 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
         fun bindChat(chat: Chat) {
 
-            var otherUserIndex: Int = 0;
+            var otherUserIndex: Int = 0
             if (chat.users.keys.indexOf(Utils.getCurrentUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
 
             itemView.text_name_chat.text =
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
+
+            itemView.text_last_message_chat.text = chat.lastMessage
 
             Picasso.with(itemView.ctx)
                 .load(chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.profilePic)
