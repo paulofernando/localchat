@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.Button
 import android.widget.EditText
+import at.markushi.ui.CircleButton
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
@@ -28,7 +29,7 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     lateinit var messageText: EditText
 
     @BindView(R.id.sendBtn)
-    lateinit var sendBtn: Button
+    lateinit var sendBtn: CircleButton
 
     @BindView(R.id.toolbarRoom)
     lateinit var toolbar: Toolbar

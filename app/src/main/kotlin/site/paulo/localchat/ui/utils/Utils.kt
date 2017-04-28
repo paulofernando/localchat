@@ -7,3 +7,8 @@ class Utils {
 fun Utils.Companion.getCurrentUserId(): String {
     return "kGbfdjuhsug"
 }
+
+//TODO Temp
+fun Utils.Companion.isMe(id: String): Boolean {
+    return id.equals("kGbfdjuhsug")
+}

@@ -74,6 +74,7 @@ android {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven { url 'https://jitpack.io' }
 }
 
@@ -121,8 +122,6 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
 
-    compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
-
     // Unit tests dependencies
     testCompile jUnit
     testCompile mockito
@@ -130,6 +129,8 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-core:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-library:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-integration:$HAMCREST_VERSION"
+
+    compile 'com.github.markushi:circlebutton:1.1'
 
     // Instrumentation test dependencies
     androidTestCompile jUnit
