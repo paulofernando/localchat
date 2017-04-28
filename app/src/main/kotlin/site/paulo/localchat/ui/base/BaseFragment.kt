@@ -11,7 +11,7 @@ import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 
-open class BaseFragment: Fragment() {
+open class BaseFragment : Fragment() {
 
     companion object {
         @JvmStatic private val KEY_ACTIVITY_ID = "KEY_ACTIVITY_ID"
@@ -40,8 +40,8 @@ open class BaseFragment: Fragment() {
             val component = (activity.application.applicationContext as BoilerplateApplication).applicationComponent
 
             DaggerConfigPersistentComponent.builder()
-                    .applicationComponent(component)
-                    .build()
+                .applicationComponent(component)
+                .build()
         })
 
         activityComponent = configPersistentComponent.activityComponent(ActivityModule(activity))

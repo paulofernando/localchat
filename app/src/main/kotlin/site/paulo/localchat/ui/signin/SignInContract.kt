@@ -6,11 +6,11 @@ import site.paulo.localchat.ui.base.MvpView
 
 object SignInContract {
 
-    interface View: MvpView {
+    interface View : MvpView {
         fun showSuccessFullSignIn()
     }
 
-    abstract class Presenter: BaseMvpPresenter<View>() {
+    abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun signIn(email: String)
     }
 }

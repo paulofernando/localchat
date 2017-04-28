@@ -12,12 +12,12 @@ import javax.inject.Singleton
 @Singleton
 class DataManager
 @Inject constructor(private val ribotsService: RibotsService,
-                    private val chatGeoService: ChatGeoService,
-                    private val databaseHelper: DatabaseHelper) {
+    private val chatGeoService: ChatGeoService,
+    private val databaseHelper: DatabaseHelper) {
 
     fun syncRibots(): Observable<Ribot> {
         return ribotsService.getRibots()
-                .concatMap { databaseHelper.setRibots(it) }
+            .concatMap { databaseHelper.setRibots(it) }
     }
 
     fun getRibots(): Observable<List<Ribot>> {
@@ -25,6 +25,6 @@ class DataManager
     }
 
     fun getUsers(): Observable<List<User>> {
-        return chatGeoService.getUsers();
+        return chatGeoService.getUsers()
     }
 }

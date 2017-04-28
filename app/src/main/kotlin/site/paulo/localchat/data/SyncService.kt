@@ -32,8 +32,8 @@ class SyncService : Service() {
     override fun onCreate() {
         super.onCreate()
         (applicationContext as BoilerplateApplication)
-                .applicationComponent
-                .inject(this)
+            .applicationComponent
+            .inject(this)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -49,16 +49,16 @@ class SyncService : Service() {
         subscription?.let { if (!it.isUnsubscribed) it.unsubscribe() }
 
         subscription = dataManager.syncRibots()
-                .subscribeOn(Schedulers.io())
-                .subscribe(FunctionSubscriber<Ribot>()
-                        .onCompleted {
-                            Timber.i("Synced successfully!")
-                            stopSelf(startId)
-                        }
-                        .onError {
-                            Timber.w(it, "Error syncing.")
-                            stopSelf(startId)
-                        })
+            .subscribeOn(Schedulers.io())
+            .subscribe(FunctionSubscriber<Ribot>()
+                .onCompleted {
+                    Timber.i("Synced successfully!")
+                    stopSelf(startId)
+                }
+                .onError {
+                    Timber.w(it, "Error syncing.")
+                    stopSelf(startId)
+                })
 
         return Service.START_STICKY
     }

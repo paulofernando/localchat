@@ -27,8 +27,8 @@ class DatabaseHelper @Inject constructor(val db: BriteDatabase) {
 
                 newRibots.forEach {
                     val result = db.insert(Db.RibotProfileTable.TABLE_NAME,
-                            Db.RibotProfileTable.toContentValues(it.profile),
-                            SQLiteDatabase.CONFLICT_REPLACE)
+                        Db.RibotProfileTable.toContentValues(it.profile),
+                        SQLiteDatabase.CONFLICT_REPLACE)
                     if (result >= 0) subscriber.onNext(it)
                 }
 
@@ -44,8 +44,8 @@ class DatabaseHelper @Inject constructor(val db: BriteDatabase) {
 
     fun getRibots(): Observable<List<Ribot>> {
         return db.createQuery(Db.RibotProfileTable.TABLE_NAME,
-                "SELECT * FROM ${Db.RibotProfileTable.TABLE_NAME}")
-                .mapToList { Ribot(Db.RibotProfileTable.parseCursor(it)) }
+            "SELECT * FROM ${Db.RibotProfileTable.TABLE_NAME}")
+            .mapToList { Ribot(Db.RibotProfileTable.parseCursor(it)) }
     }
 
 }

@@ -14,6 +14,7 @@ import android.view.*
 import rx.exceptions.AssemblyStackTraceException.find
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
+import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 
 class DashboardActivity : BaseActivity() {
@@ -97,7 +98,7 @@ class DashboardActivity : BaseActivity() {
     class PlaceholderFragment : Fragment() {
 
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
+            savedInstanceState: Bundle?): View? {
             val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
             return rootView
         }
@@ -132,7 +133,8 @@ class DashboardActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return UsersNearbyFragment();
+            return if(position == 0) UsersNearbyFragment()
+                   else ChatFragment()
             //else return PlaceholderFragment.newInstance(position + 1)
         }
 
