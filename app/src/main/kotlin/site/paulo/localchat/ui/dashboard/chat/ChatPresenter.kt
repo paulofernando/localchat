@@ -10,6 +10,8 @@ import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getCurrentUserId
 import javax.inject.Inject
 
 
@@ -23,7 +25,7 @@ constructor(private val dataManager: DataManager,
     val CHILD_USERS = "users"
 
     override fun loadChatRooms() {
-        firebaseDatabase.getReference(CHILD_USERS).child("kGbfdjuhsug")
+        firebaseDatabase.getReference(CHILD_USERS).child(Utils.getCurrentUserId())
             .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println("We're done loading user information")

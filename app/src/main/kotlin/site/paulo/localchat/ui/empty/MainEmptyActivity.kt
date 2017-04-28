@@ -20,6 +20,8 @@ class MainEmptyActivity : BaseActivity() {
             activityIntent = Intent(this, SignInActivity::class.java)
         }*/
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
         startActivity(activityIntent)
         finish()
 
