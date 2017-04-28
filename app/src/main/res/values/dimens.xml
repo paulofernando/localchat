@@ -4,7 +4,7 @@
     <dimen name="text_title">20sp</dimen>
     <dimen name="text_large_body">18sp</dimen>
     <dimen name="text_body">16sp</dimen>
-    <dimen name="text_small_body">14sp</dimen>
+    <dimen name="text_small_body">12sp</dimen>
 
     <dimen name="spacing_micro">4dp</dimen>
     <dimen name="spacing_normal">8dp</dimen>
@@ -14,6 +14,8 @@
 
     <dimen name="image_width_user">150dp</dimen>
     <dimen name="image_height_user">150dp</dimen>
+    <dimen name="image_width_chat">50dp</dimen>
+    <dimen name="image_height_chat">50dp</dimen>
 
     <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>

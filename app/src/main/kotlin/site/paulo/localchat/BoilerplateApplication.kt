@@ -9,7 +9,7 @@ import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule
 import site.paulo.localchat.BuildConfig
 
-class BoilerplateApplication: Application() {
+class BoilerplateApplication : Application() {
 
     lateinit var applicationComponent: ApplicationComponent
         private set
@@ -31,7 +31,7 @@ class BoilerplateApplication: Application() {
     @VisibleForTesting
     fun initDaggerComponent() {
         applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(ApplicationModule(this))
-                .build()
+            .applicationModule(ApplicationModule(this))
+            .build()
     }
 }

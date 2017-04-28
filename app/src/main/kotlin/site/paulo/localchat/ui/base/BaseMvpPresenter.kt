@@ -9,7 +9,8 @@ open class BaseMvpPresenter<T : MvpView> : MvpPresenter<T> {
 
     private var _view: T? = null
     val view: T
-        get() { return _view ?: throw BaseMvpPresenter.MvpViewNotAttachedException()
+        get() {
+            return _view ?: throw BaseMvpPresenter.MvpViewNotAttachedException()
         }
 
     override fun attachView(view: T) {
@@ -21,5 +22,5 @@ open class BaseMvpPresenter<T : MvpView> : MvpPresenter<T> {
     }
 
     class MvpViewNotAttachedException : RuntimeException(
-            "Please call Presenter.attachView(MvpView) before requesting data to the Presenter")
+        "Please call Presenter.attachView(MvpView) before requesting data to the Presenter")
 }

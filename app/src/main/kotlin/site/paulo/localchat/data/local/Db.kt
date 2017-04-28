@@ -49,12 +49,12 @@ object Db {
             val name = Name(cursor.getString(COLUMN_FIRST_NAME), cursor.getString(COLUMN_LAST_NAME))
 
             return Profile(
-                    email = cursor.getString(COLUMN_EMAIL),
-                    name = name,
-                    hexColor = cursor.getString(COLUMN_HEX_COLOR),
-                    dateOfBirth = Date(cursor.getLong(COLUMN_DATE_OF_BIRTH)),
-                    avatar = cursor.getString(COLUMN_AVATAR),
-                    bio = cursor.getString(COLUMN_BIO))
+                email = cursor.getString(COLUMN_EMAIL),
+                name = name,
+                hexColor = cursor.getString(COLUMN_HEX_COLOR),
+                dateOfBirth = Date(cursor.getLong(COLUMN_DATE_OF_BIRTH)),
+                avatar = cursor.getString(COLUMN_AVATAR),
+                bio = cursor.getString(COLUMN_BIO))
         }
     }
 }

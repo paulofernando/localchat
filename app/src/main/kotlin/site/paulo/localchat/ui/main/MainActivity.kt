@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), MainContract.View {
 
     val EXTRA_TRIGGER_SYNC_FLAG =
-            "site.paulo.localchat.ui.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG"
+        "site.paulo.localchat.ui.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG"
 
     @Inject
     lateinit var presenter: MainPresenter
