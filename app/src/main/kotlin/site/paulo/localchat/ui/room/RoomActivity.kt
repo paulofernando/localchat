@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 import android.widget.Button
 import android.widget.EditText
 import at.markushi.ui.CircleButton
@@ -67,6 +68,11 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         roomAdapter.messages.add(message)
         messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_room, menu)
+        return true
     }
 
     override fun cleanMessageField() {
