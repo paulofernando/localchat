@@ -7,6 +7,7 @@ object SignUpContract {
 
     interface View : MvpView {
         fun showSuccessFullSignUp()
+        fun validate(): Boolean
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {
