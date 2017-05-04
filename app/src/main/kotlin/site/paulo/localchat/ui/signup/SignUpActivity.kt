@@ -82,38 +82,38 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         val gender = inGender.text.toString()
 
         if (name.isEmpty() || name.length < 6) {
-            inName.setError("at least 6 characters")
+            inName.error = "at least 6 characters"
             valid = false
         } else {
-            inName.setError(null)
+            inName.error = null
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            inEmail.setError("enter a valid email address")
+            inEmail.error = "enter a valid email address"
             valid = false
         } else {
-            inEmail.setError(null)
+            inEmail.error = null
         }
 
         if (password.isEmpty() || password.length < 4 || password.length > 10) {
-            inPassword.setError("between 4 and 10 alphanumeric characters")
+            inPassword.error = "between 4 and 10 alphanumeric characters"
             valid = false
         } else {
-            inPassword.setError(null)
+            inPassword.error = null
         }
 
         if (age.isEmpty() || !(age.toInt() in 100..17)) {
-            inAge.setError("between 18 and 99")
+            inAge.error = "between 18 and 99"
             valid = false
         } else {
-            inAge.setError(null)
+            inAge.error = null
         }
 
         if (gender.isEmpty() || !gender.equals("m") && !gender.equals("f")) {
-            inGender.setError("f or m")
+            inGender.error = "f or m"
             valid = false
         } else {
-            inGender.setError(null)
+            inGender.error = null
         }
 
         return valid
