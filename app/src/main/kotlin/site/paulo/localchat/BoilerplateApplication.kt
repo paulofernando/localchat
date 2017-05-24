@@ -3,11 +3,10 @@ package site.paulo.localchat
 import android.app.Application
 import android.support.annotation.VisibleForTesting
 import com.squareup.leakcanary.LeakCanary
-import timber.log.Timber
 import site.paulo.localchat.injection.component.ApplicationComponent
 import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule
-import site.paulo.localchat.BuildConfig
+import timber.log.Timber
 
 class BoilerplateApplication : Application() {
 
