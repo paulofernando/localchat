@@ -1,5 +1,6 @@
 package site.paulo.localchat.injection.module
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
@@ -13,6 +14,12 @@ class FirebaseModule {
     @Singleton
     fun provideFirebaseDatabase(): FirebaseDatabase {
         return FirebaseDatabase.getInstance(FirebaseApp.getInstance())
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance(FirebaseApp.getInstance() as FirebaseApp)
     }
 
 }

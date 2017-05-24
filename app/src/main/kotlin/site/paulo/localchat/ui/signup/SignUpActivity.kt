@@ -13,6 +13,7 @@ import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
+import site.paulo.localchat.ui.main.MainActivity
 import javax.inject.Inject
 
 class SignUpActivity : BaseActivity(), SignUpContract.View {
@@ -60,7 +61,8 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         presenter.attachView(this)
 
         btnCreate.setOnClickListener {
-            validate()
+            if(validate()) presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
+                inName.text.toString(), inAge.text.toString(), inGender.text.toString())
         }
 
         linkSignIn.setOnClickListener {
@@ -69,7 +71,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     }
 
     override fun showSuccessFullSignUp() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startActivity<DashboardActivity>()
     }
 
     override fun validate(): Boolean {
@@ -102,7 +104,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
             inPassword.error = null
         }
 
-        if (age.isEmpty() || !(age.toInt() in 100..17)) {
+        if (age.isEmpty() || age.toInt() !in 17..100) {
             inAge.error = "between 18 and 99"
             valid = false
         } else {
