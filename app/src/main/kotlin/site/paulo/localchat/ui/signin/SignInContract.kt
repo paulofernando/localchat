@@ -12,5 +12,6 @@ object SignInContract {
 
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun signIn(email: String)
+        abstract fun isAuthenticated()
     }
 }
