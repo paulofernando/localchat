@@ -2,13 +2,10 @@ package site.paulo.localchat.ui.signin
 
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.AppCompatButton
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import org.jetbrains.anko.startActivity
@@ -45,10 +42,11 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         setContentView(R.layout.activity_sign_in)
         ButterKnife.bind(this)
 
+        presenter.isAuthenticated() //if authenticated, sign in
         presenter.attachView(this)
 
         btnLogin.setOnClickListener {
-            startActivity<DashboardActivity>()
+            showSuccessFullSignIn()
         }
 
         linkSignUp.setOnClickListener {
@@ -57,7 +55,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     }
 
     override fun showSuccessFullSignIn() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startActivity<DashboardActivity>()
     }
 
     override fun onDestroy() {
