@@ -5,12 +5,14 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import java.util.concurrent.Executors.newSingleThreadExecutor
 import javax.inject.Inject
 
 class SignUpPresenter
 @Inject
-constructor(private val firebaseAuth: FirebaseAuth) : SignUpContract.Presenter() {
+constructor(private val firebaseAuth: FirebaseAuth, private val firebase: FirebaseDatabase)
+    : SignUpContract.Presenter() {
 
     override fun signUp(email: String, password: String, name: String, age: String, gender: String) {
 
@@ -23,12 +25,20 @@ constructor(private val firebaseAuth: FirebaseAuth) : SignUpContract.Presenter()
                         println("Sign up failed")
                     } else {
                         println("Signed up")
-
+                        registerUser(email, name, age, gender);
                         view.showSuccessFullSignUp()
                     }
                 }
 
             })
+    }
 
+    private fun registerUser(email: String, name: String, age: String, gender: String) {
+        val value = mutableMapOf<String, Any>()
+        value.put("email", email)
+        value.put("name", name)
+        value.put("age", age)
+        value.put("gender", gender)
+        firebase.getReference("users").push().setValue(value)
     }
 }
