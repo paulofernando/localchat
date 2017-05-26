@@ -14,6 +14,7 @@
 
     <string name="action_attach_image">Attach image</string>
     <string name="action_settings">Settings</string>
+    <string name="action_signout">Sign out</string>
 
     <string name="error_chars_least_number">at least 3 characters</string>
     <string name="error_email_valid">enter a valid email address</string>
