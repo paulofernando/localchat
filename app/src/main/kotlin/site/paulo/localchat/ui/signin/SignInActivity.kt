@@ -2,18 +2,17 @@ package site.paulo.localchat.ui.signin
 
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.AppCompatButton
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
+import site.paulo.localchat.ui.signup.SignUpActivity
 import javax.inject.Inject
 
 class SignInActivity : BaseActivity(), SignInContract.View {
@@ -23,6 +22,9 @@ class SignInActivity : BaseActivity(), SignInContract.View {
 
     @BindView(R.id.btnLogin)
     lateinit var btnLogin: Button
+
+    @BindView(R.id.link_signup)
+    lateinit var linkSignUp: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +42,20 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         setContentView(R.layout.activity_sign_in)
         ButterKnife.bind(this)
 
+        presenter.isAuthenticated() //if authenticated, sign in
         presenter.attachView(this)
 
         btnLogin.setOnClickListener {
-            startActivity<DashboardActivity>()
+            showSuccessFullSignIn()
+        }
+
+        linkSignUp.setOnClickListener {
+            startActivity<SignUpActivity>()
         }
     }
 
     override fun showSuccessFullSignIn() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startActivity<DashboardActivity>()
     }
 
     override fun onDestroy() {

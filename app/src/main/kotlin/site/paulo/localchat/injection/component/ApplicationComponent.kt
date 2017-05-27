@@ -2,6 +2,7 @@ package site.paulo.localchat.injection.component
 
 import android.app.Application
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Component
 import site.paulo.localchat.data.DataManager
@@ -25,4 +26,5 @@ interface ApplicationComponent {
     fun databaseHelper(): DatabaseHelper
     fun dataManager(): DataManager
     fun firebaseDatabase(): FirebaseDatabase
+    fun firebaseAuth(): FirebaseAuth
 }
