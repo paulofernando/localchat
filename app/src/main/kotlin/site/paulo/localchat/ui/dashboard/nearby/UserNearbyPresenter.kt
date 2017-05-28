@@ -28,7 +28,6 @@ constructor(private val dataManager: DataManager, private val firebase: Firebase
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<List<User>>()
                 .onNext {
-                    //println(it.toString());
                     if (it.isEmpty()) view.showNearbyUsersEmpty() else view.showNearbyUsers(it)
                 }
                 .onError {
