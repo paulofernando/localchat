@@ -5,10 +5,9 @@ import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.local.DatabaseHelper
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
+import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.data.model.ribot.Ribot
-import site.paulo.localchat.data.remote.ChatGeoService
 import site.paulo.localchat.data.remote.RibotsService
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,9 +15,11 @@ import javax.inject.Singleton
 @Singleton
 class DataManager
 @Inject constructor(private val ribotsService: RibotsService,
-    private val chatGeoService: ChatGeoService,
     private val databaseHelper: DatabaseHelper,
     private val firebaseDatabase: FirebaseDatabase) {
+
+    val CHILD_CHATS = "chats"
+    val CHILD_USERS = "users"
 
     fun syncRibots(): Observable<Ribot> {
         return ribotsService.getRibots()
@@ -30,8 +31,12 @@ class DataManager
     }
 
     fun getUsers(): Observable<List<User>> {
-        //return chatGeoService.getUsers()
-        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference("users"),
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS),
             DataSnapshotMapper.listOf(User::class.java));
+    }
+
+    fun getChatRooms(chatId:String): Observable<Chat> {
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_CHATS).child(chatId),
+            Chat::class.java);
     }
 }
