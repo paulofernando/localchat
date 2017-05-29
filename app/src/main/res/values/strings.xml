@@ -34,8 +34,10 @@
     <string name="tab_title_1">NEARBY</string>
     <string name="tab_title_2">CHATS</string>
 
-    <string name="empty_ribots">There aren\'t any ribots</string>
-    <string name="error_loading_ribots">There was a problem loading the ribots</string>
+    <string name="empty_chat">There aren\'t any messages</string>
+    <string name="error_loading_chat">There was a problem loading the messages</string>
+    <string name="empty_nearby_users">There isn\'t any nearby user</string>
+    <string name="error_loading_nearby_users">There was a problem loading the nearby users</string>
     <string name="button_send">Send</string>
 
 </resources>

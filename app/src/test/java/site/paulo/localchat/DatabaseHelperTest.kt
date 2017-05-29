@@ -9,13 +9,9 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 import rx.observers.TestSubscriber
-import site.paulo.localchat.data.local.DatabaseHelper
-import site.paulo.localchat.data.local.DbOpenHelper
-import site.paulo.localchat.data.model.ribot.Ribot
 
 import junit.framework.Assert.assertEquals
 import rx.android.schedulers.AndroidSchedulers
-import site.paulo.localchat.data.local.Db
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.util.DefaultConfig
 import site.paulo.localchat.util.RxSchedulersOverrideRule
@@ -30,7 +26,7 @@ class DatabaseHelperTest {
     @Rule @JvmField
     val overrideSchedulersRule = RxSchedulersOverrideRule()
 
-    val databaseHelper: DatabaseHelper by lazy {
+    /*val databaseHelper: DatabaseHelper by lazy {
         val dbHelper = DbOpenHelper(RuntimeEnvironment.application)
         val sqlBrite = SqlBrite.Builder()
                 .build()
@@ -68,5 +64,5 @@ class DatabaseHelperTest {
         databaseHelper.getRibots().subscribe(result)
         result.assertNoErrors()
         result.assertValue(ribots)
-    }
+    }*/
 }

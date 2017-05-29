@@ -57,11 +57,11 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     override fun showChatsEmpty() {
         chatsAdapter.chats = mutableListOf<Chat>()
         chatsAdapter.notifyDataSetChanged()
-        Toast.makeText(activity, R.string.empty_ribots, Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, R.string.empty_chat, Toast.LENGTH_LONG).show()
     }
 
     override fun showError() {
-        Toast.makeText(activity, R.string.error_loading_ribots, Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, R.string.error_loading_chat, Toast.LENGTH_LONG).show()
     }
 
 }
