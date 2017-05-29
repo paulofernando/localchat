@@ -12,9 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner
 import rx.Observable
 import rx.observers.TestSubscriber
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.local.DatabaseHelper
-import site.paulo.localchat.data.model.ribot.Ribot
-import site.paulo.localchat.data.remote.RibotsService
 
 import org.mockito.Mockito.anyListOf
 import site.paulo.localchat.data.remote.ChatGeoService
@@ -31,7 +28,7 @@ import site.paulo.localchat.test.common.TestDataFactory
 @RunWith(MockitoJUnitRunner::class)
 class DataManagerTest {
 
-    @Mock
+    /*@Mock
     lateinit var mockDatabaseHelper: DatabaseHelper
 
     @Mock
@@ -83,5 +80,5 @@ class DataManagerTest {
         // Stub calls to the ribot service and database helper.
         whenever(mockRibotsService.getRibots()).thenReturn(Observable.just(ribots))
         whenever(mockDatabaseHelper.setRibots(ribots)).thenReturn(Observable.from(ribots))
-    }
+    }*/
 }

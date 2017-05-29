@@ -1,6 +1,5 @@
 package site.paulo.localchat.ui.signin
 
-import site.paulo.localchat.data.model.ribot.Ribot
 import site.paulo.localchat.ui.base.BaseMvpPresenter
 import site.paulo.localchat.ui.base.MvpView
 
