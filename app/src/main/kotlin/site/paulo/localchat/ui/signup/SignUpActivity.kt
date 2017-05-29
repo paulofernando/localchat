@@ -13,7 +13,6 @@ import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
-import site.paulo.localchat.ui.main.MainActivity
 import javax.inject.Inject
 
 class SignUpActivity : BaseActivity(), SignUpContract.View {

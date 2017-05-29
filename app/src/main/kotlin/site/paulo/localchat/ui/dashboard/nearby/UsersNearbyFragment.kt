@@ -51,11 +51,11 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     override fun showNearbyUsersEmpty() {
         usersAdapter.users = emptyList()
         usersAdapter.notifyDataSetChanged()
-        Toast.makeText(activity, R.string.empty_ribots, Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, R.string.empty_nearby_users, Toast.LENGTH_LONG).show()
     }
 
     override fun showError() {
-        Toast.makeText(activity, R.string.error_loading_ribots, Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, R.string.error_loading_nearby_users, Toast.LENGTH_LONG).show()
     }
 
 }

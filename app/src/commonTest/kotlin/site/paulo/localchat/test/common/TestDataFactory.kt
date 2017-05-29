@@ -1,8 +1,5 @@
 package site.paulo.localchat.test.common
 
-import site.paulo.localchat.data.model.ribot.Name
-import site.paulo.localchat.data.model.ribot.Profile
-import site.paulo.localchat.data.model.ribot.Ribot
 import java.util.*
 
 object TestDataFactory {
@@ -11,7 +8,7 @@ object TestDataFactory {
         return UUID.randomUUID().toString()
     }
 
-    @JvmStatic fun makeRibot(uniqueSuffix: String): Ribot {
+    /*@JvmStatic fun makeRibot(uniqueSuffix: String): Ribot {
         return Ribot(makeProfile(uniqueSuffix))
     }
 
@@ -35,5 +32,5 @@ object TestDataFactory {
 
     @JvmStatic fun makeName(uniqueSuffix: String): Name {
         return Name("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix)
-    }
+    }*/
 }

@@ -9,7 +9,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import site.paulo.localchat.data.remote.ChatGeoService
-import site.paulo.localchat.data.remote.RibotsService
 import javax.inject.Singleton
 
 @Module
@@ -27,18 +26,6 @@ class ApiModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRibotsService(okHttpClient: OkHttpClient, gson: Gson): RibotsService {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl("https://api.ribot.io/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .build()
-            .create(RibotsService::class.java)
     }
 
     @Provides
