@@ -9,3 +9,4 @@
 */build
 /*.jks
 /app/google-services.json
+/app/keystore
