@@ -11,6 +11,6 @@ object SignUpContract {
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {
-        abstract fun signUp(email: String, password: String, name: String, age: String, gender: String)
+        abstract fun signUp(email: String, password: String, name: String, age: Long, gender: String)
     }
 }
