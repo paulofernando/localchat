@@ -2,6 +2,8 @@ package site.paulo.localchat.ui.signup
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -9,6 +11,8 @@ import android.widget.EditText
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
@@ -60,8 +64,11 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         presenter.attachView(this)
 
         btnCreate.setOnClickListener {
-            if(validate()) presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
-                inName.text.toString(), inAge.text.toString(), inGender.text.toString())
+            if(validate()) {
+                spinnerDialog = indeterminateProgressDialog(R.string.authenticating)
+                presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
+                    inName.text.toString(), inAge.text.toString().toLong(), inGender.text.toString())
+            }
         }
 
         linkSignIn.setOnClickListener {
@@ -70,7 +77,13 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     }
 
     override fun showSuccessFullSignUp() {
+        spinnerDialog?.cancel()
         startActivity<DashboardActivity>()
+    }
+
+    override fun showFailSignUp() {
+        spinnerDialog?.cancel()
+        Handler(Looper.getMainLooper()).post({ alert(R.string.registration_failed){  }.show() })
     }
 
     override fun validate(): Boolean {
@@ -79,7 +92,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         val email = inEmail.text.toString()
         val password = inPassword.text.toString()
         val name = inName.text.toString()
-        val age = inAge.text.toString()
+        val age = inAge.text.toString().toLong()
         val gender = inGender.text.toString()
 
         if (name.isEmpty() || name.length < 6) {
@@ -89,21 +102,21 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
             inName.error = null
         }
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (inEmail.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             inEmail.error = "enter a valid email address"
             valid = false
         } else {
             inEmail.error = null
         }
 
-        if (password.isEmpty() || password.length < 4 || password.length > 10) {
+        if (inPassword.text.isEmpty() || password.length < 4 || password.length > 10) {
             inPassword.error = "between 4 and 10 alphanumeric characters"
             valid = false
         } else {
             inPassword.error = null
         }
 
-        if (age.isEmpty() || age.toInt() !in 17..100) {
+        if (inAge.text.isEmpty() || age !in 17..100) {
             inAge.error = "between 18 and 99"
             valid = false
         } else {

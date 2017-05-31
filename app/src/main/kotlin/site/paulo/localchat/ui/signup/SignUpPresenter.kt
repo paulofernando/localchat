@@ -14,7 +14,7 @@ class SignUpPresenter
 constructor(private val firebaseAuth: FirebaseAuth, private val firebase: FirebaseDatabase)
     : SignUpContract.Presenter() {
 
-    override fun signUp(email: String, password: String, name: String, age: String, gender: String) {
+    override fun signUp(email: String, password: String, name: String, age: Long, gender: String) {
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(newSingleThreadExecutor(), object : OnCompleteListener<AuthResult> {
@@ -23,6 +23,7 @@ constructor(private val firebaseAuth: FirebaseAuth, private val firebase: Fireba
 
                     if (!task.isSuccessful) {
                         println("Sign up failed")
+                        view.showFailSignUp()
                     } else {
                         println("Signed up")
                         registerUser(email, name, age, gender);
@@ -33,7 +34,7 @@ constructor(private val firebaseAuth: FirebaseAuth, private val firebase: Fireba
             })
     }
 
-    private fun registerUser(email: String, name: String, age: String, gender: String) {
+    private fun registerUser(email: String, name: String, age: Long, gender: String) {
         val value = mutableMapOf<String, Any>()
         value.put("email", email)
         value.put("name", name)

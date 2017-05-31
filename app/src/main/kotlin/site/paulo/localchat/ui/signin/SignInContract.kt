@@ -7,10 +7,11 @@ object SignInContract {
 
     interface View : MvpView {
         fun showSuccessFullSignIn()
+        fun showFailSignIn()
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {
-        abstract fun signIn(email: String)
+        abstract fun signIn(email: String, password: String)
         abstract fun isAuthenticated()
     }
 }
