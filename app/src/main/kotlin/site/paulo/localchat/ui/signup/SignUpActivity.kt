@@ -2,6 +2,8 @@ package site.paulo.localchat.ui.signup
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -9,6 +11,8 @@ import android.widget.EditText
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
@@ -60,8 +64,11 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         presenter.attachView(this)
 
         btnCreate.setOnClickListener {
-            if(validate()) presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
-                inName.text.toString(), inAge.text.toString().toLong(), inGender.text.toString())
+            if(validate()) {
+                spinnerDialog = indeterminateProgressDialog(R.string.authenticating)
+                presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
+                    inName.text.toString(), inAge.text.toString().toLong(), inGender.text.toString())
+            }
         }
 
         linkSignIn.setOnClickListener {
@@ -70,7 +77,13 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     }
 
     override fun showSuccessFullSignUp() {
+        spinnerDialog?.cancel()
         startActivity<DashboardActivity>()
+    }
+
+    override fun showFailSignUp() {
+        spinnerDialog?.cancel()
+        Handler(Looper.getMainLooper()).post({ alert(R.string.registration_failed){  }.show() })
     }
 
     override fun validate(): Boolean {

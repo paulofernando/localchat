@@ -41,8 +41,6 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     @BindView(R.id.link_signup)
     lateinit var linkSignUp: TextView
 
-    var spinnerDialog: ProgressDialog? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)

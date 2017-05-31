@@ -29,6 +29,7 @@
     <string name="chars_range">between 6 and 15 alphanumeric characters</string>
     <string name="enter_valid_email">enter a valid email address</string>
     <string name="auth_failed">Email and Password don\'t match!</string>
+    <string name="registration_failed">Registration failed!</string>
     <string name="authenticating">Authenticating...</string>
 
     <string name="section_format">Hello World from section: %1$d</string>

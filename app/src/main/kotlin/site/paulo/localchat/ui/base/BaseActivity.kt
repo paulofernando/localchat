@@ -1,5 +1,6 @@
 package site.paulo.localchat.ui.base
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import timber.log.Timber
@@ -12,6 +13,8 @@ import java.util.HashMap
 import java.util.concurrent.atomic.AtomicLong
 
 open class BaseActivity : AppCompatActivity() {
+
+    var spinnerDialog: ProgressDialog? = null
 
     companion object {
         @JvmStatic private val KEY_ACTIVITY_ID = "KEY_ACTIVITY_ID"

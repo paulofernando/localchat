@@ -23,6 +23,7 @@ constructor(private val firebaseAuth: FirebaseAuth, private val firebase: Fireba
 
                     if (!task.isSuccessful) {
                         println("Sign up failed")
+                        view.showFailSignUp()
                     } else {
                         println("Signed up")
                         registerUser(email, name, age, gender);

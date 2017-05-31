@@ -35,10 +35,18 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
         fun bindUser(user: User) {
             with(user) {
-                Picasso.with(itemView.ctx).load(profilePic)
-                    .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
-                        itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
-                    .centerCrop().into(itemView.image_profile_nearby)
+
+                if(profilePic != null && !profilePic.equals(""))
+                    Picasso.with(itemView.ctx).load(profilePic)
+                        .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
+                            itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
+                        .centerCrop().into(itemView.image_profile_nearby)
+                else
+                    Picasso.with(itemView.ctx).load(R.drawable.nearby_user_default)
+                        .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
+                            itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
+                        .centerCrop().into(itemView.image_profile_nearby)
+
                 itemView.text_first_name_user.text = name
                 itemView.text_email_user.text = email
                 //itemView.setOnClickListener { itemClick(this) }
