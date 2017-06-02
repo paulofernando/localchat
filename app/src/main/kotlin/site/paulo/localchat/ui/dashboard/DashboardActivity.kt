@@ -89,13 +89,17 @@ class DashboardActivity: BaseActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
 
-
-        if (id == R.id.action_signout) {
-            presenter.logout();
-            startActivity<SignInActivity>() //TODO clear activity stack
-            return true
+        when(item.itemId) {
+            R.id.action_settings -> {
+                println("Settings!")
+                return true
+            }
+            R.id.action_signout -> {
+                presenter.logout()
+                startActivity<SignInActivity>() //TODO clear activity stack
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
