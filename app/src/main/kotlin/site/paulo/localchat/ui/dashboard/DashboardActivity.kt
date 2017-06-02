@@ -18,6 +18,7 @@ import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
+import site.paulo.localchat.ui.settings.SettingsActivity
 import site.paulo.localchat.ui.signin.SignInActivity
 import javax.inject.Inject
 
@@ -92,7 +93,7 @@ class DashboardActivity: BaseActivity() {
 
         when(item.itemId) {
             R.id.action_settings -> {
-                println("Settings!")
+                startActivity<SettingsActivity>()
                 return true
             }
             R.id.action_signout -> {

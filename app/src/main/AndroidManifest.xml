@@ -23,10 +23,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
-        <activity android:name=".ui.main.MainActivity"/>
-
         <activity
             android:name=".ui.room.RoomActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".ui.settings.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
@@ -45,15 +47,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".data.SyncService"/>
-
-        <receiver
-            android:name=".data.SyncService$SyncOnConnectionAvailable"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
