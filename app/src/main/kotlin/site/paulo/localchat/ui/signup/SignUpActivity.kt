@@ -24,25 +24,25 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     @Inject
     lateinit var presenter: SignUpPresenter
 
-    @BindView(R.id.input_email_su)
+    @BindView(R.id.emailSignUpTxt)
     lateinit var inEmail: EditText
 
-    @BindView(R.id.input_password_su)
+    @BindView(R.id.passwordSignUpTxt)
     lateinit var inPassword: EditText
 
-    @BindView(R.id.input_name_su)
+    @BindView(R.id.nameSignUpTxt)
     lateinit var inName: EditText
 
-    @BindView(R.id.input_age_su)
+    @BindView(R.id.ageSignUpTxt)
     lateinit var inAge: EditText
 
-    @BindView(R.id.input_gender_su)
+    @BindView(R.id.genderSignUpTxt)
     lateinit var inGender: EditText
 
-    @BindView(R.id.btnCreate)
+    @BindView(R.id.createSignUpBtn)
     lateinit var btnCreate: Button
 
-    @BindView(R.id.link_signin)
+    @BindView(R.id.signinSignUpLink)
     lateinit var linkSignIn: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {

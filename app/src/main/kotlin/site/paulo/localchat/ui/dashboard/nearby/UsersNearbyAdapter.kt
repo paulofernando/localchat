@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
@@ -36,19 +37,19 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
         fun bindUser(user: User) {
             with(user) {
 
-                if(profilePic != null && !profilePic.equals(""))
+                if(!profilePic.equals(""))
                     Picasso.with(itemView.ctx).load(profilePic)
                         .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
                             itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
-                        .centerCrop().into(itemView.image_profile_nearby)
+                        .centerCrop().into(itemView.profileNearbyUserImg)
                 else
                     Picasso.with(itemView.ctx).load(R.drawable.nearby_user_default)
                         .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
                             itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
-                        .centerCrop().into(itemView.image_profile_nearby)
+                        .centerCrop().into(itemView.profileNearbyUserImg)
 
-                itemView.text_first_name_user.text = name
-                itemView.text_email_user.text = email
+                itemView.firstNameUserTv.text = name
+                itemView.emailUserTv.text = email
                 //itemView.setOnClickListener { itemClick(this) }
             }
         }

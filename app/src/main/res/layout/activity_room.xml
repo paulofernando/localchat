@@ -5,7 +5,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="6dp"
-                android:background="@color/roomBackground"
+                android:background="@color/color_room_background"
                 tools:context=".ui.room.RoomActivity">
 
     <android.support.v7.widget.Toolbar
@@ -19,7 +19,7 @@
         app:theme="@style/ToolbarStyle"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/messagesList"
+        android:id="@+id/messagesRoomList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
@@ -28,7 +28,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/spacing_normal"
-        android:background="@color/roomBackground"
+        android:background="@color/color_room_background"
         android:layout_below="@+id/toolbarRoom"
         tools:listitem="@android:layout/two_line_list_item" />
 
@@ -41,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/roomBackground"
+        android:background="@color/color_room_background"
         android:orientation="horizontal">
 
         <!--<ImageButton
@@ -52,7 +52,7 @@
             android:background="@android:drawable/ic_menu_gallery"/>-->
 
         <EditText
-            android:id="@+id/messageTxt"
+            android:id="@+id/messageRoomTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -60,7 +60,7 @@
             android:inputType="textShortMessage|textAutoCorrect" />
 
         <at.markushi.ui.CircleButton
-            android:id="@+id/sendBtn"
+            android:id="@+id/sendRoomBtn"
             android:layout_gravity="bottom"
             android:text="@string/button_send"
             android:layout_width="64dip"

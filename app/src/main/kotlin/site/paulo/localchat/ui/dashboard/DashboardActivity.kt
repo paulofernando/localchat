@@ -18,6 +18,7 @@ import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
+import site.paulo.localchat.ui.settings.SettingsActivity
 import site.paulo.localchat.ui.signin.SignInActivity
 import javax.inject.Inject
 
@@ -89,13 +90,17 @@ class DashboardActivity: BaseActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
 
-
-        if (id == R.id.action_signout) {
-            presenter.logout();
-            startActivity<SignInActivity>() //TODO clear activity stack
-            return true
+        when(item.itemId) {
+            R.id.action_settings -> {
+                startActivity<SettingsActivity>()
+                return true
+            }
+            R.id.action_signout -> {
+                presenter.logout()
+                startActivity<SignInActivity>() //TODO clear activity stack
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)

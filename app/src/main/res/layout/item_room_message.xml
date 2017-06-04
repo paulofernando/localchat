@@ -9,7 +9,7 @@
     android:orientation="horizontal">
 
     <me.himanshusoni.chatmessageview.ChatMessageView
-        android:id="@+id/roomMessageBubble"
+        android:id="@+id/messageBubbleRoom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -23,14 +23,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/roomMessageUserName"
+                android:id="@+id/messageUserNameRoomTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
                 android:textAppearance="@style/TextAppearanceRoomMessagePersonName"/>
 
             <TextView
-                android:id="@+id/roomMessage"
+                android:id="@+id/messageRoomTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearanceRoomMessage"/>
@@ -42,7 +42,7 @@
                 android:layout_gravity="right">
 
                 <TextView
-                    android:id="@+id/roomMessageTime"
+                    android:id="@+id/messageTimeRoomTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearanceRoomMessageTime"/>

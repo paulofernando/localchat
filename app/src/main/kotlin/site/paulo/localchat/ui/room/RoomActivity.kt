@@ -26,16 +26,16 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     @Inject
     lateinit var roomAdapter: RoomAdapter
 
-    @BindView(R.id.messageTxt)
+    @BindView(R.id.messageRoomTxt)
     lateinit var messageText: EditText
 
-    @BindView(R.id.sendBtn)
+    @BindView(R.id.sendRoomBtn)
     lateinit var sendBtn: CircleButton
 
     @BindView(R.id.toolbarRoom)
     lateinit var toolbar: Toolbar
 
-    @BindView(R.id.messagesList)
+    @BindView(R.id.messagesRoomList)
     lateinit var messagesList: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {

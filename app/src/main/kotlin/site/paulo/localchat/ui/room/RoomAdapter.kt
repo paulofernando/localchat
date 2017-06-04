@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_room_message.view.*
 import me.himanshusoni.chatmessageview.ChatMessageView
 import site.paulo.localchat.R
-import site.paulo.localchat.R.id.roomMessageBubble
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
@@ -38,12 +37,12 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
     inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindMessages(message: ChatMessage) {
-            itemView.roomMessageUserName.text = message.owner
-            itemView.roomMessage.text = message.message
-            itemView.roomMessageTime.text = Date().formattedTime(itemView.ctx, message.timestamp)
+            itemView.messageUserNameRoomTv.text = message.owner
+            itemView.messageRoomTv.text = message.message
+            itemView.messageTimeRoomTv.text = Date().formattedTime(itemView.ctx, message.timestamp)
 
             if(Utils.isMe(message.owner)) {
-                itemView.roomMessageBubble.setArrowPosition(ChatMessageView.ArrowPosition.RIGHT)
+                itemView.messageBubbleRoom.setArrowPosition(ChatMessageView.ArrowPosition.RIGHT)
             }
 
         }

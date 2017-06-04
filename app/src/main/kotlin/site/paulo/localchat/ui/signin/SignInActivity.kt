@@ -1,27 +1,26 @@
 package site.paulo.localchat.ui.signin
 
-import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.content.ContextCompat.startActivity
+import android.os.Looper
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import org.jetbrains.anko.AlertDialogBuilder
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import site.paulo.localchat.ui.signup.SignUpActivity
 import javax.inject.Inject
-import android.os.Looper
-import org.jetbrains.anko.indeterminateProgressDialog
 
 
 class SignInActivity : BaseActivity(), SignInContract.View {
@@ -29,17 +28,19 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     @Inject
     lateinit var presenter: SignInPresenter
 
-    @BindView(R.id.input_email)
+    @BindView(R.id.emailSignInTxt)
     lateinit var inputEmail: EditText
 
-    @BindView(R.id.input_password)
+    @BindView(R.id.passwordSignInTxt)
     lateinit var inputPassword: EditText
 
-    @BindView(R.id.btnLogin)
+    @BindView(R.id.loginSignInBtn)
     lateinit var btnLogin: Button
 
-    @BindView(R.id.link_signup)
+    @BindView(R.id.signupSignInLink)
     lateinit var linkSignUp: TextView
+
+    var alertDialog:AlertDialogBuilder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +61,39 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         presenter.attachView(this)
 
         btnLogin.setOnClickListener {
-            if(inputEmail.text.toString().equals("")) {
-                inputEmail.error = "enter an email address"
-            } else if(inputPassword.text.toString().equals("")) {
-                inputPassword.error = "enter a password"
-            } else {
-                spinnerDialog = indeterminateProgressDialog(R.string.authenticating)
-                presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
-            }
+            login()
         }
+
+        inputPassword.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            // If the event is a key-down event on the "enter" button
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                // Perform action on key press
+                login()
+                return@OnKeyListener true
+            }
+            false
+        })
 
         linkSignUp.setOnClickListener {
             startActivity<SignUpActivity>()
         }
 
         presenter.isAuthenticated() //if authenticated, sign in
+    }
+
+    fun login() {
+        if(inputEmail.text.toString().equals("")) {
+            inputEmail.error = "enter an email address"
+        } else if(inputPassword.text.toString().equals("")) {
+            inputPassword.error = "enter a password"
+        } else {
+            if(spinnerDialog == null) {
+                spinnerDialog = indeterminateProgressDialog(R.string.authenticating)
+            } else {
+                spinnerDialog?.show()
+            }
+            presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
+        }
     }
 
     override fun showSuccessFullSignIn() {
@@ -84,7 +103,11 @@ class SignInActivity : BaseActivity(), SignInContract.View {
 
     override fun showFailSignIn() {
         spinnerDialog?.cancel()
-        Handler(Looper.getMainLooper()).post({ alert(R.string.auth_failed){  }.show() })
+
+        if(alertDialog == null) {
+            alertDialog = alert(R.string.auth_failed)
+        }
+        Handler(Looper.getMainLooper()).post({ alertDialog?.show() })
     }
 
     override fun onDestroy() {
