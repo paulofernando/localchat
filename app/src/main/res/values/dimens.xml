@@ -14,6 +14,8 @@
 
     <dimen name="image_width_user">150dp</dimen>
     <dimen name="image_height_user">150dp</dimen>
+    <dimen name="image_width_settings">75dp</dimen>
+    <dimen name="image_height_settings">75dp</dimen>
     <dimen name="image_width_chat">50dp</dimen>
     <dimen name="image_height_chat">50dp</dimen>
 

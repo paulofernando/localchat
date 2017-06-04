@@ -43,10 +43,10 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             var otherUserIndex: Int = 0
             if (chat.users.keys.indexOf(Utils.getCurrentUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
 
-            itemView.text_name_chat.text =
+            itemView.nameChatTv.text =
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
 
-            itemView.text_last_message_chat.text = chat.lastMessage
+            itemView.lastMessageChatTv.text = chat.lastMessage
 
             Picasso.with(itemView.ctx)
                 .load(chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.profilePic)
@@ -54,7 +54,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                     itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
                 .centerCrop()
                 .transform(CircleTransform())
-                .into(itemView.image_chat)
+                .into(itemView.chatImg)
 
             itemView.setOnClickListener {
                 itemView.ctx.startActivity<RoomActivity>("chat" to chat)

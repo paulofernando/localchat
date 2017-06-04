@@ -17,11 +17,11 @@ constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
         //view.showMessages()
     }
 
-    override fun sendMessage(msg: ChatMessage, chatId: String) {
-        if(!msg.message.equals("")) {
+    override fun sendMessage(message: ChatMessage, chatId: String) {
+        if(!message.message.equals("")) {
             val value = mutableMapOf<String, Any>()
-            value.put("owner", msg.owner)
-            value.put("message", msg.message)
+            value.put("owner", message.owner)
+            value.put("message", message.message)
             value.put("timestamp", ServerValue.TIMESTAMP)
 
             firebase.getReference("messages").child(chatId).push().setValue(value)

@@ -25,8 +25,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@color/title_text_color</item>
-        <item name="android:textColorPrimary">@color/title_text_color</item>
+        <item name="colorControlNormal">@color/color_title_text</item>
+        <item name="android:textColorPrimary">@color/color_title_text</item>
     </style>
 
     <style name="ToolbarSubtitleAppearance">
@@ -37,18 +37,24 @@
     <style name="TextAppearanceRoomMessagePersonName">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/message_person_name</item>
+        <item name="android:textColor">@color/color_message_person_name</item>
     </style>
 
     <style name="TextAppearanceRoomMessage">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/message_message</item>
+        <item name="android:textColor">@color/color_message_message</item>
     </style>
 
     <style name="TextAppearanceRoomMessageTime">
         <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/message_time</item>
+        <item name="android:textColor">@color/color_message_time</item>
         <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextAppearanceProfileSettings">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_profile_name_settings</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

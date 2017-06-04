@@ -28,16 +28,16 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     @Inject
     lateinit var presenter: SignInPresenter
 
-    @BindView(R.id.input_email)
+    @BindView(R.id.emailSignInTxt)
     lateinit var inputEmail: EditText
 
-    @BindView(R.id.input_password)
+    @BindView(R.id.passwordSignInTxt)
     lateinit var inputPassword: EditText
 
-    @BindView(R.id.btnLogin)
+    @BindView(R.id.loginSignInBtn)
     lateinit var btnLogin: Button
 
-    @BindView(R.id.link_signup)
+    @BindView(R.id.signupSignInLink)
     lateinit var linkSignUp: TextView
 
     var alertDialog:AlertDialogBuilder? = null

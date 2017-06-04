@@ -18,7 +18,7 @@
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/image_profile_nearby"
+            android:id="@+id/profileNearbyUserImg"
             android:layout_width="@dimen/image_width_user"
             android:layout_height="@dimen/image_height_user"
             android:background="@android:color/white" />
@@ -27,13 +27,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/image_profile_nearby"
+            android:layout_below="@id/profileNearbyUserImg"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
             <TextView
-                android:id="@+id/text_first_name_user"
+                android:id="@+id/firstNameUserTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_body"
@@ -41,10 +41,10 @@
                  />
 
             <TextView
-                android:id="@+id/text_email_user"
+                android:id="@+id/emailUserTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/text_first_name_user"
+                android:layout_below="@id/firstNameUserTv"
                 android:textSize="@dimen/text_small_body"
                 tools:text="developer" />
 

@@ -18,7 +18,7 @@
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/image_chat"
+            android:id="@+id/chatImg"
             android:layout_width="@dimen/image_width_chat"
             android:layout_height="@dimen/image_height_chat"
             android:background="@android:color/white" />
@@ -26,12 +26,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_chat"
+            android:layout_toRightOf="@id/chatImg"
             android:orientation="vertical"
             >
 
             <TextView
-                android:id="@+id/text_name_chat"
+                android:id="@+id/nameChatTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_large"
@@ -39,10 +39,10 @@
                 tools:text="Antony"/>
 
             <TextView
-                android:id="@+id/text_last_message_chat"
+                android:id="@+id/lastMessageChatTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/text_name_chat"
+                android:layout_below="@id/nameChatTv"
                 android:layout_marginLeft="@dimen/spacing_large"
                 android:textSize="@dimen/text_small_body"
                 android:textStyle="italic"
