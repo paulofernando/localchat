@@ -12,12 +12,15 @@
     <dimen name="spacing_xlarge">32dp</dimen>
     <dimen name="spacing_huge">48dp</dimen>
 
-    <dimen name="image_width_user">150dp</dimen>
-    <dimen name="image_height_user">150dp</dimen>
-    <dimen name="image_width_settings">75dp</dimen>
-    <dimen name="image_height_settings">75dp</dimen>
     <dimen name="image_width_chat">50dp</dimen>
     <dimen name="image_height_chat">50dp</dimen>
+    <dimen name="image_width_settings">75dp</dimen>
+    <dimen name="image_height_settings">75dp</dimen>
+    <dimen name="image_width_user">150dp</dimen>
+    <dimen name="image_height_user">150dp</dimen>
+    <dimen name="image_width_profile">200dp</dimen>
+    <dimen name="image_height_profile">200dp</dimen>
+
 
     <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>

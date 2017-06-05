@@ -16,6 +16,7 @@
         app:theme="@style/ToolbarStyle"/>
 
     <RelativeLayout
+        android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -24,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_large"
+            android:transitionName="@string/profile_image_name"
             tools:src="@drawable/user_default"/>
 
         <TextView

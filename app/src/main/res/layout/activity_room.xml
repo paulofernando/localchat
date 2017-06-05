@@ -62,7 +62,7 @@
         <at.markushi.ui.CircleButton
             android:id="@+id/sendRoomBtn"
             android:layout_gravity="bottom"
-            android:text="@string/button_send"
+            android:text="@string/lb_button_send"
             android:layout_width="64dip"
             android:layout_height="64dip"
             android:src="@drawable/send"
