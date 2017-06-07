@@ -44,5 +44,6 @@
 
     <string name="profile_image_name">profile_image_name</string>
     <string name="user_name">user_name</string>
+    <string name="user_profile_image">user_profile_image</string>
 
 </resources>

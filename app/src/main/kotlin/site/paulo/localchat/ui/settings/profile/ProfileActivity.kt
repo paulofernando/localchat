@@ -1,5 +1,8 @@
 package site.paulo.localchat.ui.settings.profile
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -12,6 +15,9 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.utils.CircleTransform
+import android.provider.MediaStore
+import java.io.ByteArrayOutputStream
+
 
 class ProfileActivity: BaseActivity() {
 
@@ -33,17 +39,10 @@ class ProfileActivity: BaseActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         var user: User = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
+        var profilePic: Bitmap = intent.getParcelableExtra<Bitmap>(resources.getString(R.string.user_profile_image))
 
-        try {
-            Picasso.with(this).load(user.profilePic)
-                .resize(ctx.resources.getDimension(R.dimen.image_width_profile).toInt(),
-                    ctx.resources.getDimension(R.dimen.image_height_profile).toInt())
-                .centerCrop()
-                .transform(CircleTransform())
-                .into(profileImg)
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
-        }
+        //TODO send the image data directly from the Settings Activity
+        profileImg.setImageBitmap(profilePic);
 
 
     }
