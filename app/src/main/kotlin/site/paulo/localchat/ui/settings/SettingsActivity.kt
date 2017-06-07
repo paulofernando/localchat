@@ -2,18 +2,16 @@ package site.paulo.localchat.ui.settings
 
 import android.app.ActivityOptions
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.transition.Transition
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
@@ -60,13 +58,27 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
         }
 
         presenter.loadCurrentUser()
+
+        /*window.sharedElementExitTransition.addListener(object: Transition.TransitionListener {
+            override fun onTransitionResume(transition: Transition?) {}
+
+            override fun onTransitionPause(transition: Transition?) {}
+
+            override fun onTransitionCancel(transition: Transition?) {}
+
+            override fun onTransitionStart(transition: Transition?) {}
+
+            override fun onTransitionEnd(transition: Transition?) {}
+
+        })*/
+
     }
 
     fun launchProfileEditor() {
         val intent = Intent(this, ProfileActivity::class.java)
 
         intent.putExtra(getString(R.string.user_name), user)
-        intent.putExtra(getString(R.string.user_profile_image), (profileImage.getDrawable() as BitmapDrawable).bitmap);
+        intent.putExtra(getString(R.string.user_profile_image), (profileImage.drawable as BitmapDrawable).bitmap)
         val transitionName = getString(R.string.profile_image_name)
         val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this, profileImage, transitionName)
 
@@ -74,8 +86,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
     }
 
     override fun showCurrentUserData(user: User) {
-        this.user = user;
-
+        this.user = user
         Picasso.with(ctx)
             .load(user.profilePic)
             .resize(ctx.resources.getDimension(R.dimen.image_width_settings).toInt(),
