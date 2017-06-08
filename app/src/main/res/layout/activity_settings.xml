@@ -18,13 +18,13 @@
     <RelativeLayout
         android:id="@+id/profileContainer"
         android:layout_width="match_parent"
+        android:layout_margin="@dimen/spacing_large"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/profileSettingsImg"
             android:layout_width="@dimen/image_width_settings"
             android:layout_height="@dimen/image_height_settings"
-            android:padding="@dimen/spacing_large"
             android:transitionName="@string/profile_image_name"
             tools:src="@drawable/user_default"/>
 
@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/spacing_large"
             android:layout_centerVertical="true"
             style="@style/TextAppearanceProfileSettings"
             android:layout_toRightOf="@id/profileSettingsImg"/>

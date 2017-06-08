@@ -59,19 +59,6 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
         presenter.loadCurrentUser()
 
-        /*window.sharedElementExitTransition.addListener(object: Transition.TransitionListener {
-            override fun onTransitionResume(transition: Transition?) {}
-
-            override fun onTransitionPause(transition: Transition?) {}
-
-            override fun onTransitionCancel(transition: Transition?) {}
-
-            override fun onTransitionStart(transition: Transition?) {}
-
-            override fun onTransitionEnd(transition: Transition?) {}
-
-        })*/
-
     }
 
     fun launchProfileEditor() {
