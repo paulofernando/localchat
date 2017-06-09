@@ -9,6 +9,7 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
@@ -16,7 +17,7 @@ import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.base.BaseActivity
 
 
-class ProfileActivity: BaseActivity() {
+class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     @BindView(R.id.toolbarProfile)
     lateinit var toolbar: Toolbar
@@ -26,6 +27,17 @@ class ProfileActivity: BaseActivity() {
 
     @BindView(R.id.editProfileImageBtn)
     lateinit var changeImage: ImageView
+
+    @BindView(R.id.nameUserProfileLabel)
+    lateinit var nameProfileLb: TextView
+
+    @BindView(R.id.emailUserProfileLabel)
+    lateinit var emailProfileLb: TextView
+
+    @BindView(R.id.ageUserProfileLabel)
+    lateinit var ageProfileLb: TextView
+
+    lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +50,17 @@ class ProfileActivity: BaseActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        var user: User = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
+        user = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
         var profilePic: Bitmap = intent.getParcelableExtra<Bitmap>(resources.getString(R.string.user_profile_image))
 
         profileImg.setImageBitmap(profilePic)
+        showCurrentUserData()
+    }
+
+    override fun showCurrentUserData() {
+        nameProfileLb.text = user.name
+        emailProfileLb.text = user.email
+        ageProfileLb.text = user.age.toString()
     }
 
     override fun onStart() {

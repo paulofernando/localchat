@@ -6,6 +6,8 @@
 
     <!-- backgrounds -->
     <color name="color_room_background">#8b5a35</color>
+    <color name="color_profile_information_background">#ffffff</color>
+    <color name="color_profile_background">#f2ebe8</color>
 
     <!-- texts -->
     <color name="color_title_text">#FFFFFF</color>

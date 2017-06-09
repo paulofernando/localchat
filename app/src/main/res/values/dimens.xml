@@ -21,6 +21,8 @@
     <dimen name="image_width_profile">150dp</dimen>
     <dimen name="image_height_profile">150dp</dimen>
 
+    <dimen name="component_profile_data_height">50dp</dimen>
+    <dimen name="component_profile_icon">24dp</dimen>
 
     <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
