@@ -65,10 +65,81 @@
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:textSize="16sp"
-            tools:text="Information"/>
+            tools:text="name"/>
+
+        <EditText
+            android:id="@+id/nameUserProfileTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:text="name"/>
 
         <ImageView
-            android:id="@+id/nameUserProfileImg"
+            android:id="@+id/nameUserEditProfileImg"
+            android:layout_width="@dimen/component_profile_icon"
+            android:layout_height="@dimen/component_profile_icon"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="editName"
+            android:src="@drawable/edit"/>
+
+
+        <LinearLayout
+            android:id="@+id/nameUserEditProfileContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/nameUserConfirmProfileImg"
+                android:layout_width="@dimen/component_profile_icon"
+                android:layout_height="@dimen/component_profile_icon"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:onClick="confirmNameEdition"
+                android:src="@drawable/confirm"/>
+
+            <ImageView
+                android:id="@+id/nameUserCancelProfileImg"
+                android:layout_width="@dimen/component_profile_icon"
+                android:layout_height="@dimen/component_profile_icon"
+                android:layout_alignLeft="@id/nameUserConfirmProfileImg"
+                android:onClick="cancelNameEdition"
+                android:src="@drawable/cancel"/>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/component_profile_data_height"
+        android:background="@color/color_profile_information_background"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:paddingLeft="@dimen/spacing_large"
+        android:paddingRight="@dimen/spacing_large">
+
+        <TextView
+            android:id="@+id/ageUserProfileLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textSize="14sp"
+            tools:text="age"/>
+
+        <ImageView
+            android:id="@+id/ageUserProfileImg"
             android:layout_width="@dimen/component_profile_icon"
             android:layout_height="@dimen/component_profile_icon"
             android:layout_centerVertical="true"
@@ -92,15 +163,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:textSize="16sp"
-            tools:text="Information"/>
-
-        <ImageView
-            android:id="@+id/emailUserProfileImg"
-            android:layout_width="@dimen/component_profile_icon"
-            android:layout_height="@dimen/component_profile_icon"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/edit"/>
+            tools:text="email"/>
 
     </RelativeLayout>
 
@@ -113,21 +176,13 @@
         android:paddingRight="@dimen/spacing_large">
 
         <TextView
-            android:id="@+id/ageUserProfileLabel"
+            android:id="@+id/genderUserProfileLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:textSize="14sp"
-            tools:text="Information"/>
-
-        <ImageView
-            android:id="@+id/ageUserProfileImg"
-            android:layout_width="@dimen/component_profile_icon"
-            android:layout_height="@dimen/component_profile_icon"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/edit"/>
+            tools:text="gender"/>
 
     </RelativeLayout>
 

@@ -8,10 +8,13 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.activity_profile.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.base.BaseActivity
@@ -28,14 +31,21 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     @BindView(R.id.editProfileImageBtn)
     lateinit var changeImage: ImageView
 
-    @BindView(R.id.nameUserProfileLabel)
-    lateinit var nameProfileLb: TextView
+    @BindView(R.id.nameUserProfileLabel) lateinit var nameLb: TextView
+    @BindView(R.id.nameUserProfileTxt) lateinit var nameTxt: EditText
+    @BindView(R.id.nameUserEditProfileImg) lateinit var nameEditImg: ImageView
+    @BindView(R.id.nameUserCancelProfileImg) lateinit var nameCancelImg: ImageView
+    @BindView(R.id.nameUserConfirmProfileImg) lateinit var nameConfirmImg: ImageView
+    @BindView(R.id.nameUserEditProfileContainer) lateinit var nameEditContainer: LinearLayout
 
     @BindView(R.id.emailUserProfileLabel)
-    lateinit var emailProfileLb: TextView
+    lateinit var emailLb: TextView
 
     @BindView(R.id.ageUserProfileLabel)
-    lateinit var ageProfileLb: TextView
+    lateinit var ageLb: TextView
+
+    @BindView(R.id.genderUserProfileLabel)
+    lateinit var genderLb: TextView
 
     lateinit var user: User
 
@@ -58,9 +68,34 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     }
 
     override fun showCurrentUserData() {
-        nameProfileLb.text = user.name
-        emailProfileLb.text = user.email
-        ageProfileLb.text = user.age.toString()
+        nameLb.text = user.name
+        nameTxt.setText(user.name, TextView.BufferType.EDITABLE)
+        ageLb.text = user.age.toString() + " yo"
+        emailLb.text = user.email
+        genderLb.text = user.gender
+    }
+
+    override fun editName(view:View) {
+        nameLb.visibility = View.GONE
+        nameEditImg.visibility = View.GONE
+        nameTxt.visibility = View.VISIBLE
+        nameEditContainer.visibility = View.VISIBLE
+    }
+
+    override fun cancelNameEdition(view:View) {
+        hideNameConfirmationButton()
+    }
+
+    override fun confirmNameEdition(view:View) {
+        nameLb.text = nameTxt.text
+        hideNameConfirmationButton()
+    }
+
+    fun hideNameConfirmationButton() {
+        nameLb.visibility = View.VISIBLE
+        nameEditImg.visibility = View.VISIBLE
+        nameTxt.visibility = View.GONE
+        nameEditContainer.visibility = View.GONE
     }
 
     override fun onStart() {
@@ -71,6 +106,16 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     override fun onBackPressed() {
         animateReverseButton()
         changeImage.postDelayed({ super.onBackPressed() }, 200)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                supportFinishAfterTransition()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun animateButton() {
@@ -94,14 +139,5 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
-            android.R.id.home -> {
-                supportFinishAfterTransition()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 }
