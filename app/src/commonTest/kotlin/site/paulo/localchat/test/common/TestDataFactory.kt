@@ -1,5 +1,6 @@
 package site.paulo.localchat.test.common
 
+import site.paulo.localchat.data.model.chatgeo.User
 import java.util.*
 
 object TestDataFactory {
@@ -8,29 +9,22 @@ object TestDataFactory {
         return UUID.randomUUID().toString()
     }
 
-    /*@JvmStatic fun makeRibot(uniqueSuffix: String): Ribot {
-        return Ribot(makeProfile(uniqueSuffix))
-    }
-
-    @JvmStatic fun makeListRibots(number: Int): List<Ribot> {
-        val ribots = ArrayList<Ribot>()
+    @JvmStatic fun makeListUsers(number: Int): List<User> {
+        val users = ArrayList<User>()
         for (i in 0..number.dec()) {
-            ribots.add(makeRibot(i.toString()))
+            users.add(makeUser(i.toString()))
         }
-        return ribots
+        return users
     }
 
-    @JvmStatic fun makeProfile(uniqueSuffix: String): Profile {
-        return Profile(
-                name = makeName(uniqueSuffix),
-                email = "email$uniqueSuffix@ribot.co.uk",
-                hexColor = "#0066FF",
-                dateOfBirth = Date(),
-                bio = randomUuid(),
-                avatar = "http://api.ribot.io/images/" + uniqueSuffix)
+    @JvmStatic fun makeUser(uniqueSuffix: String): User {
+        return User(
+            name = "name$uniqueSuffix",
+            age = 29,
+            email = "email$uniqueSuffix@paulo.site",
+            gender = "m",
+            profilePic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+            chats = mapOf("abc" to true))
     }
 
-    @JvmStatic fun makeName(uniqueSuffix: String): Name {
-        return Name("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix)
-    }*/
 }
