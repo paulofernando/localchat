@@ -75,7 +75,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
     override fun showCurrentUserData(user: User) {
         this.user = user
         Picasso.with(ctx)
-            .load(user.profilePic)
+            .load(user.pic)
             .resize(ctx.resources.getDimension(R.dimen.image_width_settings).toInt(),
                 ctx.resources.getDimension(R.dimen.image_height_settings).toInt())
             .centerCrop()

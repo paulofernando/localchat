@@ -23,7 +23,7 @@ object TestDataFactory {
             age = 29,
             email = "email$uniqueSuffix@paulo.site",
             gender = "m",
-            profilePic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+            pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
             chats = mapOf("abc" to true))
     }
 

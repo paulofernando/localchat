@@ -37,8 +37,8 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
         fun bindUser(user: User) {
             with(user) {
 
-                if(!profilePic.equals(""))
-                    Picasso.with(itemView.ctx).load(profilePic)
+                if(!pic.equals(""))
+                    Picasso.with(itemView.ctx).load(pic)
                         .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt(),
                             itemView.ctx.resources.getDimension(R.dimen.image_height_user).toInt())
                         .centerCrop().into(itemView.profileNearbyUserImg)

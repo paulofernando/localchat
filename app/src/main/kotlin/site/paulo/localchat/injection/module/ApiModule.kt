@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import site.paulo.localchat.data.remote.ChatGeoService
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -38,7 +39,7 @@ class ApiModule {
             //.baseUrl("http://localhost:1337/user/")
             .build()
 
-        System.out.println("ChatGeoService base URL: " + retrofit.baseUrl());
+        Timber.i("ChatGeoService base URL: " + retrofit.baseUrl());
 
         return retrofit.create(ChatGeoService::class.java)
     }

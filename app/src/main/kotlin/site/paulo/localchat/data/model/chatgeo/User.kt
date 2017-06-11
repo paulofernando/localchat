@@ -9,7 +9,7 @@ data class User(
     val age: Long = 0L,
     val email: String = "",
     val gender: String = "",
-    val profilePic: String = "",
+    val pic: String = "",
     val chats: Map<String, Boolean> = emptyMap())
     : PaperParcelable {
 

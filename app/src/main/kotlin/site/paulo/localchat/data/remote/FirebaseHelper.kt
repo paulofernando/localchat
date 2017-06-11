@@ -7,9 +7,9 @@ import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.text.Typography.registered
 
 @Singleton
 class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase) {
@@ -22,6 +22,13 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase)
             DataSnapshotMapper.listOf(User::class.java))
     }
 
+    fun getUser(userId:String): Observable<User> {
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS).child(userId),
+            User::class.java)
+
+        //return RxFirebaseDatabase.observeValueEvent(firebaseDatabase.getReference(CHILD_USERS).child(userId)) //DataSnapshot
+    }
+
     fun registerUser(user:User): Unit {
         val value = mutableMapOf<String, Any>()
         value.put("email", user.email)
@@ -30,14 +37,14 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase)
         value.put("gender", user.gender)
 
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
-            println("User " + user.email + "registered")
+            Timber.e("User " + user.email + "registered")
         }
         firebaseDatabase.getReference(CHILD_USERS).push().setValue(value, completionListener)
 
 
     }
 
-    fun getChatRooms(chatId:String): Observable<Chat> {
+    fun getChatRoom(chatId:String): Observable<Chat> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_CHATS).child(chatId),
             Chat::class.java)
     }

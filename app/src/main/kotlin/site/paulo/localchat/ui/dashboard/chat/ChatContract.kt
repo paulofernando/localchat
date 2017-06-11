@@ -15,7 +15,7 @@ object ChatContract {
 
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadChatRooms()
-        abstract fun loadChat(chatId: String)
+        abstract fun loadChatRoom(chatId: String)
         abstract fun loadProfilePicture(chatList: List<Chat>)
     }
 }

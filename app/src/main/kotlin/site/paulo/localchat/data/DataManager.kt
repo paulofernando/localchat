@@ -15,11 +15,15 @@ class DataManager
         return firebaseHelper.getUsers()
     }
 
+    fun getUser(userId: String): Observable<User> {
+        return firebaseHelper.getUser(userId)
+    }
+
     fun registerUser(user: User): Unit {
         firebaseHelper.registerUser(user)
     }
 
-    fun getChatRooms(chatId:String): Observable<Chat> {
-        return firebaseHelper.getChatRooms(chatId)
+    fun getChatRoom(chatId:String): Observable<Chat> {
+        return firebaseHelper.getChatRoom(chatId)
     }
 }

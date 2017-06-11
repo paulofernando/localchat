@@ -7,6 +7,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.chatgeo.User
+import timber.log.Timber
 import java.util.concurrent.Executors.newSingleThreadExecutor
 import javax.inject.Inject
 
@@ -23,10 +24,10 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                     Log.d("signUp", "createUserWithEmail:onComplete:" + task.isSuccessful)
 
                     if (!task.isSuccessful) {
-                        println("Sign up failed")
+                        Timber.i("Sign up failed")
                         view.showFailSignUp()
                     } else {
-                        println("Signed up")
+                        Timber.i("Signed up")
                         var user:User = User(name,age,email,gender)
                         registerUser(user)
                         view.showSuccessFullSignUp()

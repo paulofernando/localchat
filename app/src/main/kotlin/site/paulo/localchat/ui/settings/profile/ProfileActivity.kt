@@ -14,7 +14,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
-import kotlinx.android.synthetic.main.activity_profile.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.base.BaseActivity

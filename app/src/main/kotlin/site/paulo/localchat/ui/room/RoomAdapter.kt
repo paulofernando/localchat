@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_room_message.view.*
 import me.himanshusoni.chatmessageview.ChatMessageView
 import site.paulo.localchat.R
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.formattedTime
-import site.paulo.localchat.ui.utils.isMe
 import java.util.Date
 import javax.inject.Inject
 
@@ -20,6 +19,9 @@ class RoomAdapter
 constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
     var messages =  mutableListOf<ChatMessage>()
+
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomAdapter.RoomViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -41,7 +43,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
             itemView.messageRoomTv.text = message.message
             itemView.messageTimeRoomTv.text = Date().formattedTime(itemView.ctx, message.timestamp)
 
-            if(Utils.isMe(message.owner)) {
+            if(message.owner.equals(currentUserManager.getUserId())) {
                 itemView.messageBubbleRoom.setArrowPosition(ChatMessageView.ArrowPosition.RIGHT)
             }
 
