@@ -44,17 +44,11 @@
         android:background="@color/color_room_background"
         android:orientation="horizontal">
 
-        <!--<ImageButton
-            android:id="@+id/imageBtn"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="bottom"
-            android:background="@android:drawable/ic_menu_gallery"/>-->
-
         <EditText
             android:id="@+id/messageRoomTxt"
+            android:background="@drawable/edit_text_shape"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:inputType="textShortMessage|textAutoCorrect" />
@@ -63,8 +57,8 @@
             android:id="@+id/sendRoomBtn"
             android:layout_gravity="bottom"
             android:text="@string/lb_button_send"
-            android:layout_width="64dip"
-            android:layout_height="64dip"
+            android:layout_width="@dimen/image_width_send_button"
+            android:layout_height="@dimen/image_height_send_button"
             android:src="@drawable/send"
             app:cb_color="#99CC00"
             app:cb_pressedRingWidth="8dip" />

@@ -47,6 +47,8 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         setContentView(R.layout.activity_room)
         ButterKnife.bind(this)
 
+        presenter.attachView(this)
+
         var otherUserIndex: Int = 0;
         var chat: Chat = intent.getParcelableExtra<Chat>("chat");
         if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
@@ -59,7 +61,6 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         messagesList.adapter = roomAdapter
         messagesList.layoutManager = LinearLayoutManager(this)
 
-        presenter.attachView(this)
         presenter.registerRoomListener(chat.id)
 
         sendBtn.setOnClickListener {
