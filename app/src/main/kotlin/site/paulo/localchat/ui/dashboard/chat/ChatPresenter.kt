@@ -53,7 +53,7 @@ constructor(private val dataManager: DataManager,
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Timber.i("We're done loading user information")
                 val user = dataSnapshot.getValue(User::class.java)
-                loadChatRoom(user.chats.keys.elementAt(0)) //TODO
+                loadChatRoom(user.chats.keys.elementAt(0))
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

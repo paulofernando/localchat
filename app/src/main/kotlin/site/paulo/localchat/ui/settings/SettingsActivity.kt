@@ -50,8 +50,8 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
         toolbar.title = resources.getString(R.string.title_settings)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         profileContainer.setOnClickListener {
             launchProfileEditor()

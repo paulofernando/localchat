@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.widget.Button
 import android.widget.EditText
 import at.markushi.ui.CircleButton
 import butterknife.BindView
@@ -14,8 +13,8 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
+import site.paulo.localchat.data.model.chatgeo.SummarizedUser
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.utils.Utils
 import javax.inject.Inject
 
 class RoomActivity : BaseActivity() , RoomContract.View {
@@ -49,14 +48,15 @@ class RoomActivity : BaseActivity() , RoomContract.View {
 
         presenter.attachView(this)
 
-        var otherUserIndex: Int = 0;
-        var chat: Chat = intent.getParcelableExtra<Chat>("chat");
+        var otherUserIndex: Int = 0
+        val chat: Chat = intent.getParcelableExtra<Chat>("chat")
         if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
-        toolbar.title = chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
+
+        toolbar.title = chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
 
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         messagesList.adapter = roomAdapter
         messagesList.layoutManager = LinearLayoutManager(this)

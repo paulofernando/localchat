@@ -33,7 +33,7 @@ constructor(private val firebaseAuth: FirebaseAuth) : SignInContract.Presenter()
     override fun isAuthenticated() {
         firebaseAuth.addAuthStateListener { firebaseAuth ->
             if (firebaseAuth.currentUser != null) {
-                Log.d("isAuthenticated", "onAuthStateChanged:signed_in:" + firebaseAuth.currentUser!!.uid)
+                Log.d("isAuthenticated", "onAuthStateChanged:signed_in:" + firebaseAuth.currentUser?.uid)
                 view.showSuccessFullSignIn()
             } else {
                 Log.d("isAuthenticated", "onAuthStateChanged:signed_out")

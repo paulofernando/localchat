@@ -56,8 +56,8 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
         toolbar.title = resources.getString(R.string.title_profile)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         user = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
         var profilePic: Bitmap = intent.getParcelableExtra<Bitmap>(resources.getString(R.string.user_profile_image))
