@@ -12,5 +12,6 @@ object SettingsContract {
 
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadCurrentUser()
+        abstract fun registerProfileListener()
     }
 }

@@ -8,12 +8,11 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_chat.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
-import site.paulo.localchat.ui.utils.getCurrentUserId
 import javax.inject.Inject
 
 class ChatAdapter
@@ -21,6 +20,9 @@ class ChatAdapter
 constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
+
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -41,15 +43,15 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         fun bindChat(chat: Chat) {
 
             var otherUserIndex: Int = 0
-            if (chat.users.keys.indexOf(Utils.getCurrentUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
+            if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
 
             itemView.nameChatTv.text =
-                chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.name
+                chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
 
             itemView.lastMessageChatTv.text = chat.lastMessage
 
             Picasso.with(itemView.ctx)
-                .load(chat.users.get(chat.users.keys.elementAt(otherUserIndex))!!.profilePic)
+                .load(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic)
                 .resize(itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt(),
                     itemView.ctx.resources.getDimension(R.dimen.image_height_chat).toInt())
                 .centerCrop()

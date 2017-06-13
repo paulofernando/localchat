@@ -1,6 +1,10 @@
 package site.paulo.localchat.test.common
 
-import java.util.*
+import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.data.model.chatgeo.SummarizedUser
+import site.paulo.localchat.data.model.chatgeo.User
+import java.util.ArrayList
+import java.util.UUID
 
 object TestDataFactory {
 
@@ -8,29 +12,35 @@ object TestDataFactory {
         return UUID.randomUUID().toString()
     }
 
-    /*@JvmStatic fun makeRibot(uniqueSuffix: String): Ribot {
-        return Ribot(makeProfile(uniqueSuffix))
-    }
-
-    @JvmStatic fun makeListRibots(number: Int): List<Ribot> {
-        val ribots = ArrayList<Ribot>()
+    @JvmStatic fun makeListUsers(number: Int): List<User> {
+        val users = ArrayList<User>()
         for (i in 0..number.dec()) {
-            ribots.add(makeRibot(i.toString()))
+            users.add(makeUser(i.toString()))
         }
-        return ribots
+        return users
     }
 
-    @JvmStatic fun makeProfile(uniqueSuffix: String): Profile {
-        return Profile(
-                name = makeName(uniqueSuffix),
-                email = "email$uniqueSuffix@ribot.co.uk",
-                hexColor = "#0066FF",
-                dateOfBirth = Date(),
-                bio = randomUuid(),
-                avatar = "http://api.ribot.io/images/" + uniqueSuffix)
+    @JvmStatic fun makeUser(uniqueSuffix: String): User {
+        return User(
+            name = "name$uniqueSuffix",
+            age = 29,
+            email = "email$uniqueSuffix@paulo.site",
+            gender = "m",
+            pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+            chats = mapOf("c1" to true))
     }
 
-    @JvmStatic fun makeName(uniqueSuffix: String): Name {
-        return Name("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix)
-    }*/
+    @JvmStatic fun makeChat(uniqueSuffix: String): Chat {
+        return Chat(
+            id = "id$uniqueSuffix",
+            lastMessage = "lastMessage",
+            users = mapOf("abc" to makeSummarizedUser("s1")))
+    }
+
+    @JvmStatic fun makeSummarizedUser(uniqueSuffix: String): SummarizedUser {
+        return SummarizedUser(
+            name = "name$uniqueSuffix",
+            pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png")
+    }
+
 }

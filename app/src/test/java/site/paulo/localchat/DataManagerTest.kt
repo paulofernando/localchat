@@ -1,20 +1,15 @@
 package site.paulo.localchat
 
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.runners.MockitoJUnitRunner
-
 import rx.Observable
-import rx.observers.TestSubscriber
 import site.paulo.localchat.data.DataManager
-
-import org.mockito.Mockito.anyListOf
-import site.paulo.localchat.data.remote.ChatGeoService
+import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.test.common.TestDataFactory
 
 /**
@@ -28,57 +23,28 @@ import site.paulo.localchat.test.common.TestDataFactory
 @RunWith(MockitoJUnitRunner::class)
 class DataManagerTest {
 
-    /*@Mock
-    lateinit var mockDatabaseHelper: DatabaseHelper
-
     @Mock
-    lateinit var mockRibotsService: RibotsService
-
-    @Mock
-    lateinit var mockChatGeoService: ChatGeoService
+    lateinit var mockFirebaseHelper: FirebaseHelper
 
     lateinit var dataManager: DataManager
 
+
     @Before
     fun setUp() {
-        dataManager = DataManager(mockRibotsService, mockChatGeoService, mockDatabaseHelper)
+        dataManager = DataManager(mockFirebaseHelper)
     }
 
     @Test
-    fun syncRibotsEmitsValues() {
-        val ribots = listOf(TestDataFactory.makeRibot("r1"), TestDataFactory.makeRibot("r2"))
-        stubSyncRibotsHelperCalls(ribots)
-
-        val result = TestSubscriber<Ribot>()
-        dataManager.syncRibots().subscribe(result)
-        result.assertNoErrors()
-        result.assertReceivedOnNext(ribots)
+    fun syncUsersEmitsValues() {
+        val users = listOf(TestDataFactory.makeUser("u1"), TestDataFactory.makeUser("u2"))
+        stubSyncUsersHelperCalls(users)
     }
 
-    @Test
-    fun syncRibotsCallsApiAndDatabase() {
-        val ribots = listOf(TestDataFactory.makeRibot("r3"), TestDataFactory.makeRibot("r4"))
-        stubSyncRibotsHelperCalls(ribots)
-
-        dataManager.syncRibots().subscribe()
-        // Verify right calls to helper methods
-        verify(mockRibotsService).getRibots()
-        verify(mockDatabaseHelper).setRibots(ribots)
-    }
-
-    @Test
-    fun syncRibotsDoesNotCallDatabaseWhenApiFails() {
-        whenever(mockRibotsService.getRibots()).thenReturn(Observable.error<List<Ribot>>(RuntimeException()))
-
-        dataManager.syncRibots().subscribe(TestSubscriber<Ribot>())
-        // Verify right calls to helper methods
-        verify(mockRibotsService).getRibots()
-        verify(mockDatabaseHelper, never()).setRibots(anyListOf(Ribot::class.java))
-    }
-
-    private fun stubSyncRibotsHelperCalls(ribots: List<Ribot>) {
+    private fun stubSyncUsersHelperCalls(users: List<User>) {
         // Stub calls to the ribot service and database helper.
-        whenever(mockRibotsService.getRibots()).thenReturn(Observable.just(ribots))
-        whenever(mockDatabaseHelper.setRibots(ribots)).thenReturn(Observable.from(ribots))
-    }*/
+        whenever(mockFirebaseHelper.getUsers()).thenReturn(Observable.just(users))
+        /*whenever(mockFirebaseHelper.setRibot(ribots)).thenReturn(Observable.from(ribots))
+        whenever(mockFirebaseHelper.setRibot(ribots)).thenReturn(Observable.from(ribots))*/
+    }
+
 }

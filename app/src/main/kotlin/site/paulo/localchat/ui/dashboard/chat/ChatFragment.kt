@@ -10,12 +10,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.ChatAdapter
 import site.paulo.localchat.ui.user.ChatPresenter
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Inject
 
 class ChatFragment : BaseFragment(), ChatContract.View {
@@ -25,6 +28,9 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     @Inject
     lateinit var chatsAdapter: ChatAdapter
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: RecyclerView
@@ -39,7 +45,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         chatsList.layoutManager = LinearLayoutManager(activity)
 
         presenter.attachView(this)
-        presenter.loadChatRooms()
+        presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
 
         return rootView
     }

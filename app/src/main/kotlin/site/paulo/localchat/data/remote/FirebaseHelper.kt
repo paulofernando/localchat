@@ -1,0 +1,91 @@
+package site.paulo.localchat.data.remote
+
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
+import com.kelvinapps.rxfirebase.DataSnapshotMapper
+import com.kelvinapps.rxfirebase.RxFirebaseDatabase
+import rx.Observable
+import site.paulo.localchat.data.manager.CurrentUserManager
+import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.data.model.chatgeo.ChatMessage
+import site.paulo.localchat.data.model.chatgeo.User
+import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase, val currentUserManager: CurrentUserManager) {
+
+    val CHILD_CHATS = "chats"
+    val CHILD_USERS = "users"
+    val CHILD_MESSAGES = "messages"
+
+    companion object {
+        enum class UserDataType {
+            NAME, AGE
+        }
+    }
+
+    /**************** User *********************/
+
+    fun getUsers(): Observable<List<User>> {
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS),
+            DataSnapshotMapper.listOf(User::class.java))
+    }
+
+    fun getUser(userId:String): Observable<User> {
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS).child(userId),
+            User::class.java)
+    }
+
+    fun registerUser(user:User): Unit {
+        val value = mutableMapOf<String, Any>()
+        value.put("email", user.email)
+        value.put("name", user.name)
+        value.put("age", user.age)
+        value.put("gender", user.gender)
+
+        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            Timber.e("User " + user.email + "registered")
+        }
+        firebaseDatabase.getReference(CHILD_USERS).push().setValue(value, completionListener)
+    }
+
+    fun updateUserData(dataType: UserDataType, value:String, completionListener: DatabaseReference.CompletionListener): Unit {
+        when(dataType) {
+            UserDataType.NAME -> {
+                val v = mutableMapOf<String, Any>()
+                v.put("name", value)
+                firebaseDatabase.getReference(CHILD_USERS)
+                    .child(currentUserManager.getUserId())
+                    .updateChildren(v, completionListener)
+            }
+            UserDataType.AGE -> {
+                val v = mutableMapOf<String, Any>()
+                v.put("age", value.toInt())
+                firebaseDatabase.getReference(CHILD_USERS)
+                    .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
+            }
+            else -> Timber.e("Invalid UserDataType")
+        }
+    }
+
+    /**************** Chat *********************/
+
+    fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
+        val value = mutableMapOf<String, Any>()
+        value.put("owner", message.owner)
+        value.put("message", message.message)
+        value.put("timestamp", ServerValue.TIMESTAMP)
+
+        firebaseDatabase.getReference(CHILD_MESSAGES).child(chatId).push().setValue(value, completionListener)
+    }
+
+    fun getChatRoom(chatId:String): Observable<Chat> {
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_CHATS).child(chatId),
+            Chat::class.java)
+    }
+
+
+}

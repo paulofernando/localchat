@@ -1,6 +1,9 @@
 package site.paulo.localchat.data.manager
 
 import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getFirebaseId
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Singleton
@@ -14,12 +17,26 @@ class CurrentUserManager {
         val instance: CurrentUserManager by lazy { Holder.INSTANCE }
     }
 
-    fun getUser(): User {
+    fun getUser(): User { //TODO Increase the quality of nullability code
         return user!!
+    }
+
+    fun getUserId(): String {
+        return Utils.getFirebaseId(user!!.email)
     }
 
     fun setUser(user:User){
         this.user = user
+    }
+
+    fun setUserName(name: String){
+        this.user = User(name, user!!.age, user!!.email, user!!.gender, user!!.pic, user!!.chats)
+        Timber.i("Current user data updated: " + user.toString())
+    }
+
+    fun setAge(age: Long){
+        this.user = User(user!!.name, age, user!!.email, user!!.gender, user!!.pic, user!!.chats)
+        Timber.i("Current user data updated: " + user.toString())
     }
 
 }

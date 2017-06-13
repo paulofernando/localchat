@@ -11,37 +11,43 @@
     <string name="lb_already_member">Already a member? Login</string>
     <string name="lb_no_account_yet">No account yet? Create one</string>
     <string name="lb_today">today</string>
+    <string name="lb_button_send">Send</string>
 
     <string name="title_settings">Settings</string>
+    <string name="title_profile">Profile</string>
+
+    <string name="description_profile_image">Profile\'s image</string>
 
     <string name="action_attach_image">Attach image</string>
     <string name="action_settings">Settings</string>
     <string name="action_signout">Sign out</string>
 
-    <string name="error_chars_least_number">at least 3 characters</string>
+    <string name="error_chars_least_number">at least 6 characters</string>
     <string name="error_email_valid">enter a valid email address</string>
     <string name="error_chars_bet_numbers">between 4 and 10 alphanumeric characters</string>
-
-    <string name="sign_in">Sign in</string>
-    <string name="signing_in">Signing in...</string>
-    <string name="signing_up">Signing up...</string>
+    <string name="error_age_bet_numbers">between 18 and 99</string>
+    <string name="error_gender">f or m</string>
+    <string name="error_loading_nearby_users">There was a problem loading the nearby users</string>
+    <string name="error_loading_chat">There was a problem loading the messages</string>
     <string name="signing_up_failed">Sign up failed. Try another email!</string>
-    <string name="sign_out">Sign out</string>
-
+    <string name="registration_failed">Registration failed!</string>
     <string name="chars_range">between 6 and 15 alphanumeric characters</string>
     <string name="enter_valid_email">enter a valid email address</string>
     <string name="auth_failed">Email and Password don\'t match!</string>
-    <string name="registration_failed">Registration failed!</string>
+    <string name="empty_chat">There aren\'t any messages</string>
+    <string name="empty_nearby_users">There isn\'t any nearby user</string>
+
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="signing_in">Signing in...</string>
+    <string name="signing_up">Signing up...</string>
     <string name="authenticating">Authenticating...</string>
 
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="tab_title_1">NEARBY</string>
     <string name="tab_title_2">CHATS</string>
 
-    <string name="empty_chat">There aren\'t any messages</string>
-    <string name="error_loading_chat">There was a problem loading the messages</string>
-    <string name="empty_nearby_users">There isn\'t any nearby user</string>
-    <string name="error_loading_nearby_users">There was a problem loading the nearby users</string>
-    <string name="button_send">Send</string>
+    <string name="profile_image_name">profile_image_name</string>
+    <string name="user_name">user_name</string>
+    <string name="user_profile_image">user_profile_image</string>
 
 </resources>

@@ -3,31 +3,26 @@ package site.paulo.localchat.ui.room
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ServerValue
+import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.ui.room.RoomContract
+import timber.log.Timber
 import javax.inject.Inject
 
 class RoomPresenter
 @Inject
-constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
-
-    override fun loadMessages() {
-        //view.showMessages()
-    }
+constructor(private val firebaseDatabase: FirebaseDatabase, private val dataManager: DataManager) : RoomContract.Presenter() {
 
     override fun sendMessage(message: ChatMessage, chatId: String) {
         if(!message.message.equals("")) {
-            val value = mutableMapOf<String, Any>()
-            value.put("owner", message.owner)
-            value.put("message", message.message)
-            value.put("timestamp", ServerValue.TIMESTAMP)
+            val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+                Timber.i("Message sent")
+            }
 
-            firebase.getReference("messages").child(chatId).push().setValue(value)
+            dataManager.sendMessage(message, chatId, completionListener)
             view.cleanMessageField()
-        }
-    }
+        }    }
 
     override fun registerRoomListener(chatId: String) {
         val childEventListener = object : ChildEventListener {
@@ -44,7 +39,7 @@ constructor(private val firebase: FirebaseDatabase) : RoomContract.Presenter() {
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebase.getReference("messages")
+        firebaseDatabase.getReference("messages")
             .child(chatId)
             .addChildEventListener(childEventListener)
     }
