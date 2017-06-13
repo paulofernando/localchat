@@ -1,7 +1,9 @@
 package site.paulo.localchat.data
 
+import com.google.firebase.database.DatabaseReference
 import rx.Observable
 import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.data.model.chatgeo.ChatMessage
 import site.paulo.localchat.data.model.chatgeo.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import javax.inject.Inject
@@ -23,7 +25,16 @@ class DataManager
         firebaseHelper.registerUser(user)
     }
 
+    fun signUn(user: User): Unit {
+        firebaseHelper.signUp(user)
+    }
+
     fun getChatRoom(chatId:String): Observable<Chat> {
         return firebaseHelper.getChatRoom(chatId)
     }
+
+    fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
+        return firebaseHelper.sendMessage(message, chatId, completionListener)
+    }
+
 }

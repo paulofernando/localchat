@@ -25,41 +25,24 @@ import javax.inject.Inject
 @ConfigPersistent
 class ChatPresenter
 @Inject
-constructor(private val dataManager: DataManager,
-            private val firebaseDatabase: FirebaseDatabase,
-            private val firebaseAuth: FirebaseAuth,
-            private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
+constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
 
-    val CHILD_USERS = "users"
+    override fun loadChatRooms(userId:String) {
 
-    override fun loadChatRooms() {
-
-        /*dataManager.getUser(Utils.getCurrentUserId())
+        dataManager.getUser(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<User>()
                 .onNext {
-                    loadChatRoom(it.)
+                    it.chats.forEach {
+                        loadChatRoom(it.key)
+                    }
                 }
                 .onError {
-                    Timber.e(it, "There was an error loading a chat room.")
-                    view.showError()
+                    Timber.e(it, "There was an error loading chats from an user.")
                 }
-            ).addTo(compositeSubscription)*/
+            ).addTo(compositeSubscription)
 
-        val userEmail = firebaseAuth.currentUser?.email
-        firebaseDatabase.getReference(CHILD_USERS).child(Utils.getFirebaseId(userEmail!!))
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Timber.i("We're done loading user information")
-                val user = dataSnapshot.getValue(User::class.java)
-                loadChatRoom(user.chats.keys.elementAt(0))
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Timber.e(databaseError.toString())
-            }
-        })
     }
 
     override fun loadChatRoom(chatId: String) {

@@ -6,8 +6,11 @@
 
     <!-- backgrounds -->
     <color name="color_room_background">#67799E</color>
+    <color name="color_nearby_users_background">#eeeeee</color>
+    <color name="color_chats_background">#eeeeee</color>
     <color name="color_profile_information_background">#ffffff</color>
-    <color name="color_profile_background">#f2ebe8</color>
+    <color name="color_settings_background">#eeeeee</color>
+    <color name="color_profile_background">#eeeeee</color>
     <color name="color_edit_text_background">#ffffff</color>
 
     <!-- texts -->

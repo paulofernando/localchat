@@ -61,14 +61,14 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         presenter.attachView(this)
 
         btnLogin.setOnClickListener {
-            login()
+            if(validate()) presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
         }
 
         inputPassword.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             // If the event is a key-down event on the "enter" button
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform action on key press
-                login()
+                if(validate()) presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
                 return@OnKeyListener true
             }
             false
@@ -81,18 +81,20 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         presenter.isAuthenticated() //if authenticated, sign in
     }
 
-    fun login() {
+    fun validate(): Boolean {
         if(inputEmail.text.toString().equals("")) {
             inputEmail.error = "enter an email address"
+            return false
         } else if(inputPassword.text.toString().equals("")) {
             inputPassword.error = "enter a password"
+            return false
         } else {
             if(spinnerDialog == null) {
                 spinnerDialog = indeterminateProgressDialog(R.string.authenticating)
             } else {
                 spinnerDialog?.show()
             }
-            presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
+            return true
         }
     }
 

@@ -2,10 +2,12 @@ package site.paulo.localchat.data.remote
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.data.model.chatgeo.ChatMessage
 import site.paulo.localchat.data.model.chatgeo.User
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,6 +18,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase)
 
     val CHILD_CHATS = "chats"
     val CHILD_USERS = "users"
+    val CHILD_MESSAGES = "messages"
 
     fun getUsers(): Observable<List<User>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS),
@@ -25,8 +28,6 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase)
     fun getUser(userId:String): Observable<User> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS).child(userId),
             User::class.java)
-
-        //return RxFirebaseDatabase.observeValueEvent(firebaseDatabase.getReference(CHILD_USERS).child(userId)) //DataSnapshot
     }
 
     fun registerUser(user:User): Unit {
@@ -40,13 +41,21 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase)
             Timber.e("User " + user.email + "registered")
         }
         firebaseDatabase.getReference(CHILD_USERS).push().setValue(value, completionListener)
+    }
 
+    fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
+        val value = mutableMapOf<String, Any>()
+        value.put("owner", message.owner)
+        value.put("message", message.message)
+        value.put("timestamp", ServerValue.TIMESTAMP)
 
+        firebaseDatabase.getReference(CHILD_MESSAGES).child(chatId).push().setValue(value, completionListener)
     }
 
     fun getChatRoom(chatId:String): Observable<Chat> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_CHATS).child(chatId),
             Chat::class.java)
     }
+
 
 }

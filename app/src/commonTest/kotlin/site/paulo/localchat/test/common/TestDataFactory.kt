@@ -1,7 +1,10 @@
 package site.paulo.localchat.test.common
 
+import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.data.model.chatgeo.SummarizedUser
 import site.paulo.localchat.data.model.chatgeo.User
-import java.util.*
+import java.util.ArrayList
+import java.util.UUID
 
 object TestDataFactory {
 
@@ -24,7 +27,20 @@ object TestDataFactory {
             email = "email$uniqueSuffix@paulo.site",
             gender = "m",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
-            chats = mapOf("abc" to true))
+            chats = mapOf("c1" to true))
+    }
+
+    @JvmStatic fun makeChat(uniqueSuffix: String): Chat {
+        return Chat(
+            id = "id$uniqueSuffix",
+            lastMessage = "lastMessage",
+            users = mapOf("abc" to makeSummarizedUser("s1")))
+    }
+
+    @JvmStatic fun makeSummarizedUser(uniqueSuffix: String): SummarizedUser {
+        return SummarizedUser(
+            name = "name$uniqueSuffix",
+            pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png")
     }
 
 }
