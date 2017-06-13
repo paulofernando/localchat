@@ -16,7 +16,10 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseActivity
+import site.paulo.localchat.ui.settings.ProfilePresenter
+import javax.inject.Inject
 
 
 class ProfileActivity: BaseActivity(), ProfileContract.View {
@@ -40,17 +43,24 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     @BindView(R.id.emailUserProfileLabel)
     lateinit var emailLb: TextView
 
-    @BindView(R.id.ageUserProfileLabel)
-    lateinit var ageLb: TextView
+    @BindView(R.id.ageUserProfileLabel) lateinit var ageLb: TextView
+    @BindView(R.id.ageUserProfileTxt) lateinit var ageTxt: EditText
+    @BindView(R.id.ageUserEditProfileImg) lateinit var ageEditImg: ImageView
+    @BindView(R.id.ageUserCancelProfileImg) lateinit var ageCancelImg: ImageView
+    @BindView(R.id.ageUserConfirmProfileImg) lateinit var ageConfirmImg: ImageView
+    @BindView(R.id.ageUserEditProfileContainer) lateinit var ageEditContainer: LinearLayout
 
     @BindView(R.id.genderUserProfileLabel)
     lateinit var genderLb: TextView
 
     lateinit var user: User
 
+    @Inject
+    lateinit var presenter: ProfilePresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //activityComponent.inject(this)
+        activityComponent.inject(this)
         setContentView(R.layout.activity_profile)
         ButterKnife.bind(this)
 
@@ -69,10 +79,13 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     override fun showCurrentUserData() {
         nameLb.text = user.name
         nameTxt.setText(user.name, TextView.BufferType.EDITABLE)
-        ageLb.text = user.age.toString() + " yo"
+        ageLb.text = user.age.toString()
+        ageTxt.setText(user.age.toString(), TextView.BufferType.EDITABLE)
         emailLb.text = user.email
         genderLb.text = user.gender
     }
+
+    /**************** Name *********************/
 
     override fun editName(view:View) {
         nameLb.visibility = View.GONE
@@ -86,8 +99,15 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     }
 
     override fun confirmNameEdition(view:View) {
-        nameLb.text = nameTxt.text
-        hideNameConfirmationButton()
+        val name = nameTxt.text.toString()
+        if (name.isEmpty() || name.length < 6) {
+            nameTxt.error = resources.getString(R.string.error_chars_least_number)
+        } else {
+            nameTxt.error = null
+            nameLb.text = nameTxt.text
+            presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
+            hideNameConfirmationButton()
+        }
     }
 
     fun hideNameConfirmationButton() {
@@ -96,6 +116,39 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         nameTxt.visibility = View.GONE
         nameEditContainer.visibility = View.GONE
     }
+
+    /**************** Age *********************/
+
+    override fun editAge(view:View) {
+        ageLb.visibility = View.GONE
+        ageEditImg.visibility = View.GONE
+        ageTxt.visibility = View.VISIBLE
+        ageEditContainer.visibility = View.VISIBLE
+    }
+
+    override fun cancelAgeEdition(view:View) {
+        hideAgeConfirmationButton()
+    }
+
+    override fun confirmAgeEdition(view:View) {
+        val age = ageTxt.text.toString().toLong()
+        if (ageTxt.text.isEmpty() || age !in 17..100) {
+            ageTxt.error = resources.getString(R.string.error_age_bet_numbers)
+        } else {
+            ageTxt.error = null
+            ageLb.text = ageTxt.text
+            presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
+            hideAgeConfirmationButton()
+        }
+    }
+
+    fun hideAgeConfirmationButton() {
+        ageLb.visibility = View.VISIBLE
+        ageEditImg.visibility = View.VISIBLE
+        ageTxt.visibility = View.GONE
+        ageEditContainer.visibility = View.GONE
+    }
+
 
     override fun onStart() {
         super.onStart()

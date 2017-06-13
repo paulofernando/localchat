@@ -6,6 +6,7 @@ import com.google.firebase.database.ServerValue
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.chatgeo.Chat
 import site.paulo.localchat.data.model.chatgeo.ChatMessage
 import site.paulo.localchat.data.model.chatgeo.User
@@ -14,11 +15,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase) {
+class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase, val currentUserManager: CurrentUserManager) {
 
     val CHILD_CHATS = "chats"
     val CHILD_USERS = "users"
     val CHILD_MESSAGES = "messages"
+
+    companion object {
+        enum class UserDataType {
+            NAME, AGE
+        }
+    }
+
+    /**************** User *********************/
 
     fun getUsers(): Observable<List<User>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS),
@@ -42,6 +51,27 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase)
         }
         firebaseDatabase.getReference(CHILD_USERS).push().setValue(value, completionListener)
     }
+
+    fun updateUserData(dataType: UserDataType, value:String, completionListener: DatabaseReference.CompletionListener): Unit {
+        when(dataType) {
+            UserDataType.NAME -> {
+                val v = mutableMapOf<String, Any>()
+                v.put("name", value)
+                firebaseDatabase.getReference(CHILD_USERS)
+                    .child(currentUserManager.getUserId())
+                    .updateChildren(v, completionListener)
+            }
+            UserDataType.AGE -> {
+                val v = mutableMapOf<String, Any>()
+                v.put("age", value.toInt())
+                firebaseDatabase.getReference(CHILD_USERS)
+                    .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
+            }
+            else -> Timber.e("Invalid UserDataType")
+        }
+    }
+
+    /**************** Chat *********************/
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         val value = mutableMapOf<String, Any>()

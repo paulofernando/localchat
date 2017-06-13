@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class RoomPresenter
 @Inject
-constructor(private val firebase: FirebaseDatabase, private val dataManager: DataManager) : RoomContract.Presenter() {
+constructor(private val firebaseDatabase: FirebaseDatabase, private val dataManager: DataManager) : RoomContract.Presenter() {
 
     override fun sendMessage(message: ChatMessage, chatId: String) {
         if(!message.message.equals("")) {
@@ -39,7 +39,7 @@ constructor(private val firebase: FirebaseDatabase, private val dataManager: Dat
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebase.getReference("messages")
+        firebaseDatabase.getReference("messages")
             .child(chatId)
             .addChildEventListener(childEventListener)
     }

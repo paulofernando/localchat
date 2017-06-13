@@ -57,8 +57,11 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
             launchProfileEditor()
         }
 
-        presenter.loadCurrentUser()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.loadCurrentUser()
     }
 
     fun launchProfileEditor() {

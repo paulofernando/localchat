@@ -25,8 +25,9 @@ class DataManager
         firebaseHelper.registerUser(user)
     }
 
-    fun signUn(user: User): Unit {
-        firebaseHelper.signUp(user)
+    fun updateUserData(dataType: FirebaseHelper.Companion.UserDataType,
+        value:String, completionListener: DatabaseReference.CompletionListener): Unit {
+        firebaseHelper.updateUserData(dataType, value, completionListener)
     }
 
     fun getChatRoom(chatId:String): Observable<Chat> {
