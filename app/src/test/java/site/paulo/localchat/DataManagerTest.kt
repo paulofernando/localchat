@@ -8,7 +8,7 @@ import org.mockito.Mock
 import org.mockito.runners.MockitoJUnitRunner
 import rx.Observable
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.test.common.TestDataFactory
 

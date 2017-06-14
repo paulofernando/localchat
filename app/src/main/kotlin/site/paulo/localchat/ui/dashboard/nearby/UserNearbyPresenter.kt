@@ -8,7 +8,7 @@ import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyContract
 import timber.log.Timber

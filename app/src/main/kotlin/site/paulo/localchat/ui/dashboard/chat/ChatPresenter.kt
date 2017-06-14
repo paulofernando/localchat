@@ -12,8 +12,8 @@ import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
 import site.paulo.localchat.ui.utils.Utils
@@ -34,11 +34,16 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<User>()
                 .onNext {
-                    it.chats.forEach {
-                        loadChatRoom(it.key)
+                    if(it.chats.isEmpty()) {
+                        view.showChatsEmpty()
+                    } else {
+                        it.chats.forEach {
+                            loadChatRoom(it.key)
+                        }
                     }
                 }
                 .onError {
+                    view.showError()
                     Timber.e(it, "There was an error loading chats from an user.")
                 }
             ).addTo(compositeSubscription)

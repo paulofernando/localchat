@@ -2,17 +2,17 @@ package site.paulo.localchat.ui.signin
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.kelvinapps.rxfirebase.RxFirebaseAuth
+import site.paulo.localchat.data.DataManager
 import timber.log.Timber
 import javax.inject.Inject
 
 
 class SignInPresenter
 @Inject
-constructor(private val firebaseAuth: FirebaseAuth) : SignInContract.Presenter() {
+constructor(private val dataManager: DataManager, private val firebaseAuth: FirebaseAuth) : SignInContract.Presenter() {
 
     override fun signIn(email: String, password: String) {
-        RxFirebaseAuth.signInWithEmailAndPassword(firebaseAuth, email, password)
+        dataManager.authenticateUser(email, password)
             .subscribe({
                 Timber.i("signIn", "signInWithEmail:onComplete")
                 view.showFailSignIn()

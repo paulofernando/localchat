@@ -1,6 +1,6 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseMvpPresenter
 import site.paulo.localchat.ui.base.MvpView
 

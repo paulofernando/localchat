@@ -15,7 +15,6 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
-import site.paulo.localchat.R.string.error_chars_bet_numbers
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import javax.inject.Inject

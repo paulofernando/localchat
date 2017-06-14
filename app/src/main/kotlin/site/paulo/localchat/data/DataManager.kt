@@ -1,10 +1,11 @@
 package site.paulo.localchat.data
 
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseReference
 import rx.Observable
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +24,10 @@ class DataManager
 
     fun registerUser(user: User): Unit {
         firebaseHelper.registerUser(user)
+    }
+
+    fun authenticateUser(email: String, password: String): Observable<AuthResult> {
+        return firebaseHelper.authenticateUser(email, password)
     }
 
     fun updateUserData(dataType: FirebaseHelper.Companion.UserDataType,

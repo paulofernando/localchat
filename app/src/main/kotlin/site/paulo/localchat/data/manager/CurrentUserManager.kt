@@ -1,6 +1,6 @@
 package site.paulo.localchat.data.manager
 
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber

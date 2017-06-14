@@ -6,8 +6,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import timber.log.Timber
+import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.remote.FirebaseHelper
+import site.paulo.localchat.data.remote.FirebaseHelper.Child.CHILD_TIMESTAMP
 import javax.inject.Inject
 
 class RoomPresenter
@@ -17,12 +18,12 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val dataMana
     override fun sendMessage(message: ChatMessage, chatId: String) {
         if(!message.message.equals("")) {
             val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
-                Timber.i("Message sent")
+                view.messageSent(message)
             }
-
             dataManager.sendMessage(message, chatId, completionListener)
             view.cleanMessageField()
-        }    }
+        }
+    }
 
     override fun registerRoomListener(chatId: String) {
         val childEventListener = object : ChildEventListener {
@@ -31,16 +32,14 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val dataMana
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {}
-
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
-
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebaseDatabase.getReference("messages")
+        firebaseDatabase.getReference(FirebaseHelper.Child.CHILD_MESSAGES)
             .child(chatId)
+            .orderByChild(FirebaseHelper.Child.CHILD_TIMESTAMP)
             .addChildEventListener(childEventListener)
     }
 

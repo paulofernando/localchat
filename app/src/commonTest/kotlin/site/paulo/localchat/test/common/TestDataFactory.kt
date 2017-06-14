@@ -1,8 +1,8 @@
 package site.paulo.localchat.test.common
 
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.SummarizedUser
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.SummarizedUser
+import site.paulo.localchat.data.model.firebase.User
 import java.util.ArrayList
 import java.util.UUID
 
@@ -28,6 +28,26 @@ object TestDataFactory {
             gender = "m",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
             chats = mapOf("c1" to true))
+    }
+
+    @JvmStatic fun makeUser(uniqueSuffix: String, chatId: String): User {
+        return User(
+            name = "name$uniqueSuffix",
+            age = 29,
+            email = "email$uniqueSuffix@paulo.site",
+            gender = "m",
+            pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+            chats = mapOf(chatId to true))
+    }
+
+    @JvmStatic fun makeUserEmptyChatList(uniqueSuffix: String): User {
+        return User(
+            name = "name$uniqueSuffix",
+            age = 29,
+            email = "email$uniqueSuffix@paulo.site",
+            gender = "m",
+            pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+            chats = emptyMap())
     }
 
     @JvmStatic fun makeChat(uniqueSuffix: String): Chat {

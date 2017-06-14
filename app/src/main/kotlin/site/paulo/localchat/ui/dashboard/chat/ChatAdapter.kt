@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.item_chat.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.Chat
+import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx

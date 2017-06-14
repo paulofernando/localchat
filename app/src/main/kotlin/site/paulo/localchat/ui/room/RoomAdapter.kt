@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.item_room_message.view.*
 import me.himanshusoni.chatmessageview.ChatMessageView
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.formattedTime
 import java.util.Date

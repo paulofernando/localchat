@@ -3,7 +3,7 @@ package site.paulo.localchat.ui.signup
 import com.google.firebase.auth.FirebaseAuth
 import com.kelvinapps.rxfirebase.RxFirebaseAuth
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import timber.log.Timber
 import javax.inject.Inject
 

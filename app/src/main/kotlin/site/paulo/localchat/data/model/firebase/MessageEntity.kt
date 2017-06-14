@@ -1,4 +1,4 @@
-package site.paulo.localchat.data.model.chatgeo
+package site.paulo.localchat.data.model.firebase
 
 data class MessageEntity(val id: String,
     val senderId: String,

@@ -10,7 +10,7 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.UserNearbyPresenter
 import site.paulo.localchat.ui.user.UsersNearbyAdapter

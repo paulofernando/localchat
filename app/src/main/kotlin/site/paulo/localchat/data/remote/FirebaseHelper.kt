@@ -1,25 +1,33 @@
 package site.paulo.localchat.data.remote
 
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
+import com.kelvinapps.rxfirebase.RxFirebaseAuth
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.User
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase, val currentUserManager: CurrentUserManager) {
+class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
+    val currentUserManager: CurrentUserManager,
+    val firebaseAuth: FirebaseAuth) {
 
-    val CHILD_CHATS = "chats"
-    val CHILD_USERS = "users"
-    val CHILD_MESSAGES = "messages"
+    object Child {
+        val CHILD_CHATS = "chats"
+        val CHILD_USERS = "users"
+        val CHILD_MESSAGES = "messages"
+        val CHILD_TIMESTAMP = "timestamp"
+    }
 
     companion object {
         enum class UserDataType {
@@ -30,12 +38,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     /**************** User *********************/
 
     fun getUsers(): Observable<List<User>> {
-        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS),
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Child.CHILD_USERS),
             DataSnapshotMapper.listOf(User::class.java))
     }
 
     fun getUser(userId:String): Observable<User> {
-        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_USERS).child(userId),
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Child.CHILD_USERS).child(userId),
             User::class.java)
     }
 
@@ -49,7 +57,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.e("User " + user.email + "registered")
         }
-        firebaseDatabase.getReference(CHILD_USERS).push().setValue(value, completionListener)
+        firebaseDatabase.getReference(Child.CHILD_USERS).push().setValue(value, completionListener)
+    }
+
+    fun authenticateUser(email: String, password: String): Observable<AuthResult> {
+        return RxFirebaseAuth.signInWithEmailAndPassword(firebaseAuth, email, password)
     }
 
     fun updateUserData(dataType: UserDataType, value:String, completionListener: DatabaseReference.CompletionListener): Unit {
@@ -57,14 +69,14 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             UserDataType.NAME -> {
                 val v = mutableMapOf<String, Any>()
                 v.put("name", value)
-                firebaseDatabase.getReference(CHILD_USERS)
+                firebaseDatabase.getReference(Child.CHILD_USERS)
                     .child(currentUserManager.getUserId())
                     .updateChildren(v, completionListener)
             }
             UserDataType.AGE -> {
                 val v = mutableMapOf<String, Any>()
                 v.put("age", value.toInt())
-                firebaseDatabase.getReference(CHILD_USERS)
+                firebaseDatabase.getReference(Child.CHILD_USERS)
                     .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
             }
             else -> Timber.e("Invalid UserDataType")
@@ -79,11 +91,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         value.put("message", message.message)
         value.put("timestamp", ServerValue.TIMESTAMP)
 
-        firebaseDatabase.getReference(CHILD_MESSAGES).child(chatId).push().setValue(value, completionListener)
+        firebaseDatabase.getReference(Child.CHILD_MESSAGES).child(chatId).push().setValue(value, completionListener)
     }
 
     fun getChatRoom(chatId:String): Observable<Chat> {
-        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(CHILD_CHATS).child(chatId),
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Child.CHILD_CHATS).child(chatId),
             Chat::class.java)
     }
 

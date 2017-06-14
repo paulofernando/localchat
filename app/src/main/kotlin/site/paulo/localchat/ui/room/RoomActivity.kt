@@ -11,10 +11,10 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.data.model.chatgeo.SummarizedUser
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.base.BaseActivity
+import timber.log.Timber
 import javax.inject.Inject
 
 class RoomActivity : BaseActivity() , RoomContract.View {
@@ -63,6 +63,8 @@ class RoomActivity : BaseActivity() , RoomContract.View {
 
         presenter.registerRoomListener(chat.id)
 
+        (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
+
         sendBtn.setOnClickListener {
             presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), "cH58hajvh")
         }
@@ -81,6 +83,10 @@ class RoomActivity : BaseActivity() , RoomContract.View {
 
     override fun cleanMessageField() {
         messageText.text.clear()
+    }
+
+    override fun messageSent(message: ChatMessage) {
+        Timber.i("Message sent: " + message.message)
     }
 
     override fun onDestroy() {

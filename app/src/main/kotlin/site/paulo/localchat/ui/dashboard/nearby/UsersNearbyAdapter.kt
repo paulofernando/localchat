@@ -8,7 +8,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.ctx
 import javax.inject.Inject
 

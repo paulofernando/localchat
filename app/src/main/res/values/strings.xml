@@ -12,6 +12,8 @@
     <string name="lb_no_account_yet">No account yet? Create one</string>
     <string name="lb_today">today</string>
     <string name="lb_button_send">Send</string>
+    <string name="lb_gender_male">Male</string>
+    <string name="lb_gender_female">Female</string>
 
     <string name="title_settings">Settings</string>
     <string name="title_profile">Profile</string>

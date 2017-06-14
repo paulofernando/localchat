@@ -2,7 +2,7 @@ package site.paulo.localchat.data.remote
 
 import retrofit2.http.GET
 import rx.Observable
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 
 interface ChatGeoService {
 

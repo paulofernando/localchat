@@ -5,8 +5,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.remote.FirebaseHelper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,13 +28,11 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val currentU
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
-
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebaseDatabase.getReference("users")
+        firebaseDatabase.getReference(FirebaseHelper.Child.CHILD_USERS)
             .child(currentUserManager.getUserId())
             .addChildEventListener(childEventListener)
     }

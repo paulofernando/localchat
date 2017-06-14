@@ -15,7 +15,7 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.ProfilePresenter
@@ -55,6 +55,8 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     lateinit var user: User
 
+    var lastValue:String? = null
+
     @Inject
     lateinit var presenter: ProfilePresenter
 
@@ -82,16 +84,23 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         ageLb.text = user.age.toString()
         ageTxt.setText(user.age.toString(), TextView.BufferType.EDITABLE)
         emailLb.text = user.email
-        genderLb.text = user.gender
+
+        when(user.gender) {
+            "m" -> genderLb.text = resources.getString(R.string.lb_gender_male)
+            "f" -> genderLb.text = resources.getString(R.string.lb_gender_female)
+        }
+
     }
 
     /**************** Name *********************/
 
     override fun editName(view:View) {
+        cancelAgeEdition(ageTxt)
         nameLb.visibility = View.GONE
         nameEditImg.visibility = View.GONE
         nameTxt.visibility = View.VISIBLE
         nameEditContainer.visibility = View.VISIBLE
+        lastValue = nameLb.text.toString()
     }
 
     override fun cancelNameEdition(view:View) {
@@ -104,8 +113,10 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
             nameTxt.error = resources.getString(R.string.error_chars_least_number)
         } else {
             nameTxt.error = null
-            nameLb.text = nameTxt.text
-            presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
+            if(!lastValue!!.equals(nameTxt.text.toString())) {
+                nameLb.text = nameTxt.text
+                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
+            }
             hideNameConfirmationButton()
         }
     }
@@ -120,10 +131,12 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     /**************** Age *********************/
 
     override fun editAge(view:View) {
+        cancelAgeEdition(nameTxt)
         ageLb.visibility = View.GONE
         ageEditImg.visibility = View.GONE
         ageTxt.visibility = View.VISIBLE
         ageEditContainer.visibility = View.VISIBLE
+        lastValue = nameLb.text.toString()
     }
 
     override fun cancelAgeEdition(view:View) {
@@ -136,8 +149,10 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
             ageTxt.error = resources.getString(R.string.error_age_bet_numbers)
         } else {
             ageTxt.error = null
-            ageLb.text = ageTxt.text
-            presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
+            if(!lastValue!!.equals(ageTxt.text.toString())) {
+                ageLb.text = ageTxt.text
+                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
+            }
             hideAgeConfirmationButton()
         }
     }

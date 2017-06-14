@@ -27,6 +27,7 @@
         android:layout_alignParentStart="true"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/spacing_large"
         android:paddingTop="@dimen/spacing_normal"
         android:background="@color/color_room_background"
         android:layout_below="@+id/toolbarRoom"
@@ -48,20 +49,20 @@
             android:id="@+id/messageRoomTxt"
             android:background="@drawable/edit_text_shape"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/image_height_send_button"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:inputType="textShortMessage|textAutoCorrect" />
 
         <at.markushi.ui.CircleButton
             android:id="@+id/sendRoomBtn"
-            android:layout_gravity="bottom"
-            android:text="@string/lb_button_send"
             android:layout_width="@dimen/image_width_send_button"
             android:layout_height="@dimen/image_height_send_button"
+            android:layout_gravity="bottom"
             android:src="@drawable/send"
+            android:text="@string/lb_button_send"
             app:cb_color="#99CC00"
-            app:cb_pressedRingWidth="8dip" />
+            app:cb_pressedRingWidth="3dip"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -14,7 +14,7 @@ import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.profile.ProfileActivity
 import site.paulo.localchat.ui.utils.CircleTransform

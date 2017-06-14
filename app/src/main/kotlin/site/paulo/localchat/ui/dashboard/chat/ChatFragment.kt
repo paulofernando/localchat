@@ -12,8 +12,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.ChatAdapter
 import site.paulo.localchat.ui.user.ChatPresenter
