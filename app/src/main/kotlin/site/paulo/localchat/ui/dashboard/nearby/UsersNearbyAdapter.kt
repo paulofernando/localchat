@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
+import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
+import site.paulo.localchat.R.drawable.chat
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.ui.room.RoomActivity
+import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
+import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Inject
 
 class UsersNearbyAdapter
@@ -17,6 +23,9 @@ class UsersNearbyAdapter
 constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
     var users = emptyList<User>()
+
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersNearbyAdapter.UserViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -50,7 +59,11 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
                 itemView.firstNameUserTv.text = name
                 itemView.emailUserTv.text = email
-                //itemView.setOnClickListener { itemClick(this) }
+
+                itemView.setOnClickListener {
+                    val chatId:String = currentUserManager.getUser().chats.get(Utils.getFirebaseId(email)) ?: ""
+                    itemView.ctx.startActivity<RoomActivity>("chatId" to chatId)
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.widget.EditText
+import android.widget.Toast
 import at.markushi.ui.CircleButton
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -48,11 +49,12 @@ class RoomActivity : BaseActivity() , RoomContract.View {
 
         presenter.attachView(this)
 
-        var otherUserIndex: Int = 0
-        val chat: Chat = intent.getParcelableExtra<Chat>("chat")
-        if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
+        val chatId: String? = intent.getStringExtra("chatId")
+        val chat: Chat? = intent.getParcelableExtra<Chat>("chat")
 
-        toolbar.title = chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
+        if(chat == null) //just have the chat id
+            presenter.getChatData(chatId!!)
+        else showChat(chat!!)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -61,13 +63,20 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         messagesList.adapter = roomAdapter
         messagesList.layoutManager = LinearLayoutManager(this)
 
-        presenter.registerRoomListener(chat.id)
-
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
         sendBtn.setOnClickListener {
             presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), "cH58hajvh")
         }
+    }
+
+    override fun showChat(chat: Chat) {
+        var otherUserIndex: Int = 0
+        if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1 //TODO change to getCurrentUserId
+
+        toolbar.title = chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
+
+        presenter.registerRoomListener(chat.id)
     }
 
     override fun addMessage(message: ChatMessage) {
@@ -76,10 +85,10 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_room, menu)
-        return true
+    override fun showEmptyChatRoom() {
+        //Toast.makeText(this, R.string.error_loading_chat_room_data, Toast.LENGTH_LONG).show()
     }
+
 
     override fun cleanMessageField() {
         messageText.text.clear()
@@ -87,6 +96,11 @@ class RoomActivity : BaseActivity() , RoomContract.View {
 
     override fun messageSent(message: ChatMessage) {
         Timber.i("Message sent: " + message.message)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_room, menu)
+        return true
     }
 
     override fun onDestroy() {

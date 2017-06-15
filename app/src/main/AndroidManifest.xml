@@ -16,12 +16,12 @@
         <activity
             android:name=".ui.signin.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".ui.signup.SignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".ui.room.RoomActivity"

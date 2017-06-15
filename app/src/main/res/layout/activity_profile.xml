@@ -56,7 +56,7 @@
         android:layout_below="@+id/nameUserProfileTxt"
         android:layout_toEndOf="@+id/nameUserProfileTxt"
         android:layout_marginBottom="@dimen/spacing_normal"
-        android:background="@color/color_profile_information_background"
+        android:background="@color/color_profile_information_component"
         android:paddingLeft="@dimen/spacing_large">
 
         <ImageView
@@ -141,7 +141,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/component_profile_data_height"
-        android:background="@color/color_profile_information_background"
+        android:background="@color/color_profile_information_component"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:paddingLeft="@dimen/spacing_large">
 
@@ -227,7 +227,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/component_profile_data_height"
-        android:background="@color/color_profile_information_background"
+        android:background="@color/color_profile_information_component"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:paddingLeft="@dimen/spacing_large"
         android:paddingRight="@dimen/spacing_large">
@@ -254,7 +254,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/component_profile_data_height"
-        android:background="@color/color_profile_information_background"
+        android:background="@color/color_profile_information_component"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:paddingLeft="@dimen/spacing_large"
         android:paddingRight="@dimen/spacing_large">

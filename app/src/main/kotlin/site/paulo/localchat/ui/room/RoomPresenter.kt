@@ -5,15 +5,34 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import rx.android.schedulers.AndroidSchedulers
+import rx.lang.kotlin.FunctionSubscriber
+import rx.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.remote.FirebaseHelper
-import site.paulo.localchat.data.remote.FirebaseHelper.Child.CHILD_TIMESTAMP
+import timber.log.Timber
 import javax.inject.Inject
 
 class RoomPresenter
 @Inject
 constructor(private val firebaseDatabase: FirebaseDatabase, private val dataManager: DataManager) : RoomContract.Presenter() {
+
+    override fun getChatData(chatId: String) {
+        dataManager.getChatRoom(chatId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(FunctionSubscriber<Chat>()
+                .onNext {
+                    view.showChat(it)
+                }
+                .onError {
+                    Timber.e(it, "There was an error loading a chat room.")
+                    view.showEmptyChatRoom()
+                }
+            )
+    }
 
     override fun sendMessage(message: ChatMessage, chatId: String) {
         if(!message.message.equals("")) {

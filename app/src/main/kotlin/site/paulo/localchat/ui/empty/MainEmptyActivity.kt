@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.google.firebase.database.FirebaseDatabase
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.dashboard.DashboardActivity
 import site.paulo.localchat.ui.signin.SignInActivity
 
 
@@ -16,9 +15,9 @@ class MainEmptyActivity : BaseActivity() {
         val activityIntent: Intent
 
         //if (Util.getToken() != null) {
-            //activityIntent = Intent(this, DashboardActivity::class.java)
+        //activityIntent = Intent(this, DashboardActivity::class.java)
         //} else {
-            activityIntent = Intent(this, SignInActivity::class.java)
+        activityIntent = Intent(this, SignInActivity::class.java)
         //}
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)

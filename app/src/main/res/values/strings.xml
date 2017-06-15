@@ -30,6 +30,7 @@
     <string name="error_age_bet_numbers">between 18 and 99</string>
     <string name="error_gender">f or m</string>
     <string name="error_loading_nearby_users">There was a problem loading the nearby users</string>
+    <string name="error_loading_chat_room_data">There was a problem loading the chat data</string>
     <string name="error_loading_chat">There was a problem loading the messages</string>
     <string name="signing_up_failed">Sign up failed. Try another email!</string>
     <string name="registration_failed">Registration failed!</string>

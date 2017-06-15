@@ -10,7 +10,7 @@ data class User(
     val email: String = "",
     val gender: String = "",
     val pic: String = "",
-    val chats: Map<String, Boolean> = emptyMap())
+    val chats: Map<String, String> = emptyMap())
     : PaperParcelable {
 
     companion object {
