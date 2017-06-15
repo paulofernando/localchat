@@ -86,12 +86,16 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     /**************** Chat *********************/
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
-        val value = mutableMapOf<String, Any>()
-        value.put("owner", message.owner)
-        value.put("message", message.message)
-        value.put("timestamp", ServerValue.TIMESTAMP)
+        val valueMessage = mutableMapOf<String, Any>()
+        valueMessage.put("owner", message.owner)
+        valueMessage.put("message", message.message)
+        valueMessage.put("timestamp", ServerValue.TIMESTAMP)
 
-        firebaseDatabase.getReference(Child.CHILD_MESSAGES).child(chatId).push().setValue(value, completionListener)
+        val valueLastMessage = mutableMapOf<String, Any>()
+        valueLastMessage.put("lastMessage", message.owner + ": " + message.message)
+
+        firebaseDatabase.getReference(Child.CHILD_MESSAGES).child(chatId).push().setValue(valueMessage, completionListener)
+        firebaseDatabase.getReference(Child.CHILD_CHATS).child(chatId).updateChildren(valueLastMessage)
     }
 
     fun getChatRoom(chatId:String): Observable<Chat> {
