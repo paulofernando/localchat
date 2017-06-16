@@ -15,8 +15,8 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:subtitleTextAppearance="@style/ToolbarSubtitleAppearance"
-        app:theme="@style/ToolbarStyle"/>
+        android:theme="@style/ToolbarStyle"
+        app:subtitleTextAppearance="@style/ToolbarSubtitleAppearance"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRoomList"

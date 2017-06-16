@@ -39,6 +39,10 @@ class DataManager
         return firebaseHelper.getChatRoom(chatId)
     }
 
+    fun createNewRoom(otherUser: User): Chat {
+        return firebaseHelper.createNewRoom(otherUser)
+    }
+
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         return firebaseHelper.sendMessage(message, chatId, completionListener)
     }

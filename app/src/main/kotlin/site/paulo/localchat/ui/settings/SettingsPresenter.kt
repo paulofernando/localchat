@@ -32,7 +32,7 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val currentU
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebaseDatabase.getReference(FirebaseHelper.Child.CHILD_USERS)
+        firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
             .child(currentUserManager.getUserId())
             .addChildEventListener(childEventListener)
     }

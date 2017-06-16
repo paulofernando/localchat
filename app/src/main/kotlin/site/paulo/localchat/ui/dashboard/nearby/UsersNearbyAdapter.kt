@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
-import site.paulo.localchat.R.drawable.chat
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.room.RoomActivity
@@ -62,7 +60,7 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
                 itemView.setOnClickListener {
                     val chatId:String = currentUserManager.getUser().chats.get(Utils.getFirebaseId(email)) ?: ""
-                    itemView.ctx.startActivity<RoomActivity>("chatId" to chatId)
+                    itemView.ctx.startActivity<RoomActivity>("chatId" to chatId, "otherUser" to user)
                 }
             }
         }
