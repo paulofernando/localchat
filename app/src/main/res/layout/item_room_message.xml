@@ -35,6 +35,13 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearanceRoomMessage"/>
 
+            <ImageView
+                android:id="@+id/chatRoomPicImg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package site.paulo.localchat.data.model.chatgeo
+package site.paulo.localchat.data.model.firebase
 
 import nz.bradcampbell.paperparcel.PaperParcel
 

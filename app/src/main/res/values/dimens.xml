@@ -20,14 +20,14 @@
     <dimen name="image_height_user">150dp</dimen>
     <dimen name="image_width_profile">150dp</dimen>
     <dimen name="image_height_profile">150dp</dimen>
-    <dimen name="image_width_send_button">50dp</dimen>
-    <dimen name="image_height_send_button">50dp</dimen>
+    <dimen name="image_width_send_button">40dp</dimen>
+    <dimen name="image_height_send_button">40dp</dimen>
 
     <dimen name="component_profile_data_height">50dp</dimen>
     <dimen name="component_profile_icon">20dp</dimen>
 
-    <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
+    <dimen name="activity_horizontal_margin">@dimen/spacing_normal</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
-    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="appbar_padding_top">@dimen/spacing_normal</dimen>
 
 </resources>

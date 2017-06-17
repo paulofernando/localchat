@@ -10,7 +10,7 @@
 
     <!-- Main Buttons -->
     <style name="ThemeOverlay.MyMainButton" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="android:layout_marginRight">@dimen/spacing_micro</item>
         <item name="android:layout_marginLeft">@dimen/spacing_micro</item>
         <item name="android:textColor">@android:color/white</item>
@@ -24,6 +24,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen_bg</item>
+    </style>
+
+    <!-- ************************************************************************************ -->
 
     <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">@color/color_title_text</item>

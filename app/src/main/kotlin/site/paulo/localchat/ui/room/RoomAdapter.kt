@@ -8,9 +8,10 @@ import kotlinx.android.synthetic.main.item_room_message.view.*
 import me.himanshusoni.chatmessageview.ChatMessageView
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.formattedTime
+import site.paulo.localchat.ui.utils.loadUrlAndCacheOffline
 import java.util.Date
 import javax.inject.Inject
 
@@ -40,7 +41,15 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
     inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindMessages(message: ChatMessage) {
             itemView.messageUserNameRoomTv.text = message.owner
-            itemView.messageRoomTv.text = message.message
+
+            if (message.message.startsWith("https://firebasestorage.googleapis.com/")) {
+                itemView.chatRoomPicImg.loadUrlAndCacheOffline(message.message)
+                itemView.chatRoomPicImg.visibility = View.VISIBLE
+                itemView.messageRoomTv.visibility = View.GONE
+            } else {
+                itemView.messageRoomTv.text = message.message
+            }
+
             itemView.messageTimeRoomTv.text = Date().formattedTime(itemView.ctx, message.timestamp)
 
             if(message.owner.equals(currentUserManager.getUserId())) {

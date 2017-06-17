@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 Paulo Fernando
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package site.paulo.localchat.ui.settings.profile
 
 import android.graphics.Bitmap
@@ -15,7 +31,7 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.ProfilePresenter
@@ -55,6 +71,8 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     lateinit var user: User
 
+    var lastValue:String? = null
+
     @Inject
     lateinit var presenter: ProfilePresenter
 
@@ -82,16 +100,23 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         ageLb.text = user.age.toString()
         ageTxt.setText(user.age.toString(), TextView.BufferType.EDITABLE)
         emailLb.text = user.email
-        genderLb.text = user.gender
+
+        when(user.gender) {
+            "m" -> genderLb.text = resources.getString(R.string.lb_gender_male)
+            "f" -> genderLb.text = resources.getString(R.string.lb_gender_female)
+        }
+
     }
 
     /**************** Name *********************/
 
     override fun editName(view:View) {
+        cancelAgeEdition(ageTxt)
         nameLb.visibility = View.GONE
         nameEditImg.visibility = View.GONE
         nameTxt.visibility = View.VISIBLE
         nameEditContainer.visibility = View.VISIBLE
+        lastValue = nameLb.text.toString()
     }
 
     override fun cancelNameEdition(view:View) {
@@ -100,12 +125,16 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     override fun confirmNameEdition(view:View) {
         val name = nameTxt.text.toString()
-        if (name.isEmpty() || name.length < 6) {
-            nameTxt.error = resources.getString(R.string.error_chars_least_number)
+        val minimumCharsName: Int = resources.getString(R.string.number_minimum_chars_user_name).toInt()
+        val maximumCharsName: Int = resources.getString(R.string.number_maximum_chars_user_name).toInt()
+        if (name.isEmpty() || name.length < minimumCharsName || name.length > maximumCharsName) {
+            nameTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
         } else {
             nameTxt.error = null
-            nameLb.text = nameTxt.text
-            presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
+            if(!lastValue!!.equals(nameTxt.text.toString())) {
+                nameLb.text = nameTxt.text
+                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
+            }
             hideNameConfirmationButton()
         }
     }
@@ -120,10 +149,12 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     /**************** Age *********************/
 
     override fun editAge(view:View) {
+        cancelAgeEdition(nameTxt)
         ageLb.visibility = View.GONE
         ageEditImg.visibility = View.GONE
         ageTxt.visibility = View.VISIBLE
         ageEditContainer.visibility = View.VISIBLE
+        lastValue = nameLb.text.toString()
     }
 
     override fun cancelAgeEdition(view:View) {
@@ -132,12 +163,16 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     override fun confirmAgeEdition(view:View) {
         val age = ageTxt.text.toString().toLong()
-        if (ageTxt.text.isEmpty() || age !in 17..100) {
-            ageTxt.error = resources.getString(R.string.error_age_bet_numbers)
+        val minimumAge: Int = resources.getString(R.string.number_minimum_age).toInt()
+        val maximumAge: Int = resources.getString(R.string.number_maximum_age).toInt()
+        if (ageTxt.text.isEmpty() || age !in (minimumAge - 1) .. (maximumAge + 1)) {
+            ageTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
         } else {
             ageTxt.error = null
-            ageLb.text = ageTxt.text
-            presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
+            if(!lastValue!!.equals(ageTxt.text.toString())) {
+                ageLb.text = ageTxt.text
+                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
+            }
             hideAgeConfirmationButton()
         }
     }

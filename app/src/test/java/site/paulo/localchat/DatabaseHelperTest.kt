@@ -13,7 +13,7 @@ import rx.observers.TestSubscriber
 import junit.framework.Assert.assertEquals
 import org.mockito.Mock
 import rx.android.schedulers.AndroidSchedulers
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.util.DefaultConfig

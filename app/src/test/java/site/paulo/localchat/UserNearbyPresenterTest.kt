@@ -16,7 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner
 import rx.Observable
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyContract
 import site.paulo.localchat.ui.user.UserNearbyPresenter

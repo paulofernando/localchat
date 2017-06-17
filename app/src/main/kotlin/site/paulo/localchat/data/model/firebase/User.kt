@@ -1,4 +1,4 @@
-package site.paulo.localchat.data.model.chatgeo
+package site.paulo.localchat.data.model.firebase
 
 import nz.bradcampbell.paperparcel.PaperParcel
 import nz.bradcampbell.paperparcel.PaperParcelable
@@ -10,7 +10,7 @@ data class User(
     val email: String = "",
     val gender: String = "",
     val pic: String = "",
-    val chats: Map<String, Boolean> = emptyMap())
+    val chats: Map<String, String> = emptyMap())
     : PaperParcelable {
 
     companion object {

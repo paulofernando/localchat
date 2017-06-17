@@ -24,7 +24,7 @@
             android:background="@android:color/white" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/chatImg"
             android:orientation="vertical"
@@ -40,13 +40,17 @@
 
             <TextView
                 android:id="@+id/lastMessageChatTv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/nameChatTv"
                 android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
                 android:textSize="@dimen/text_small_body"
                 android:textStyle="italic"
-                tools:text="last message" />
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="last message abababababababababababababababababababababab" />
 
         </LinearLayout>
 

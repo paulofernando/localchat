@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Component
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
@@ -25,4 +26,5 @@ interface ApplicationComponent {
     fun firebaseDatabase(): FirebaseDatabase
     fun firebaseHelper(): FirebaseHelper
     fun firebaseAuth(): FirebaseAuth
+    fun firebaseStorage(): FirebaseStorage
 }

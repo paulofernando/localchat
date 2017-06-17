@@ -1,10 +1,27 @@
+/*
+ * Copyright 2017 Paulo Fernando
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package site.paulo.localchat.data
 
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseReference
 import rx.Observable
-import site.paulo.localchat.data.model.chatgeo.Chat
-import site.paulo.localchat.data.model.chatgeo.ChatMessage
-import site.paulo.localchat.data.model.chatgeo.User
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +42,10 @@ class DataManager
         firebaseHelper.registerUser(user)
     }
 
+    fun authenticateUser(email: String, password: String): Observable<AuthResult> {
+        return firebaseHelper.authenticateUser(email, password)
+    }
+
     fun updateUserData(dataType: FirebaseHelper.Companion.UserDataType,
         value:String, completionListener: DatabaseReference.CompletionListener): Unit {
         firebaseHelper.updateUserData(dataType, value, completionListener)
@@ -32,6 +53,10 @@ class DataManager
 
     fun getChatRoom(chatId:String): Observable<Chat> {
         return firebaseHelper.getChatRoom(chatId)
+    }
+
+    fun createNewRoom(otherUser: User): Chat {
+        return firebaseHelper.createNewRoom(otherUser)
     }
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
