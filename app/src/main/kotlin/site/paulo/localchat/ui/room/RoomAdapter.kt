@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_room_message.view.*
 import me.himanshusoni.chatmessageview.ChatMessageView
 import site.paulo.localchat.R
@@ -12,6 +11,7 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.formattedTime
+import site.paulo.localchat.ui.utils.loadUrl
 import java.util.Date
 import javax.inject.Inject
 
@@ -43,9 +43,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
             itemView.messageUserNameRoomTv.text = message.owner
 
             if (message.message.startsWith("https://firebasestorage.googleapis.com/")) {
-                Picasso.with(itemView.ctx)
-                    .load(message.message)
-                    .into(itemView.chatRoomPicImg)
+                itemView.chatRoomPicImg.loadUrl(message.message)
                 itemView.chatRoomPicImg.visibility = View.VISIBLE
                 itemView.messageRoomTv.visibility = View.GONE
             } else {

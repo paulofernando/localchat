@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 Paulo Fernando
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package site.paulo.localchat.ui.settings
 
 import android.app.ActivityOptions
@@ -12,12 +28,16 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_chat.view.*
 import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
+import site.paulo.localchat.R.drawable.chat
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.profile.ProfileActivity
 import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.ctx
+import site.paulo.localchat.ui.utils.loadUrlAndResize
 import javax.inject.Inject
 
 
@@ -77,15 +97,10 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
     override fun showCurrentUserData(user: User) {
         this.user = user
-        Picasso.with(ctx)
-            .load(user.pic)
-            .resize(ctx.resources.getDimension(R.dimen.image_width_settings).toInt(),
-                ctx.resources.getDimension(R.dimen.image_height_settings).toInt())
-            .centerCrop()
-            .transform(CircleTransform())
-            .into(profileImage)
+        profileImage.loadUrlAndResize(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
+            request -> request.transform(CircleTransform())
+        }
         profileName.text = user.name
     }
-
 
 }
