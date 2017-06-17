@@ -105,14 +105,21 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     override fun validate(): Boolean {
         var valid = true
 
+        val minimumCharsName: Int = resources.getString(R.string.number_minimum_chars_user_name).toInt()
+        val maximumCharsName: Int = resources.getString(R.string.number_maximum_chars_user_name).toInt()
+        val minimumCharsPassword: Int = resources.getString(R.string.number_minimum_chars_password).toInt()
+        val maximumCharsPassword: Int = resources.getString(R.string.number_maximum_chars_password).toInt()
+        val minimumAge: Int = resources.getString(R.string.number_minimum_age).toInt()
+        val maximumAge: Int = resources.getString(R.string.number_maximum_age).toInt()
+
         val email = inEmail.text.toString()
         val password = inPassword.text.toString()
         val name = inName.text.toString()
-        val age = inAge.text.toString().toLong()
+        val age = if (inAge.text.isEmpty()) 0 else inAge.text.toString().toLong()
         val gender = inGender.text.toString()
 
-        if (name.isEmpty() || name.length < 6) {
-            inName.error = resources.getString(R.string.error_chars_least_number)
+        if (name.isEmpty() || name.length < minimumCharsName || name.length > maximumCharsName) {
+            inName.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
             valid = false
         } else {
             inName.error = null
@@ -125,15 +132,15 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
             inEmail.error = null
         }
 
-        if (inPassword.text.isEmpty() || password.length < 4 || password.length > 10) {
-            inPassword.error = resources.getString(R.string.error_chars_bet_numbers)
+        if (inPassword.text.isEmpty() || password.length < minimumCharsPassword || password.length > maximumCharsPassword) {
+            inPassword.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsPassword, maximumCharsPassword)
             valid = false
         } else {
             inPassword.error = null
         }
 
-        if (inAge.text.isEmpty() || age !in 17..100) {
-            inAge.error = resources.getString(R.string.error_age_bet_numbers)
+        if (inAge.text.isEmpty() || age !in (minimumAge - 1) .. (maximumAge + 1)) {
+            inAge.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
             valid = false
         } else {
             inAge.error = null

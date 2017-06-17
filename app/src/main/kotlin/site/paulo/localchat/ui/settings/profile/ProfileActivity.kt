@@ -125,8 +125,10 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     override fun confirmNameEdition(view:View) {
         val name = nameTxt.text.toString()
-        if (name.isEmpty() || name.length < 6) {
-            nameTxt.error = resources.getString(R.string.error_chars_least_number)
+        val minimumCharsName: Int = resources.getString(R.string.number_minimum_chars_user_name).toInt()
+        val maximumCharsName: Int = resources.getString(R.string.number_maximum_chars_user_name).toInt()
+        if (name.isEmpty() || name.length < minimumCharsName || name.length > maximumCharsName) {
+            nameTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
         } else {
             nameTxt.error = null
             if(!lastValue!!.equals(nameTxt.text.toString())) {
@@ -161,8 +163,10 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     override fun confirmAgeEdition(view:View) {
         val age = ageTxt.text.toString().toLong()
-        if (ageTxt.text.isEmpty() || age !in 17..100) {
-            ageTxt.error = resources.getString(R.string.error_age_bet_numbers)
+        val minimumAge: Int = resources.getString(R.string.number_minimum_age).toInt()
+        val maximumAge: Int = resources.getString(R.string.number_maximum_age).toInt()
+        if (ageTxt.text.isEmpty() || age !in (minimumAge - 1) .. (maximumAge + 1)) {
+            ageTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
         } else {
             ageTxt.error = null
             if(!lastValue!!.equals(ageTxt.text.toString())) {
