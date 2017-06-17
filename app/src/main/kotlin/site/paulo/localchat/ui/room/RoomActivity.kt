@@ -1,15 +1,23 @@
 package site.paulo.localchat.ui.room
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import at.markushi.ui.CircleButton
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
@@ -21,8 +29,13 @@ import javax.inject.Inject
 
 class RoomActivity : BaseActivity() , RoomContract.View {
 
+    internal val RC_PHOTO_PICKER = 1
+
     @Inject
     lateinit var currentUserManager: CurrentUserManager
+
+    @Inject
+    lateinit var firebaseStorage: FirebaseStorage
 
     @Inject
     lateinit var presenter: RoomPresenter
@@ -126,9 +139,45 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_attach_image -> {
+                showImagePicker()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun showImagePicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/jpeg"
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+        startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data.data
+
+            // Get a reference to the location where we'll store our photos
+            var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
+            // Get a reference to store file at chat_photos/<FILENAME>
+            val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
+
+            // Upload file to Firebase Storage
+            photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
+                Timber.i("Image sent successfully!")
+                val downloadUrl = taskSnapshot?.downloadUrl
+                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), chat!!.id)
+            }
+        }
     }
 
 
