@@ -33,7 +33,7 @@
     <string name="error_loading_chat_room_data">There was a problem loading the chat data</string>
     <string name="error_loading_chat">There was a problem loading the messages</string>
     <string name="signing_up_failed">Sign up failed. Try another email!</string>
-    <string name="registration_failed">Registration failed!</string>
+    <string name="registration_failed">Registration failed! Try another e-mail.</string>
     <string name="chars_range">between 6 and 15 alphanumeric characters</string>
     <string name="enter_valid_email">enter a valid email address</string>
     <string name="auth_failed">Email and Password don\'t match!</string>

@@ -50,7 +50,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         ButterKnife.bind(this, rootView)
 
         usersNearbyList.adapter = usersAdapter
-        usersNearbyList.layoutManager = GridLayoutManager(activity, 2)
+        usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
 
         presenter.attachView(this)
         presenter.loadNearbyUsers()

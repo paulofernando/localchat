@@ -31,10 +31,10 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
         dataManager.authenticateUser(email, password)
             .subscribe({
                 Timber.i("signIn", "signInWithEmail:onComplete")
-                view.showFailSignIn()
+                view.showSuccessFullSignIn()
             }, {
                 Timber.e("signIn", "signInWithEmail:failed")
-                view.showSuccessFullSignIn()
+                view.showFailSignIn()
             })
     }
 

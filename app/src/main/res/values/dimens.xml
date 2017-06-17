@@ -26,7 +26,7 @@
     <dimen name="component_profile_data_height">50dp</dimen>
     <dimen name="component_profile_icon">20dp</dimen>
 
-    <dimen name="activity_horizontal_margin">@dimen/spacing_large</dimen>
+    <dimen name="activity_horizontal_margin">@dimen/spacing_normal</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
     <dimen name="appbar_padding_top">@dimen/spacing_normal</dimen>
 

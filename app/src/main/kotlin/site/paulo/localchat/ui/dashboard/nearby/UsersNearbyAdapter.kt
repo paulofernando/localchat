@@ -57,7 +57,6 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
     }
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         fun bindUser(user: User) {
             with(user) {
 
@@ -68,8 +67,8 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
                     itemView.profileNearbyUserImg.loadResourceAndResize(R.drawable.nearby_user_default,
                         itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt())
 
-                itemView.firstNameUserTv.text = name
-                itemView.emailUserTv.text = email
+                itemView.firstNameUserTv.text = name + ", " + age.toString()
+                //itemView.ageUserTv.text = age.toString()
 
                 itemView.setOnClickListener {
                     val chatId:String = currentUserManager.getUser().chats.get(Utils.getFirebaseId(email)) ?: ""
