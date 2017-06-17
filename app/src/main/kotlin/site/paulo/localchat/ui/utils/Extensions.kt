@@ -4,6 +4,8 @@ import android.content.Context
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import android.widget.ImageView
+import com.squareup.picasso.Callback
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.RequestCreator
 import kotlinx.android.synthetic.main.item_user.view.*
@@ -23,6 +25,20 @@ fun Date.formattedTime(context: Context, time: Long): String {
     return date
 }
 
+/* ---------------------- ImageView ---------------------------*/
+
+fun ImageView.loadUrlAndCacheOffline(url: String) {
+    val imageView:ImageView  = this
+    Picasso.with(context).load(url).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, object: Callback {
+
+        override fun onSuccess() { }
+
+        override fun onError() {
+            imageView.loadUrl(url)
+        }
+
+    })
+}
 
 fun ImageView.loadUrl(url: String) {
     Picasso.with(context).load(url).into(this)

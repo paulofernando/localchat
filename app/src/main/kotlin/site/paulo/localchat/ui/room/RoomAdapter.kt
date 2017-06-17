@@ -11,7 +11,7 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.formattedTime
-import site.paulo.localchat.ui.utils.loadUrl
+import site.paulo.localchat.ui.utils.loadUrlAndCacheOffline
 import java.util.Date
 import javax.inject.Inject
 
@@ -43,7 +43,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
             itemView.messageUserNameRoomTv.text = message.owner
 
             if (message.message.startsWith("https://firebasestorage.googleapis.com/")) {
-                itemView.chatRoomPicImg.loadUrl(message.message)
+                itemView.chatRoomPicImg.loadUrlAndCacheOffline(message.message)
                 itemView.chatRoomPicImg.visibility = View.VISIBLE
                 itemView.messageRoomTv.visibility = View.GONE
             } else {
