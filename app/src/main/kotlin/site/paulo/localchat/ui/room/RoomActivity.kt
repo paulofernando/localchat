@@ -88,10 +88,6 @@ class RoomActivity : BaseActivity() , RoomContract.View {
             presenter.getChatData(chatId!!)
         else showChat(chat!!)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
         messagesList.adapter = roomAdapter
         messagesList.layoutManager = LinearLayoutManager(this)
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
@@ -104,24 +100,24 @@ class RoomActivity : BaseActivity() , RoomContract.View {
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
                 presenter.registerRoomListener(chat!!.id)
                 emptyRoom = false
-
-                Timber.i("Chat created: " + chat!!.id)
             }
         }
+
+        if(this.otherUser != null) {
+            toolbar.title = otherUser?.name ?: ""
+        } else if(this.chat != null){
+            var otherUserIndex: Int = 0
+            if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
+            toolbar.title = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))?.name ?: ""
+        }
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
     }
 
     override fun showChat(chat: Chat) {
-        this.chat = chat
-
-        if(otherUser == null) {
-            var otherUserIndex: Int = 0
-            if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
-            toolbar.title = chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
-        } else {
-            toolbar.title = otherUser?.name ?: ""
-        }
-
         presenter.registerRoomListener(chat.id)
     }
 
