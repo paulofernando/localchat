@@ -54,6 +54,8 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
             if(message.owner.equals(currentUserManager.getUserId())) {
                 itemView.messageBubbleRoom.setArrowPosition(ChatMessageView.ArrowPosition.RIGHT)
+                itemView.messageBubbleRoom.setBackgroundColorRes(R.color.color_room_my_bubble_background,
+                    R.color.color_room_my_bubble_pressed_background)
             }
 
         }

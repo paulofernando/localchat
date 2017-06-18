@@ -28,7 +28,7 @@
     <string name="error_email_valid">enter a valid email address</string>
     <string name="error_chars_bet_numbers">between %1$d and %2$d alphanumeric characters</string>
     <string name="error_numbers_bet">between %1$d and %2$d</string>
-    <string name="error_gender">f or m</string>
+    <string name="error_gender">choose a gender</string>
     <string name="error_loading_nearby_users">There was a problem loading the nearby users</string>
     <string name="error_loading_chat_room_data">There was a problem loading the chat data</string>
     <string name="error_loading_chat">There was a problem loading the messages</string>
@@ -45,6 +45,7 @@
     <string name="signing_in">Signing in...</string>
     <string name="signing_up">Signing up...</string>
     <string name="authenticating">Authenticating...</string>
+    <string name="registering">Registering...</string>
 
     <string name="tab_title_1">NEARBY</string>
     <string name="tab_title_2">CHATS</string>
@@ -59,5 +60,10 @@
     <string name="number_maximum_chars_password" translatable="false"> 15 </string>
     <string name="number_minimum_age" translatable="false"> 18 </string>
     <string name="number_maximum_age" translatable="false"> 99 </string>
+
+    <string name="spinner_gender_choose"> Gender </string>
+    <string name="spinner_gender_female"> female </string>
+    <string name="spinner_gender_male"> male </string>
+    <string name="spinner_gender_non_binary"> non binary </string>
 
 </resources>

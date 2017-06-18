@@ -17,7 +17,10 @@
 package site.paulo.localchat.data
 
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 import rx.Observable
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -61,6 +64,18 @@ class DataManager
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         return firebaseHelper.sendMessage(message, chatId, completionListener)
+    }
+
+    fun registerChildEventListener(query: Query, listener: ChildEventListener): Unit {
+        firebaseHelper.registerChildEventListener(query, listener)
+    }
+
+    fun registerValueEventListener(query: Query, listener: ValueEventListener): Unit {
+        firebaseHelper.registerValueEventListener(query, listener)
+    }
+
+    fun removeAllListeners(): Unit {
+        firebaseHelper.removeAllListeners()
     }
 
 }
