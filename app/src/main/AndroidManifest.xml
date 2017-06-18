@@ -21,7 +21,8 @@
         <activity
             android:name=".ui.signup.SignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name=".ui.room.RoomActivity"

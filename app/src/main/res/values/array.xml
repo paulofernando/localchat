@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="genders">
+        <item>@string/spinner_gender_choose</item>
+        <item>@string/spinner_gender_female</item>
+        <item>@string/spinner_gender_male</item>
+        <item>@string/spinner_gender_non_binary</item>
+    </string-array>
+</resources>

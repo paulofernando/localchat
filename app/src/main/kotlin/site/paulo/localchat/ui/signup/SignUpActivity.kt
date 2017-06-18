@@ -24,6 +24,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -31,9 +32,14 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
+import site.paulo.localchat.R.drawable.gender
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import javax.inject.Inject
+import android.widget.ArrayAdapter
+import timber.log.Timber
+import java.util.ArrayList
+
 
 class SignUpActivity : BaseActivity(), SignUpContract.View {
 
@@ -52,8 +58,8 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     @BindView(R.id.ageSignUpTxt)
     lateinit var inAge: EditText
 
-    @BindView(R.id.genderSignUpTxt)
-    lateinit var inGender: EditText
+    @BindView(R.id.genderSignUpSpinner)
+    lateinit var inGender: Spinner
 
     @BindView(R.id.createSignUpBtn)
     lateinit var btnCreate: Button
@@ -81,15 +87,19 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
 
         btnCreate.setOnClickListener {
             if(validate()) {
-                spinnerDialog = indeterminateProgressDialog(R.string.authenticating)
+                spinnerDialog = indeterminateProgressDialog(R.string.registering)
                 presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
-                    inName.text.toString(), inAge.text.toString().toLong(), inGender.text.toString())
+                    inName.text.toString(), inAge.text.toString().toLong(), getSelectedGender())
             }
         }
 
         linkSignIn.setOnClickListener {
             finish()
         }
+
+        val adapter = ArrayAdapter.createFromResource(this, R.array.genders, R.layout.spinner_item)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        inGender.setAdapter(adapter)
     }
 
     override fun showSuccessFullSignUp() {
@@ -116,7 +126,6 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         val password = inPassword.text.toString()
         val name = inName.text.toString()
         val age = if (inAge.text.isEmpty()) 0 else inAge.text.toString().toLong()
-        val gender = inGender.text.toString()
 
         if (name.isEmpty() || name.length < minimumCharsName || name.length > maximumCharsName) {
             inName.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
@@ -146,11 +155,11 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
             inAge.error = null
         }
 
-        if (gender.isEmpty() || !gender.equals("m") && !gender.equals("f")) {
-            inGender.error = resources.getString(R.string.error_gender)
+        if(getSelectedGender().equals((""))) {
+            (inGender.selectedView as TextView).error = resources.getString(R.string.error_gender)
             valid = false
         } else {
-            inGender.error = null
+            (inGender.selectedView as TextView).error = null
         }
 
         return valid
@@ -159,6 +168,15 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+    }
+
+    private fun getSelectedGender(): String {
+        when((inGender.selectedView as TextView).text.toString()) {
+            resources.getString(R.string.spinner_gender_female) -> return "f"
+            resources.getString(R.string.spinner_gender_male) -> return "m"
+            resources.getString(R.string.spinner_gender_non_binary) -> return "n"
+        }
+        return ""
     }
 
 }

@@ -21,5 +21,6 @@
     <color name="color_message_person_name">#67799E</color>
     <color name="color_message_message">#2b3241</color>
     <color name="color_message_time">#67799E</color>
+    <color name="color_text_field">#222222</color>
 
 </resources>

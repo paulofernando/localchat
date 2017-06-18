@@ -91,7 +91,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.e("User " + user.email + "registered")
         }
-        firebaseDatabase.getReference(Reference.USERS).push().setValue(value, completionListener)
+        firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(value, completionListener)
     }
 
     fun createNewRoom(otherUser:User): Chat {
