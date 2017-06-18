@@ -17,14 +17,17 @@
 package site.paulo.localchat.ui.dashboard
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import site.paulo.localchat.data.DataManager
 import javax.inject.Inject
 
 class DashboardPresenter
 @Inject
-constructor(private val firebaseAuth: FirebaseAuth): DashboardContract.Presenter() {
+constructor(private val firebaseAuth: FirebaseAuth, private val dataManager: DataManager): DashboardContract.Presenter() {
 
     override fun logout() {
         firebaseAuth.signOut()
+        dataManager.removeAllListeners()
     }
 
 

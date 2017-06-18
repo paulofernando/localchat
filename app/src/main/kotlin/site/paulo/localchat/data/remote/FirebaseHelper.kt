@@ -18,9 +18,12 @@ package site.paulo.localchat.data.remote
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ValueEventListener
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseAuth
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
@@ -33,6 +36,7 @@ import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -67,6 +71,9 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             NAME, AGE
         }
     }
+
+    private var childEventListeners: ArrayList<ChildEventListener> = ArrayList<ChildEventListener>()
+    private var valueEventListeners: ArrayList<ValueEventListener> = ArrayList<ValueEventListener>()
 
     /**************** User *********************/
 
@@ -142,7 +149,10 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         }
     }
 
-    /**************** Chat *********************/
+    /*******************************************/
+
+
+    /**************** Chat ****************/
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         val valueMessage = mutableMapOf<String, Any>()
@@ -162,5 +172,26 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Chat::class.java)
     }
 
+    /**************************************/
+
+
+    /**************** Listeners ****************/
+
+    fun registerChildEventListener(query: Query, listener: ChildEventListener): Unit {
+        childEventListeners.add(listener)
+        query.addChildEventListener(listener)
+    }
+
+    fun registerValueEventListener(query: Query, listener: ValueEventListener): Unit {
+        valueEventListeners.add(listener)
+        query.addValueEventListener(listener)
+    }
+
+    fun removeAllListeners(): Unit {
+        childEventListeners.forEach { firebaseDatabase.getReference().removeEventListener(it) }
+        valueEventListeners.forEach { firebaseDatabase.getReference().removeEventListener(it) }
+    }
+
+    /*******************************************/
 
 }

@@ -20,6 +20,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -29,7 +30,9 @@ import javax.inject.Inject
 
 class SettingsPresenter
 @Inject
-constructor(private val firebaseDatabase: FirebaseDatabase, private val currentUserManager: CurrentUserManager) : SettingsContract.Presenter() {
+constructor(private val firebaseDatabase: FirebaseDatabase,
+    private val currentUserManager: CurrentUserManager,
+    private val dataManager: DataManager) : SettingsContract.Presenter() {
 
     override fun loadCurrentUser() {
         view.showCurrentUserData(currentUserManager.getUser())
@@ -48,9 +51,8 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val currentU
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
-            .child(currentUserManager.getUserId())
-            .addChildEventListener(childEventListener)
+        dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
+            .child(currentUserManager.getUserId()), childEventListener)
     }
 
 }

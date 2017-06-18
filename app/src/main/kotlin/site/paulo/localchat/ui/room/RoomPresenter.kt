@@ -74,10 +74,10 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val dataMana
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(chatId)
-            .orderByChild(FirebaseHelper.Child.TIMESTAMP)
-            .addChildEventListener(childEventListener)
+
+
+        dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+            .child(chatId).orderByChild(FirebaseHelper.Child.TIMESTAMP), childEventListener)
     }
 
     override fun createNewRoom(otherUser: User): Chat {

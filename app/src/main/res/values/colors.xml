@@ -7,10 +7,14 @@
     <!-- backgrounds -->
     <color name="color_background_default">#eeeeee</color>
     <color name="color_room_background">@color/color_background_default</color>
+    <color name="color_room_my_bubble_background">#b8ec78</color>
+    <color name="color_room_my_bubble_pressed_background">#a8d96d</color>
+    <color name="color_room_send_btn_background">@color/colorAccent</color>
     <color name="color_nearby_users_background">@color/color_background_default</color>
     <color name="color_chats_background">@color/color_background_default</color>
     <color name="color_settings_background">@color/color_background_default</color>
     <color name="color_profile_background">@color/color_background_default</color>
+
 
     <color name="color_profile_information_component">#ffffff</color>
     <color name="color_edit_text_background">#ffffff</color>

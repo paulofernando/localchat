@@ -1,9 +1,12 @@
 package site.paulo.localchat.data.manager
 
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.ValueEventListener
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
+import java.util.ArrayList
 import javax.inject.Singleton
 
 @Singleton
