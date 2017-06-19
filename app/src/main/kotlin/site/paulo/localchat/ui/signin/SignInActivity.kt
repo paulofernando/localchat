@@ -37,6 +37,10 @@ import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import site.paulo.localchat.ui.signup.SignUpActivity
 import javax.inject.Inject
+import android.content.Intent
+import org.jetbrains.anko.clearTask
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
 
 
 class SignInActivity : BaseActivity(), SignInContract.View {
@@ -116,7 +120,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
 
     override fun showSuccessFullSignIn() {
         spinnerDialog?.cancel()
-        startActivity<DashboardActivity>()
+        startActivity(intentFor<DashboardActivity>().newTask().clearTask())
     }
 
     override fun showFailSignIn() {
