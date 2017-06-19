@@ -60,4 +60,9 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
         }
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
 }
