@@ -10,24 +10,14 @@ Libraries and tools included:
 - [SqlBrite](https://github.com/square/sqlbrite)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber](https://github.com/JakeWharton/timber)
-- [Glide](https://github.com/bumptech/glide)
+- [Picasso](https://github.com/square/picasso)
 - Functional tests with [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/index.html)
 - [Robolectric](http://robolectric.org/)
 - [Mockito](http://mockito.org/)
 
-## Requirements
+## How to run
 
-- JDK 1.8
-- [Android SDK](http://developer.android.com/sdk/index.html).
-- Android N [(API 24) ](http://developer.android.com/tools/revisions/platforms.html).
-- Kotlin 1.0.4.
-- Latest Android SDK Tools and build tools.
-
-## Architecture
-
-This project follows ribot's Android architecture guidelines that are based on [MVP (Model View Presenter)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter). Read more about them [here](https://github.com/ribot/android-guidelines/blob/master/architecture_guidelines/android_architecture.md). 
-
-![](https://github.com/ribot/android-guidelines/raw/master/architecture_guidelines/architecture_diagram.png)
+You need to create a [Firebase](https://firebase.google.com) account and put the google-services.json in the project.
 
 ## License
 
