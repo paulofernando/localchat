@@ -15,7 +15,6 @@
     <color name="color_settings_background">@color/color_background_default</color>
     <color name="color_profile_background">@color/color_background_default</color>
 
-
     <color name="color_profile_information_component">#ffffff</color>
     <color name="color_edit_text_background">#ffffff</color>
 

@@ -40,20 +40,20 @@ fun ImageView.loadUrlAndCacheOffline(url: String) {
     })
 }
 
-fun ImageView.loadUrl(url: String) {
-    Picasso.with(context).load(url).into(this)
+fun ImageView.loadUrl(url: String?) {
+    if(url != null) Picasso.with(context).load(url).into(this)
 }
 
-fun ImageView.loadUrl(url: String, request: (RequestCreator) -> RequestCreator) {
-    request(Picasso.with(context).load(url)).into(this)
+fun ImageView.loadUrl(url: String?, request: (RequestCreator) -> RequestCreator) {
+    if(url != null) request(Picasso.with(context).load(url)).into(this)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int) {
-    Picasso.with(context).load(url).resize(resize, resize).centerCrop().into(this)
+    if(url != null) Picasso.with(context).load(url).resize(resize, resize).centerCrop().into(this)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
-    request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
+    if(url != null) request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
 }
 
 fun ImageView.loadResourceAndResize(resource: Int, resize: Int) {

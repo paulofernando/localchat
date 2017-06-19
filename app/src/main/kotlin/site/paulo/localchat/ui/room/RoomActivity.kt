@@ -24,7 +24,9 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import at.markushi.ui.CircleButton
 import butterknife.BindView
@@ -35,8 +37,11 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
+import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.loadUrl
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -68,10 +73,14 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     @BindView(R.id.messagesRoomList)
     lateinit var messagesList: RecyclerView
 
+    @BindView(R.id.otherUserImg)
+    lateinit var otherUserPic: ImageView
+
     var emptyRoom: Boolean = false
 
     var chat: Chat? = null
     var otherUser: User? = null
+    var chatId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +90,8 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         presenter.attachView(this)
 
         this.chat = intent.getParcelableExtra<Chat>("chat") //just passed from chat fragment
-        val chatId: String? = intent.getStringExtra("chatId") //just passed from nearby users fragment
+
+        this.chatId = intent.getStringExtra("chatId") //just passed from nearby users fragment
         this.otherUser = intent.getParcelableExtra<User>("otherUser") //just passed from nearby users fragment
 
         if(chat == null) //just have the chat id
@@ -97,19 +107,14 @@ class RoomActivity : BaseActivity() , RoomContract.View {
             if(!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
             else {
                 chat = presenter.createNewRoom(this.otherUser!!)
+                chatId = chat?.id
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
                 presenter.registerRoomListener(chat!!.id)
                 emptyRoom = false
             }
         }
 
-        if(this.otherUser != null) {
-            toolbar.title = otherUser?.name ?: ""
-        } else if(this.chat != null){
-            var otherUserIndex: Int = 0
-            if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
-            toolbar.title = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))?.name ?: ""
-        }
+        loadTitleAndUserImage()
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -150,20 +155,12 @@ class RoomActivity : BaseActivity() , RoomContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.action_attach_image -> {
-                showImagePicker()
+            R.id.action_settings -> {
                 return true
             }
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    fun showImagePicker() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/jpeg"
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-        startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER)
     }
 
     override fun onDestroy() {
@@ -184,7 +181,33 @@ class RoomActivity : BaseActivity() , RoomContract.View {
             photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
                 Timber.i("Image sent successfully!")
                 val downloadUrl = taskSnapshot?.downloadUrl
-                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), chat!!.id)
+                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), this.chatId!!)
+            }
+        }
+    }
+
+    fun showImagePicker(view: View) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/jpeg"
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+        startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER)
+    }
+
+    fun loadTitleAndUserImage() {
+        if(this.otherUser != null) {
+            toolbar.title = otherUser?.name ?: ""
+            otherUserPic.loadUrl(otherUser?.pic) {
+                request -> request.transform(CircleTransform())
+            }
+        } else if(this.chat != null){
+            var otherUserIndex: Int = 0
+            if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
+            var summarizedUser:SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
+            chatId = (chat as Chat)?.id
+
+            toolbar.title = summarizedUser?.name
+            otherUserPic.loadUrl(summarizedUser?.pic) {
+                request -> request.transform(CircleTransform())
             }
         }
     }
