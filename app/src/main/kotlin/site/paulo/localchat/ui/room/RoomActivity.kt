@@ -85,9 +85,9 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+        presenter.attachView(this)
         setContentView(R.layout.activity_room)
         ButterKnife.bind(this)
-        presenter.attachView(this)
 
         this.chat = intent.getParcelableExtra<Chat>("chat") //just passed from chat fragment
 

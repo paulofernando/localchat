@@ -3,9 +3,9 @@
     <color name="colorPrimary">#353F5A</color>
     <color name="colorPrimaryDark">#2D374B</color>
     <color name="colorAccent">#4093ff</color>
+    <color name="color_background_default">#eeeeee</color>
 
     <!-- backgrounds -->
-    <color name="color_background_default">#eeeeee</color>
     <color name="color_room_background">@color/color_background_default</color>
     <color name="color_room_my_bubble_background">#b8ec78</color>
     <color name="color_room_my_bubble_pressed_background">#a8d96d</color>

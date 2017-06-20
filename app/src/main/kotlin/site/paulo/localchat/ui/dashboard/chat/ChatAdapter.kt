@@ -31,6 +31,7 @@ import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.loadUrlAndResize
+import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
 import javax.inject.Inject
 
 class ChatAdapter
@@ -68,7 +69,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
             itemView.lastMessageChatTv.text = chat.lastMessage
 
-            itemView.chatImg.loadUrlAndResize(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
+            itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
                 itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {
                 request -> request.transform(CircleTransform())
             }

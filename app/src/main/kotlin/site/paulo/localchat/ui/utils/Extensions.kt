@@ -45,15 +45,19 @@ fun ImageView.loadUrl(url: String?) {
 }
 
 fun ImageView.loadUrl(url: String?, request: (RequestCreator) -> RequestCreator) {
-    if(url != null) request(Picasso.with(context).load(url)).into(this)
+    if(url != null) request(Picasso.with(context).load(url)).placeholder(R.drawable.empty).into(this)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int) {
-    if(url != null) Picasso.with(context).load(url).resize(resize, resize).centerCrop().into(this)
+    if(url != null) Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop().into(this)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
-    if(url != null) request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
+    if(url != null) request(Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop()).into(this)
+}
+
+fun ImageView.loadUrlAndResizeCircle(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
+    if(url != null) request(Picasso.with(context).load(url).placeholder(R.drawable.empty_circle).resize(resize, resize).centerCrop()).into(this)
 }
 
 fun ImageView.loadResourceAndResize(resource: Int, resize: Int) {

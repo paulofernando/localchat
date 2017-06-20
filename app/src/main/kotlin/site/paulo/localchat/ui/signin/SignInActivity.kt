@@ -65,6 +65,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+        presenter.attachView(this)
 
         if (Build.VERSION.SDK_INT < 16) {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -78,7 +79,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         setContentView(R.layout.activity_sign_in)
         ButterKnife.bind(this)
 
-        presenter.attachView(this)
+
 
         btnLogin.setOnClickListener {
             if(validate()) presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())

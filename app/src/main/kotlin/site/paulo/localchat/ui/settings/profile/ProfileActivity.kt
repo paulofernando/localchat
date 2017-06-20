@@ -79,6 +79,7 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+        presenter.attachView(this)
         setContentView(R.layout.activity_profile)
         ButterKnife.bind(this)
 

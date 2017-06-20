@@ -38,6 +38,7 @@ import site.paulo.localchat.ui.settings.profile.ProfileActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.loadUrlAndResize
+import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
 import javax.inject.Inject
 
 
@@ -63,10 +64,9 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+        presenter.attachView(this)
         setContentView(R.layout.activity_settings)
         ButterKnife.bind(this)
-
-        presenter.attachView(this)
 
         toolbar.title = resources.getString(R.string.title_settings)
         setSupportActionBar(toolbar)
@@ -97,7 +97,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
     override fun showCurrentUserData(user: User) {
         this.user = user
-        profileImage.loadUrlAndResize(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
+        profileImage.loadUrlAndResizeCircle(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
             request -> request.transform(CircleTransform())
         }
         profileName.text = user.name

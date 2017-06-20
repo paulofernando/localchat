@@ -46,13 +46,13 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
+        presenter.attachView(this)
         val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
         ButterKnife.bind(this, rootView)
 
         usersNearbyList.adapter = usersAdapter
         usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
 
-        presenter.attachView(this)
         presenter.loadNearbyUsers()
 
         return rootView

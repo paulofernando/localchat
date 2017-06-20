@@ -26,14 +26,17 @@
 
         <activity
             android:name=".ui.room.RoomActivity"
+            android:parentActivityName=".ui.dashboard.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".ui.settings.SettingsActivity"
+            android:parentActivityName=".ui.dashboard.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".ui.settings.profile.ProfileActivity"
+            android:parentActivityName=".ui.settings.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity

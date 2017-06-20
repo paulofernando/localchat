@@ -33,4 +33,7 @@
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
     <dimen name="appbar_padding_top">@dimen/spacing_normal</dimen>
 
+    <!-- 56 + 48 -->
+    <dimen name="toolbar_placeholder_height">104dp</dimen>
+
 </resources>
