@@ -69,7 +69,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     companion object {
         enum class UserDataType {
-            NAME, AGE
+            NAME, AGE, PIC
         }
     }
 
@@ -146,6 +146,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                 firebaseDatabase.getReference(Reference.USERS)
                     .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
             }
+            UserDataType.PIC -> {
+                val v = mutableMapOf<String, Any>()
+                v.put(Child.PIC, value)
+                firebaseDatabase.getReference(Reference.USERS)
+                    .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
+            }
             else -> Timber.e("Invalid UserDataType")
         }
     }
@@ -157,6 +163,19 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         if(token != null) {
             val v = mutableMapOf<String, Any>()
             v.put(Child.TOKEN, token)
+            firebaseDatabase.getReference(Reference.USERS)
+                .child(currentUserManager.getUserId())
+                .updateChildren(v, completionListener)
+        }
+    }
+
+    fun updateProfilePic(url: String?): Unit {
+        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            Timber.d("Profile pic updated")
+        }
+        if(url != null) {
+            val v = mutableMapOf<String, Any>()
+            v.put(Child.PIC, url)
             firebaseDatabase.getReference(Reference.USERS)
                 .child(currentUserManager.getUserId())
                 .updateChildren(v, completionListener)

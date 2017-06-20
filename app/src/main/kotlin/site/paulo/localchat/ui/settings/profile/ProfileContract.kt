@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.settings.profile
 
+import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseMvpPresenter
@@ -33,10 +34,13 @@ object ProfileContract {
         fun editAge(view: android.view.View)
         fun cancelAgeEdition(view : android.view.View)
         fun confirmAgeEdition(view : android.view.View)
+
+        fun updatePic(url: String)
     }
 
     abstract class Presenter : BaseMvpPresenter<ProfileContract.View>() {
         abstract fun updateUserData(dataType: FirebaseHelper.Companion.UserDataType, value:String)
+        abstract fun uploadPic(selectedImageUri: Uri)
     }
 
 }

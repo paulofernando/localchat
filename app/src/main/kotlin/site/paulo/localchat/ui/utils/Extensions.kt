@@ -52,7 +52,7 @@ fun ImageView.loadUrl(url: String?, request: (RequestCreator) -> RequestCreator)
  * The same as loadUrl but with a circle image placeholder
  */
 fun ImageView.loadUrlCircle(url: String?, request: (RequestCreator) -> RequestCreator) {
-    if(url != null) request(Picasso.with(context).load(url)).placeholder(R.drawable.empty).into(this)
+    if(url != null) request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int) {

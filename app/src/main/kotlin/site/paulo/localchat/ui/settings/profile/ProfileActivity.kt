@@ -16,6 +16,8 @@
 
 package site.paulo.localchat.ui.settings.profile
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
@@ -35,10 +37,15 @@ import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.ProfilePresenter
+import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.loadUrl
+import site.paulo.localchat.ui.utils.loadUrlCircle
 import javax.inject.Inject
 
 
-class ProfileActivity: BaseActivity(), ProfileContract.View {
+class ProfileActivity : BaseActivity(), ProfileContract.View {
+
+    internal val RC_PHOTO_PICKER = 1
 
     @BindView(R.id.toolbarProfile)
     lateinit var toolbar: Toolbar
@@ -71,7 +78,7 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     lateinit var user: User
 
-    var lastValue:String? = null
+    var lastValue: String? = null
 
     @Inject
     lateinit var presenter: ProfilePresenter
@@ -102,7 +109,7 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         ageTxt.setText(user.age.toString(), TextView.BufferType.EDITABLE)
         emailLb.text = user.email
 
-        when(user.gender) {
+        when (user.gender) {
             "m" -> genderLb.text = resources.getString(R.string.lb_gender_male)
             "f" -> genderLb.text = resources.getString(R.string.lb_gender_female)
         }
@@ -111,7 +118,7 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     /**************** Name *********************/
 
-    override fun editName(view:View) {
+    override fun editName(view: View) {
         cancelAgeEdition(ageTxt)
         nameLb.visibility = View.GONE
         nameEditImg.visibility = View.GONE
@@ -120,11 +127,11 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         lastValue = nameLb.text.toString()
     }
 
-    override fun cancelNameEdition(view:View) {
+    override fun cancelNameEdition(view: View) {
         hideNameConfirmationButton()
     }
 
-    override fun confirmNameEdition(view:View) {
+    override fun confirmNameEdition(view: View) {
         val name = nameTxt.text.toString()
         val minimumCharsName: Int = resources.getString(R.string.number_minimum_chars_user_name).toInt()
         val maximumCharsName: Int = resources.getString(R.string.number_maximum_chars_user_name).toInt()
@@ -132,7 +139,7 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
             nameTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
         } else {
             nameTxt.error = null
-            if(!lastValue!!.equals(nameTxt.text.toString())) {
+            if (!lastValue!!.equals(nameTxt.text.toString())) {
                 nameLb.text = nameTxt.text
                 presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
             }
@@ -149,7 +156,7 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
 
     /**************** Age *********************/
 
-    override fun editAge(view:View) {
+    override fun editAge(view: View) {
         cancelAgeEdition(nameTxt)
         ageLb.visibility = View.GONE
         ageEditImg.visibility = View.GONE
@@ -158,19 +165,19 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         lastValue = nameLb.text.toString()
     }
 
-    override fun cancelAgeEdition(view:View) {
+    override fun cancelAgeEdition(view: View) {
         hideAgeConfirmationButton()
     }
 
-    override fun confirmAgeEdition(view:View) {
+    override fun confirmAgeEdition(view: View) {
         val age = ageTxt.text.toString().toLong()
         val minimumAge: Int = resources.getString(R.string.number_minimum_age).toInt()
         val maximumAge: Int = resources.getString(R.string.number_maximum_age).toInt()
-        if (ageTxt.text.isEmpty() || age !in (minimumAge - 1) .. (maximumAge + 1)) {
+        if (ageTxt.text.isEmpty() || age !in (minimumAge - 1)..(maximumAge + 1)) {
             ageTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
         } else {
             ageTxt.error = null
-            if(!lastValue!!.equals(ageTxt.text.toString())) {
+            if (!lastValue!!.equals(ageTxt.text.toString())) {
                 ageLb.text = ageTxt.text
                 presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
             }
@@ -178,13 +185,11 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         }
     }
 
-    fun hideAgeConfirmationButton() {
-        ageLb.visibility = View.VISIBLE
-        ageEditImg.visibility = View.VISIBLE
-        ageTxt.visibility = View.GONE
-        ageEditContainer.visibility = View.GONE
+    override fun updatePic(url: String) {
+        profileImg.loadUrlCircle(url) {
+            request -> request.transform(CircleTransform())
+        }
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -206,6 +211,26 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
+            presenter.uploadPic(data.data)
+        }
+    }
+
+    fun showImagePicker(view: View) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/jpeg"
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+        startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER)
+    }
+
+    fun hideAgeConfirmationButton() {
+        ageLb.visibility = View.VISIBLE
+        ageEditImg.visibility = View.VISIBLE
+        ageTxt.visibility = View.GONE
+        ageEditContainer.visibility = View.GONE
+    }
+
     fun animateButton() {
         changeImage.visibility = View.VISIBLE
         var myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale)
@@ -225,7 +250,6 @@ class ProfileActivity: BaseActivity(), ProfileContract.View {
         })
         changeImage.startAnimation(myAnim)
     }
-
 
 
 }

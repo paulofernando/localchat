@@ -44,6 +44,7 @@
             android:background="@drawable/circle_bg"
             android:visibility="invisible"
             tools:visibility="visible"
+            android:onClick="showImagePicker"
             android:layout_alignBottom="@id/profileProfileImg"
             android:layout_alignRight="@id/profileProfileImg"
             android:layout_alignEnd="@id/profileProfileImg" />

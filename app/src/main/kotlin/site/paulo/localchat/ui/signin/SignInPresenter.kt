@@ -42,7 +42,11 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
         firebaseAuth.addAuthStateListener { firebaseAuth ->
             if (firebaseAuth.currentUser != null) {
                 Log.d("isAuthenticated", "onAuthStateChanged:signed_in:" + firebaseAuth.currentUser?.uid)
-                view.showSuccessFullSignIn()
+                try {
+                    view.showSuccessFullSignIn()
+                } catch (e: MvpViewNotAttachedException) {
+                    Timber.e(e.message)
+                }
             } else {
                 Log.d("isAuthenticated", "onAuthStateChanged:signed_out")
             }

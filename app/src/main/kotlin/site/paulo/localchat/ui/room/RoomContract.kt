@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.room
 
+import android.net.Uri
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -38,5 +39,6 @@ object RoomContract {
         abstract fun getChatData(chatId: String)
         abstract fun registerRoomListener(chatId: String)
         abstract fun createNewRoom(otherUser: User): Chat
+        abstract fun uploadImage(selectedImageUri: Uri, chatId: String)
     }
 }

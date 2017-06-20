@@ -16,15 +16,19 @@
 
 package site.paulo.localchat.ui.room
 
+import android.net.Uri
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -34,7 +38,10 @@ import javax.inject.Inject
 
 class RoomPresenter
 @Inject
-constructor(private val firebaseDatabase: FirebaseDatabase, private val dataManager: DataManager) : RoomContract.Presenter() {
+constructor(private val firebaseDatabase: FirebaseDatabase,
+    private val dataManager: DataManager,
+    private val currentUserManager: CurrentUserManager,
+    private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
 
     override fun getChatData(chatId: String) {
         dataManager.getChatRoom(chatId)
@@ -78,6 +85,20 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val dataMana
 
         dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
             .child(chatId).orderByChild(FirebaseHelper.Child.TIMESTAMP), childEventListener)
+    }
+
+    override fun uploadImage(selectedImageUri: Uri, chatId: String) {
+        // Get a reference to the location where we'll store our photos
+        var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
+        // Get a reference to store file at chat_photos/<FILENAME>
+        val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
+
+        // Upload file to Firebase Storage
+        photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
+            Timber.i("Image sent successfully!")
+            val downloadUrl = taskSnapshot?.downloadUrl
+            sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), chatId)
+        }
     }
 
     override fun createNewRoom(otherUser: User): Chat {

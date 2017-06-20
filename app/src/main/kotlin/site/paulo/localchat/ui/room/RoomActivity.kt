@@ -31,8 +31,6 @@ import android.widget.Toast
 import at.markushi.ui.CircleButton
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
@@ -51,9 +49,6 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
-
-    @Inject
-    lateinit var firebaseStorage: FirebaseStorage
 
     @Inject
     lateinit var presenter: RoomPresenter
@@ -165,19 +160,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
-            val selectedImageUri = data.data
-
-            // Get a reference to the location where we'll store our photos
-            var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
-            // Get a reference to store file at chat_photos/<FILENAME>
-            val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
-
-            // Upload file to Firebase Storage
-            photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
-                Timber.i("Image sent successfully!")
-                val downloadUrl = taskSnapshot?.downloadUrl
-                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), this.chatId!!)
-            }
+            presenter.uploadImage(data.data, this.chatId!!)
         }
     }
 
@@ -192,8 +175,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         if (this.otherUser != null) {
             toolbar.title = otherUser?.name ?: ""
             otherUserPic.loadUrlCircle(otherUser?.pic) {
-                request ->
-                request.transform(CircleTransform())
+                request -> request.transform(CircleTransform())
             }
         } else if (this.chat != null) {
             var otherUserIndex: Int = 0

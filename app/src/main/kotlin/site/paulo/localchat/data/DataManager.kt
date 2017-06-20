@@ -49,6 +49,10 @@ class DataManager
         firebaseHelper.updateToken(token)
     }
 
+    fun updateProfilePic(url: String?): Unit {
+        firebaseHelper.updateToken(url)
+    }
+
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
         return firebaseHelper.authenticateUser(email, password)
     }
