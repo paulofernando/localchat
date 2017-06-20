@@ -19,6 +19,7 @@ package site.paulo.localchat.ui.settings.profile
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -32,7 +33,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.squareup.picasso.Callback
+import rx.plugins.RxJavaHooks.onError
 import site.paulo.localchat.R
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseActivity
@@ -82,6 +86,9 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
 
     @Inject
     lateinit var presenter: ProfilePresenter
+
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -186,7 +193,15 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     }
 
     override fun updatePic(url: String) {
-        profileImg.loadUrlCircle(url) {
+        var callback: com.squareup.picasso.Callback =  object: Callback {
+            override fun onSuccess() {
+                //currentUserManager.setPic((profileImg.drawable as BitmapDrawable).bitmap)
+            }
+
+            override fun onError() { }
+        }
+
+        profileImg.loadUrlCircle(url, callback) {
             request -> request.transform(CircleTransform())
         }
     }

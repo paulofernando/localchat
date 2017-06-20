@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.settings
 
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
@@ -58,6 +59,7 @@ constructor(private val dataManager: DataManager,
             val downloadUrl = taskSnapshot?.downloadUrl
             updateUserData(FirebaseHelper.Companion.UserDataType.PIC, downloadUrl!!.toString())
             view.updatePic(downloadUrl!!.toString())
+
             currentUserManager.setPic(downloadUrl!!.toString())
         }
     }

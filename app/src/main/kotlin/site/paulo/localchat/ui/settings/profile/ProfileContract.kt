@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.settings.profile
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import site.paulo.localchat.data.remote.FirebaseHelper

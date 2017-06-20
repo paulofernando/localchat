@@ -1,5 +1,6 @@
 package site.paulo.localchat.data.model.firebase
 
+import android.graphics.Bitmap
 import nz.bradcampbell.paperparcel.PaperParcel
 import nz.bradcampbell.paperparcel.PaperParcelable
 
@@ -16,5 +17,7 @@ data class User(
     companion object {
         @JvmField val CREATOR = PaperParcelable.Creator(User::class.java)
     }
+
+    //@Transient var userPicBitmap: Bitmap? = null
 
 }

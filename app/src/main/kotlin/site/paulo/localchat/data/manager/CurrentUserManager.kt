@@ -1,13 +1,10 @@
 package site.paulo.localchat.data.manager
 
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.ValueEventListener
-import site.paulo.localchat.R.drawable.name
+import android.graphics.Bitmap
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
-import java.util.ArrayList
 import javax.inject.Singleton
 
 @Singleton
@@ -47,6 +44,11 @@ class CurrentUserManager {
         this.user = User(user!!.name, user!!.age, user!!.email, user!!.gender, url, user!!.chats)
         Timber.i("Current user data updated: " + user.toString())
     }
+
+    /*fun setPic(bmp: Bitmap){
+        this.user?.userPicBitmap = bmp
+        Timber.i("Current user pic (bitmap) updated")
+    }*/
 
 }
 
