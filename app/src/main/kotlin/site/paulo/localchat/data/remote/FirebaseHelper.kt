@@ -63,6 +63,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val OWNER = "owner"
         val PIC = "pic"
         val TIMESTAMP = "timestamp"
+        val TOKEN = "token"
         val USERS = "users"
     }
 
@@ -146,6 +147,19 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                     .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
             }
             else -> Timber.e("Invalid UserDataType")
+        }
+    }
+
+    fun updateToken(token: String?): Unit {
+        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            Timber.d("Token updated")
+        }
+        if(token != null) {
+            val v = mutableMapOf<String, Any>()
+            v.put(Child.TOKEN, token)
+            firebaseDatabase.getReference(Reference.USERS)
+                .child(currentUserManager.getUserId())
+                .updateChildren(v, completionListener)
         }
     }
 

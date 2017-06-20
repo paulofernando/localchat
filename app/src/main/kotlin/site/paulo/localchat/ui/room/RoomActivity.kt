@@ -41,11 +41,11 @@ import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.loadUrl
+import site.paulo.localchat.ui.utils.loadUrlCircle
 import timber.log.Timber
 import javax.inject.Inject
 
-class RoomActivity : BaseActivity() , RoomContract.View {
+class RoomActivity : BaseActivity(), RoomContract.View {
 
     internal val RC_PHOTO_PICKER = 1
 
@@ -82,6 +82,7 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     var otherUser: User? = null
     var chatId: String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
@@ -94,7 +95,7 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         this.chatId = intent.getStringExtra("chatId") //just passed from nearby users fragment
         this.otherUser = intent.getParcelableExtra<User>("otherUser") //just passed from nearby users fragment
 
-        if(chat == null) //just have the chat id
+        if (chat == null) //just have the chat id
             presenter.getChatData(chatId!!)
         else showChat(chat!!)
 
@@ -103,8 +104,7 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
         sendBtn.setOnClickListener {
-            //TODO create new room just after send first message
-            if(!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
+            if (!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
             else {
                 chat = presenter.createNewRoom(this.otherUser!!)
                 chatId = chat?.id
@@ -114,11 +114,7 @@ class RoomActivity : BaseActivity() , RoomContract.View {
             }
         }
 
-        loadTitleAndUserImage()
-
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        configureToolbar()
 
     }
 
@@ -154,12 +150,11 @@ class RoomActivity : BaseActivity() , RoomContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_settings -> {
                 return true
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -193,23 +188,28 @@ class RoomActivity : BaseActivity() , RoomContract.View {
         startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER)
     }
 
-    fun loadTitleAndUserImage() {
-        if(this.otherUser != null) {
+    private fun configureToolbar() {
+        if (this.otherUser != null) {
             toolbar.title = otherUser?.name ?: ""
-            otherUserPic.loadUrl(otherUser?.pic) {
-                request -> request.transform(CircleTransform())
+            otherUserPic.loadUrlCircle(otherUser?.pic) {
+                request ->
+                request.transform(CircleTransform())
             }
-        } else if(this.chat != null){
+        } else if (this.chat != null) {
             var otherUserIndex: Int = 0
             if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
-            var summarizedUser:SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
+            var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
             chatId = (chat as Chat)?.id
 
             toolbar.title = summarizedUser?.name
-            otherUserPic.loadUrl(summarizedUser?.pic) {
-                request -> request.transform(CircleTransform())
+            otherUserPic.loadUrlCircle(summarizedUser?.pic) {
+                request ->
+                request.transform(CircleTransform())
             }
         }
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
 

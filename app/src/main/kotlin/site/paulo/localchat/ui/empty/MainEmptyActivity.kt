@@ -18,6 +18,7 @@ package site.paulo.localchat.ui.empty
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.startActivity
 import com.google.firebase.database.FirebaseDatabase
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.signin.SignInActivity

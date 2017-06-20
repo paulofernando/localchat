@@ -45,6 +45,10 @@ class DataManager
         firebaseHelper.registerUser(user)
     }
 
+    fun updateToken(token: String?): Unit {
+        firebaseHelper.updateToken(token)
+    }
+
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
         return firebaseHelper.authenticateUser(email, password)
     }
