@@ -30,11 +30,11 @@ import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.squareup.picasso.Callback
-import rx.plugins.RxJavaHooks.onError
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
@@ -42,7 +42,6 @@ import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.ProfilePresenter
 import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.loadUrl
 import site.paulo.localchat.ui.utils.loadUrlCircle
 import javax.inject.Inject
 
@@ -79,6 +78,9 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
 
     @BindView(R.id.genderUserProfileLabel)
     lateinit var genderLb: TextView
+
+    @BindView(R.id.loadingProfileProgress)
+    lateinit var loadingProfileProgress: ProgressBar
 
     lateinit var user: User
 
@@ -154,13 +156,6 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
         }
     }
 
-    fun hideNameConfirmationButton() {
-        nameLb.visibility = View.VISIBLE
-        nameEditImg.visibility = View.VISIBLE
-        nameTxt.visibility = View.GONE
-        nameEditContainer.visibility = View.GONE
-    }
-
     /**************** Age *********************/
 
     override fun editAge(view: View) {
@@ -195,7 +190,8 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     override fun updatePic(url: String) {
         var callback: com.squareup.picasso.Callback =  object: Callback {
             override fun onSuccess() {
-                //currentUserManager.setPic((profileImg.drawable as BitmapDrawable).bitmap)
+                currentUserManager.setPic((profileImg.drawable as BitmapDrawable).bitmap)
+                loadingProfileProgress.visibility = View.INVISIBLE
             }
 
             override fun onError() { }
@@ -228,6 +224,7 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
+            loadingProfileProgress.visibility = View.VISIBLE
             presenter.uploadPic(data.data)
         }
     }
@@ -244,6 +241,13 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
         ageEditImg.visibility = View.VISIBLE
         ageTxt.visibility = View.GONE
         ageEditContainer.visibility = View.GONE
+    }
+
+    fun hideNameConfirmationButton() {
+        nameLb.visibility = View.VISIBLE
+        nameEditImg.visibility = View.VISIBLE
+        nameTxt.visibility = View.GONE
+        nameEditContainer.visibility = View.GONE
     }
 
     fun animateButton() {

@@ -1,6 +1,7 @@
 package site.paulo.localchat.ui.utils
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import android.view.PixelCopy.request
@@ -101,6 +102,12 @@ fun ImageView.loadUrlAndResizeCircle(url: String?, resize: Int, placeholder: Boo
         } else {
             request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
         }
+}
+
+fun ImageView.loadUrlAndResizeCirclePlaceholder(url: String?, resize: Int, placeholder: Drawable, request: (RequestCreator) -> RequestCreator) {
+    if (url != null)
+        request(Picasso.with(context).load(url).placeholder(placeholder).resize(resize, resize).centerCrop()).into(this)
+
 }
 
 fun ImageView.loadResourceAndResize(resource: Int, resize: Int) {

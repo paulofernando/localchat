@@ -27,6 +27,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import at.markushi.ui.CircleButton
 import butterknife.BindView
@@ -70,6 +71,12 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     @BindView(R.id.otherUserImg)
     lateinit var otherUserPic: ImageView
+
+    @BindView(R.id.attachImageRoomImg)
+    lateinit var attachImage: ImageView
+
+    @BindView(R.id.attachImageRoomProgressImg)
+    lateinit var attachImageProgress: ProgressBar
 
     var emptyRoom: Boolean = false
 
@@ -129,6 +136,16 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     override fun showEmptyChatRoom() {
         emptyRoom = true
+    }
+
+    override fun showLoadingImage() {
+        attachImage.visibility = View.INVISIBLE
+        attachImageProgress.visibility = View.VISIBLE
+    }
+
+    override fun hideLoadingImage() {
+        attachImage.visibility = View.VISIBLE
+        attachImageProgress.visibility = View.INVISIBLE
     }
 
     override fun cleanMessageField() {

@@ -22,5 +22,6 @@ class Utils {
 }
 
 fun Utils.Companion.getFirebaseId(email:String): String {
-    return email.replace(".", "_", false)
+    if(!email.equals("")) return email.replace(".", "_", false)
+    else return ""
 }

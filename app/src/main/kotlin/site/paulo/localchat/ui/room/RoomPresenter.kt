@@ -93,11 +93,14 @@ constructor(private val firebaseDatabase: FirebaseDatabase,
         // Get a reference to store file at chat_photos/<FILENAME>
         val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
 
+        view.showLoadingImage()
+
         // Upload file to Firebase Storage
         photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
             Timber.i("Image sent successfully!")
             val downloadUrl = taskSnapshot?.downloadUrl
             sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), chatId)
+            view.hideLoadingImage()
         }
     }
 

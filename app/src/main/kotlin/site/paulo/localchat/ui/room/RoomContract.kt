@@ -31,6 +31,8 @@ object RoomContract {
         fun showChat(chat: Chat)
         fun showEmptyChatRoom()
         fun showError()
+        fun showLoadingImage()
+        fun hideLoadingImage()
         fun cleanMessageField()
     }
 

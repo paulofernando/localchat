@@ -23,7 +23,7 @@ class CurrentUserManager {
     }
 
     fun getUserId(): String {
-        return Utils.getFirebaseId(user!!.email)
+        return Utils.getFirebaseId(user?.email ?: "")
     }
 
     fun setUser(user:User){
@@ -45,10 +45,10 @@ class CurrentUserManager {
         Timber.i("Current user data updated: " + user.toString())
     }
 
-    /*fun setPic(bmp: Bitmap){
+    fun setPic(bmp: Bitmap){
         this.user?.userPicBitmap = bmp
         Timber.i("Current user pic (bitmap) updated")
-    }*/
+    }
 
 }
 

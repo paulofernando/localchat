@@ -18,6 +18,6 @@ data class User(
         @JvmField val CREATOR = PaperParcelable.Creator(User::class.java)
     }
 
-    //@Transient var userPicBitmap: Bitmap? = null
+    @Transient var userPicBitmap: Bitmap? = null
 
 }
