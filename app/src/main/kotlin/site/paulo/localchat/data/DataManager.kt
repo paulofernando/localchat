@@ -21,6 +21,8 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
+import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -85,5 +87,6 @@ class DataManager
     fun removeAllListeners(): Unit {
         firebaseHelper.removeAllListeners()
     }
+
 
 }

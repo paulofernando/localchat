@@ -17,6 +17,7 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.base.BaseMvpPresenter
 import site.paulo.localchat.ui.base.MvpView
 
@@ -27,6 +28,7 @@ object ChatContract {
         fun showChat(chat: Chat)
         fun showChatsEmpty()
         fun showError()
+        fun messageReceived(chatMessage: ChatMessage)
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {

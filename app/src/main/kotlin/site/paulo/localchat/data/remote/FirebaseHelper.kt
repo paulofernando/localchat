@@ -26,6 +26,7 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseAuth
+import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.manager.CurrentUserManager
@@ -186,6 +187,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
 
     /**************** Chat ****************/
+
+    fun registerRoomListener(query: Query, listener: ChildEventListener): Unit {
+        childEventListeners.add(listener)
+        query.addChildEventListener(listener)
+    }
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         val valueMessage = mutableMapOf<String, Any>()

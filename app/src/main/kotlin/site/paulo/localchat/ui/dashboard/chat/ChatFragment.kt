@@ -27,14 +27,18 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ChildEventListener
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.ChatAdapter
 import site.paulo.localchat.ui.user.ChatPresenter
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
+import timber.log.Timber
+import java.util.HashMap
 import javax.inject.Inject
 
 class ChatFragment : BaseFragment(), ChatContract.View {
@@ -85,5 +89,10 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     override fun showError() {
         Toast.makeText(activity, R.string.error_loading_chat, Toast.LENGTH_LONG).show()
     }
+
+    override fun messageReceived(chatMessage: ChatMessage) {
+        Timber.i("Message received")
+    }
+
 
 }

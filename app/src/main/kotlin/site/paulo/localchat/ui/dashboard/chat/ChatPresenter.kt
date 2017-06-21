@@ -16,6 +16,13 @@
 
 package site.paulo.localchat.ui.user
 
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
+import com.kelvinapps.rxfirebase.RxFirebaseDatabase
+import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.lang.kotlin.addTo
@@ -23,7 +30,9 @@ import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
 import timber.log.Timber
@@ -33,10 +42,9 @@ import javax.inject.Inject
 @ConfigPersistent
 class ChatPresenter
 @Inject
-constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
+constructor(private val dataManager: DataManager, private val firebaseDatabase: FirebaseDatabase) : ChatContract.Presenter() {
 
     override fun loadChatRooms(userId:String) {
-
         dataManager.getUser(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -65,6 +73,23 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
             .subscribe(FunctionSubscriber<Chat>()
                 .onNext {
                     view.showChat(it)
+
+                    val childEventListener = object : ChildEventListener {
+                        override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
+                            view.messageReceived(snapshot.getValue(ChatMessage::class.java))
+                        }
+
+                        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+                        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+                        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+                        override fun onCancelled(databaseError: DatabaseError) {}
+                    }
+
+                    dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+                        .child(it.id), childEventListener)
+
+                    Timber.i("Chat room registered!")
+
                 }
                 .onError {
                     Timber.e(it, "There was an error loading a chat room.")
