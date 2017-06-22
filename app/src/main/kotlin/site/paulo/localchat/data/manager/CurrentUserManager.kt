@@ -36,12 +36,12 @@ class CurrentUserManager {
     }
 
     fun setAge(age: Long){
-        this.user = User(user!!.name, age, user!!.email, user!!.gender, user!!.pic, user!!.chats)
+        this.user = User(user?.name ?: "", age, user?.email ?: "", user?.gender ?: "", user?.pic ?: "", user!!.chats)
         Timber.i("Current user data updated: " + user.toString())
     }
 
     fun setPic(url: String){
-        this.user = User(user!!.name, user!!.age, user!!.email, user!!.gender, url, user!!.chats)
+        this.user = User(user?.name ?: "", user?.age ?: 0, user?.email ?: "", user?.gender ?: "", url, user!!.chats)
         Timber.i("Current user data updated: " + user.toString())
     }
 

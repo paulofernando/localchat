@@ -99,18 +99,18 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
     override fun showCurrentUserData(user: User) {
         this.user = user
-        if(currentUserManager.getUser().userPicBitmap != null) {
+        /*if(currentUserManager.getUser().userPicBitmap != null) {
             profileImage.loadUrlAndResizeCirclePlaceholder(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt(),
                 BitmapDrawable(getResources(), currentUserManager.getUser().userPicBitmap)) {
                 request ->
                 request.transform(CircleTransform())
             }
-        } else {
+        } else {*/
             profileImage.loadUrlAndResizeCircle(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
                 request ->
                 request.transform(CircleTransform())
             }
-        }
+        //}
         profileName.text = user.name
     }
 
