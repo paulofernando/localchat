@@ -26,6 +26,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.squareup.picasso.Picasso
 import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
@@ -33,6 +34,7 @@ import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.profile.ProfileActivity
 import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.loadUrlAndResize
 import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
 import site.paulo.localchat.ui.utils.loadUrlAndResizeCirclePlaceholder
 import javax.inject.Inject

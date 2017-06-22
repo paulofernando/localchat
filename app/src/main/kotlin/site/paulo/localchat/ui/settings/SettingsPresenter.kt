@@ -19,19 +19,15 @@ package site.paulo.localchat.ui.settings
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
-import site.paulo.localchat.data.remote.FirebaseHelper
 import timber.log.Timber
 import javax.inject.Inject
 
 class SettingsPresenter
 @Inject
-constructor(private val firebaseDatabase: FirebaseDatabase,
-    private val currentUserManager: CurrentUserManager,
+constructor(private val currentUserManager: CurrentUserManager,
     private val dataManager: DataManager) : SettingsContract.Presenter() {
 
     override fun loadCurrentUser() {
@@ -51,8 +47,7 @@ constructor(private val firebaseDatabase: FirebaseDatabase,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
-            .child(currentUserManager.getUserId()), childEventListener)
+        dataManager.registerUserChildEventListener(childEventListener)
     }
 
 }

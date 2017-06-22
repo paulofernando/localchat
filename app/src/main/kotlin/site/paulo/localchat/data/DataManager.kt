@@ -76,13 +76,22 @@ class DataManager
         return firebaseHelper.sendMessage(message, chatId, completionListener)
     }
 
-    fun registerChildEventListener(query: Query, listener: ChildEventListener): Unit {
-        firebaseHelper.registerChildEventListener(query, listener)
+    fun registerUserChildEventListener(listener: ChildEventListener): Unit {
+        firebaseHelper.registerUserChildEventListener(listener)
     }
 
-    fun registerValueEventListener(query: Query, listener: ValueEventListener): Unit {
-        firebaseHelper.registerValueEventListener(query, listener)
+    fun registerUserValueEventListener(listener: ValueEventListener): Unit {
+        firebaseHelper.registerUserValueEventListener(listener)
     }
+
+    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
+        firebaseHelper.registerRoomChildEventListener(listener, roomId)
+    }
+
+    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        firebaseHelper.registerRoomValueEventListener(listener, roomId)
+    }
+
 
     fun removeAllListeners(): Unit {
         firebaseHelper.removeAllListeners()

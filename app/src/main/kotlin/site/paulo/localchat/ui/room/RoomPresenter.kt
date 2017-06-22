@@ -21,7 +21,6 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import rx.android.schedulers.AndroidSchedulers
@@ -32,14 +31,12 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
-import site.paulo.localchat.data.remote.FirebaseHelper
 import timber.log.Timber
 import javax.inject.Inject
 
 class RoomPresenter
 @Inject
-constructor(private val firebaseDatabase: FirebaseDatabase,
-    private val dataManager: DataManager,
+constructor(private val dataManager: DataManager,
     private val currentUserManager: CurrentUserManager,
     private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
 
@@ -69,7 +66,7 @@ constructor(private val firebaseDatabase: FirebaseDatabase,
         }
     }
 
-    override fun registerRoomListener(chatId: String) {
+    override fun registerRoomListener(roomId: String) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 view.addMessage(snapshot.getValue(ChatMessage::class.java))
@@ -81,13 +78,10 @@ constructor(private val firebaseDatabase: FirebaseDatabase,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-
-
-        dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(chatId).orderByChild(FirebaseHelper.Child.TIMESTAMP), childEventListener)
+        dataManager.registerRoomChildEventListener(childEventListener, roomId)
     }
 
-    override fun uploadImage(selectedImageUri: Uri, chatId: String) {
+    override fun uploadImage(selectedImageUri: Uri, roomId: String) {
         // Get a reference to the location where we'll store our photos
         var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
         // Get a reference to store file at chat_photos/<FILENAME>
@@ -99,7 +93,7 @@ constructor(private val firebaseDatabase: FirebaseDatabase,
         photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
             Timber.i("Image sent successfully!")
             val downloadUrl = taskSnapshot?.downloadUrl
-            sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), chatId)
+            sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), roomId)
             view.hideLoadingImage()
         }
     }

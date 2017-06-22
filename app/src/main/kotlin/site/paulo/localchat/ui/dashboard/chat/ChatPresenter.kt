@@ -19,10 +19,6 @@ package site.paulo.localchat.ui.user
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
-import com.kelvinapps.rxfirebase.RxFirebaseDatabase
-import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.lang.kotlin.addTo
@@ -32,7 +28,6 @@ import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
-import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
 import timber.log.Timber
@@ -42,7 +37,7 @@ import javax.inject.Inject
 @ConfigPersistent
 class ChatPresenter
 @Inject
-constructor(private val dataManager: DataManager, private val firebaseDatabase: FirebaseDatabase) : ChatContract.Presenter() {
+constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
 
     override fun loadChatRooms(userId:String) {
         dataManager.getUser(userId)
@@ -85,11 +80,8 @@ constructor(private val dataManager: DataManager, private val firebaseDatabase: 
                         override fun onCancelled(databaseError: DatabaseError) {}
                     }
 
-                    dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-                        .child(it.id), childEventListener)
-
-                    Timber.i("Chat room registered!")
-
+                    dataManager.registerRoomChildEventListener(childEventListener, it.id)
+                    Timber.i("Chat room " + it.id + "registered!")
                 }
                 .onError {
                     Timber.e(it, "There was an error loading a chat room.")

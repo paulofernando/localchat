@@ -43,65 +43,40 @@ fun ImageView.loadUrl(url: String?) {
     if(url != null) Picasso.with(context).load(url).into(this)
 }
 
-fun ImageView.loadUrl(url: String?, placeholder: Boolean = true, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.loadUrl(url: String?, request: (RequestCreator) -> RequestCreator) {
     if(url != null)
-        if(placeholder) {
-            request(Picasso.with(context).load(url)).placeholder(R.drawable.empty).into(this)
-        } else {
-            request(Picasso.with(context).load(url)).into(this)
-        }
+        request(Picasso.with(context).load(url)).placeholder(R.drawable.empty).into(this)
 }
 
 /**
  * The same as loadUrl but with a circle image placeholder
  */
-fun ImageView.loadUrlCircle(url: String?, placeholder: Boolean = true, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.loadUrlCircle(url: String?, request: (RequestCreator) -> RequestCreator) {
     if(url != null)
-        if(placeholder) {
-            request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this)
-        } else {
-            request(Picasso.with(context).load(url)).into(this)
-        }
+        request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this)
 }
 
-fun ImageView.loadUrlCircle(url: String?, callback: Callback, placeholder: Boolean = true, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.loadUrlCircle(url: String?, callback: Callback, request: (RequestCreator) -> RequestCreator) {
     if (url != null)
-        if(placeholder) {
-            request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this, callback)
-        } else {
-            request(Picasso.with(context).load(url)).into(this, callback)
-        }
+        request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this, callback)
 }
 
-fun ImageView.loadUrlAndResize(url: String?, resize: Int, placeholder: Boolean = true) {
+fun ImageView.loadUrlAndResize(url: String?, resize: Int) {
     if (url != null)
-        if(placeholder) {
-            Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop().into(this)
-        } else {
-            Picasso.with(context).load(url).resize(resize, resize).centerCrop().into(this)
-        }
-
+        Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop().into(this)
 }
 
-fun ImageView.loadUrlAndResize(url: String?, resize: Int, placeholder: Boolean = true, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.loadUrlAndResize(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
     if(url != null)
-        if(placeholder) {
-            request(Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop()).into(this)
-        } else {
-            request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
-        }
+        request(Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop()).into(this)
 }
 
 /**
  * The same as loadUrlAndResize but with a circle image placeholder
  */
-fun ImageView.loadUrlAndResizeCircle(url: String?, resize: Int, placeholder: Boolean = true, request: (RequestCreator) -> RequestCreator) {
+fun ImageView.loadUrlAndResizeCircle(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
     if (url != null)
-        if(placeholder) {
-            request(Picasso.with(context).load(url).placeholder(R.drawable.empty_circle).resize(resize, resize).centerCrop()).into(this)
-        } else {
-            request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
-        }
+        request(Picasso.with(context).load(url).placeholder(R.drawable.empty_circle).resize(resize, resize).centerCrop()).into(this)
 }
 
 fun ImageView.loadUrlAndResizeCirclePlaceholder(url: String?, resize: Int, placeholder: Drawable, request: (RequestCreator) -> RequestCreator) {

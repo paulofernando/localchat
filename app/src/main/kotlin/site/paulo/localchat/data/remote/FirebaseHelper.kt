@@ -38,6 +38,7 @@ import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
 import java.util.ArrayList
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,8 +75,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         }
     }
 
-    private var childEventListeners: ArrayList<ChildEventListener> = ArrayList<ChildEventListener>()
-    private var valueEventListeners: ArrayList<ValueEventListener> = ArrayList<ValueEventListener>()
+    private var childEventListeners: HashMap<String, ChildEventListener> = HashMap()
+    private var valueEventListeners: HashMap<String, ValueEventListener> = HashMap()
 
     /**************** User *********************/
 
@@ -101,31 +102,6 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Timber.e("User " + user.email + "registered")
         }
         firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(value, completionListener)
-    }
-
-    fun createNewRoom(otherUser:User): Chat {
-        val summarizedCurrentUser: SummarizedUser = SummarizedUser(currentUserManager.getUser().name,
-            currentUserManager.getUser().pic)
-        val summarizedOtherUser:SummarizedUser = SummarizedUser(otherUser.name, otherUser.pic)
-
-        var reference = firebaseDatabase.getReference(Reference.CHATS).push()
-
-        val chat:Chat = Chat(reference.key, mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
-            Utils.getFirebaseId(otherUser.email) to summarizedOtherUser), "")
-
-        reference.setValue(chat)
-
-        firebaseDatabase.getReference(Reference.USERS)
-            .child(Utils.getFirebaseId(currentUserManager.getUser().email))
-            .child(Child.CHATS)
-            .updateChildren(mapOf(Utils.getFirebaseId(otherUser.email) to reference.key))
-
-        firebaseDatabase.getReference(Reference.USERS)
-            .child(Utils.getFirebaseId(otherUser.email))
-            .child(Child.CHATS)
-            .updateChildren(mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to reference.key))
-
-        return chat
     }
 
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
@@ -183,15 +159,20 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         }
     }
 
+    fun registerUserChildEventListener(listener: ChildEventListener): Unit {
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
+            .child(currentUserManager.getUserId()), listener, "User")
+    }
+
+    fun registerUserValueEventListener(listener: ValueEventListener): Unit {
+        registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
+            .child(currentUserManager.getUserId()), listener, "User")
+    }
+
     /*******************************************/
 
 
-    /**************** Chat ****************/
-
-    fun registerRoomListener(query: Query, listener: ChildEventListener): Unit {
-        childEventListeners.add(listener)
-        query.addChildEventListener(listener)
-    }
+    /**************** Room ****************/
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         val valueMessage = mutableMapOf<String, Any>()
@@ -211,24 +192,64 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Chat::class.java)
     }
 
+    fun createNewRoom(otherUser:User): Chat {
+        val summarizedCurrentUser: SummarizedUser = SummarizedUser(currentUserManager.getUser().name,
+            currentUserManager.getUser().pic)
+        val summarizedOtherUser:SummarizedUser = SummarizedUser(otherUser.name, otherUser.pic)
+
+        var reference = firebaseDatabase.getReference(Reference.CHATS).push()
+
+        val chat:Chat = Chat(reference.key, mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
+            Utils.getFirebaseId(otherUser.email) to summarizedOtherUser), "")
+
+        reference.setValue(chat)
+
+        firebaseDatabase.getReference(Reference.USERS)
+            .child(Utils.getFirebaseId(currentUserManager.getUser().email))
+            .child(Child.CHATS)
+            .updateChildren(mapOf(Utils.getFirebaseId(otherUser.email) to reference.key))
+
+        firebaseDatabase.getReference(Reference.USERS)
+            .child(Utils.getFirebaseId(otherUser.email))
+            .child(Child.CHATS)
+            .updateChildren(mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to reference.key))
+
+        return chat
+    }
+
+    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
+    }
+
+    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
+    }
+
     /**************************************/
 
 
     /**************** Listeners ****************/
 
-    fun registerChildEventListener(query: Query, listener: ChildEventListener): Unit {
-        childEventListeners.add(listener)
+    private fun registerChildEventListener(query: Query, listener: ChildEventListener, listenerIdentifier: String): Unit {
+        childEventListeners.put(listenerIdentifier, listener)
         query.addChildEventListener(listener)
     }
 
-    fun registerValueEventListener(query: Query, listener: ValueEventListener): Unit {
-        valueEventListeners.add(listener)
+    private fun registerValueEventListener(query: Query, listener: ValueEventListener, listenerIdentifier: String): Unit {
+        valueEventListeners.put(listenerIdentifier, listener)
         query.addValueEventListener(listener)
     }
 
     fun removeAllListeners(): Unit {
-        childEventListeners.forEach { firebaseDatabase.getReference().removeEventListener(it) }
-        valueEventListeners.forEach { firebaseDatabase.getReference().removeEventListener(it) }
+        for ((listenerIdentifier, listener) in childEventListeners) {
+            firebaseDatabase.getReference().removeEventListener(listener)
+        }
+
+        for ((listenerIdentifier, listener) in valueEventListeners) {
+            firebaseDatabase.getReference().removeEventListener(listener)
+        }
     }
 
     /*******************************************/
