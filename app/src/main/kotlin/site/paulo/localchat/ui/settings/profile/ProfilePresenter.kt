@@ -41,6 +41,7 @@ constructor(private val dataManager: DataManager,
             when(dataType) {
                 FirebaseHelper.Companion.UserDataType.NAME -> currentUserManager.setUserName(value)
                 FirebaseHelper.Companion.UserDataType.AGE -> currentUserManager.setAge(value.toLong())
+                FirebaseHelper.Companion.UserDataType.PIC -> currentUserManager.setPic(value)
             }
         }
         dataManager.updateUserData(dataType, value, completionListener)
@@ -59,8 +60,6 @@ constructor(private val dataManager: DataManager,
             val downloadUrl = taskSnapshot?.downloadUrl
             updateUserData(FirebaseHelper.Companion.UserDataType.PIC, downloadUrl!!.toString())
             view.updatePic(downloadUrl!!.toString())
-
-            currentUserManager.setPic(downloadUrl!!.toString())
         }
     }
 
