@@ -90,6 +90,22 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
             ).addTo(compositeSubscription)
     }
 
+    override fun listenNewChatRooms() {
+        val childEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
+                Timber.i("NEW CHAT CREATED")
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+
+        dataManager.registerNewChatRoomChildEventListener(childEventListener)
+        Timber.i("New chat listen registered!")
+    }
+
     override fun loadProfilePicture(chatList: List<Chat>) {
         //TODO
     }

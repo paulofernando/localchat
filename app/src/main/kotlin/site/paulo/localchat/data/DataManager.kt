@@ -92,6 +92,10 @@ class DataManager
         firebaseHelper.registerRoomValueEventListener(listener, roomId)
     }
 
+    fun registerNewChatRoomChildEventListener(listener: ChildEventListener): Unit {
+        firebaseHelper.registerNewChatRoomChildEventListener(listener)
+    }
+
 
     fun removeAllListeners(): Unit {
         firebaseHelper.removeAllListeners()

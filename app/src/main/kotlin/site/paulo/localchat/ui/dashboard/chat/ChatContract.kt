@@ -34,6 +34,8 @@ object ChatContract {
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadChatRooms(userId: String)
         abstract fun loadChatRoom(chatId: String)
+        /** Listen to new chats the current user is added */
+        abstract fun listenNewChatRooms()
         abstract fun loadProfilePicture(chatList: List<Chat>)
     }
 }

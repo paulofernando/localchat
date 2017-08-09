@@ -227,6 +227,15 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
     }
 
+    fun registerNewChatRoomChildEventListener(listener: ChildEventListener): Unit {
+
+        //TODO check if user is null
+
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
+                .child(Utils.getFirebaseId(currentUserManager.getUser().email))
+                .child(FirebaseHelper.Child.CHATS), listener, "myChats")
+    }
+
     /**************************************/
 
 
