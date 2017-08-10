@@ -29,6 +29,7 @@ import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import site.paulo.localchat.R
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -94,6 +95,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
         Timber.i("Message received: ${chatMessage.message}")
+        MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
     }
 

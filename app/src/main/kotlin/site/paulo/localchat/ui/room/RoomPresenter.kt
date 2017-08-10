@@ -27,6 +27,8 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.MessagesListener
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -67,6 +69,7 @@ constructor(private val dataManager: DataManager,
     }
 
     override fun registerRoomListener(roomId: String) {
+        MessagesManager.registerListener(this, roomId)
         /*val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 view.addMessage(snapshot.getValue(ChatMessage::class.java))
@@ -80,6 +83,10 @@ constructor(private val dataManager: DataManager,
 
         dataManager.registerRoomChildEventListener(childEventListener, roomId)
         Timber.d("Listening chat room $roomId")*/
+    }
+
+    override  fun messageReceived(chatMessage: ChatMessage) {
+        view.addMessage(chatMessage)
     }
 
     override fun uploadImage(selectedImageUri: Uri, roomId: String) {

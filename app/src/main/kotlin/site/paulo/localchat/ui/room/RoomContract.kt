@@ -17,6 +17,7 @@
 package site.paulo.localchat.ui.room
 
 import android.net.Uri
+import site.paulo.localchat.data.MessagesListener
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -36,7 +37,7 @@ object RoomContract {
         fun cleanMessageField()
     }
 
-    abstract class Presenter : BaseMvpPresenter<View>() {
+    abstract class Presenter : BaseMvpPresenter<View>(), MessagesListener {
         abstract fun sendMessage(message: ChatMessage, roomId: String)
         abstract fun getChatData(chatId: String)
         abstract fun registerRoomListener(chatId: String)
