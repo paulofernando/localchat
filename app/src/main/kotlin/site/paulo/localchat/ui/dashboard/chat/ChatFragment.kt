@@ -66,9 +66,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         chatsList.layoutManager = LinearLayoutManager(activity)
 
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
-
-        //The user is not loaded yet
-        presenter.listenNewChatRooms()
+        presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
 
 
         return rootView
@@ -94,9 +92,13 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         Toast.makeText(activity, R.string.error_loading_chat, Toast.LENGTH_LONG).show()
     }
 
-    override fun messageReceived(chatMessage: ChatMessage) {
-        Timber.i("Message received")
+    override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
+        Timber.i("Message received: ${chatMessage.message}")
+        updateLastMessage(chatMessage, chatId)
     }
 
+    override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
+        chatsAdapter.setLastMessage(chatMessage.message, chatId)
+    }
 
 }

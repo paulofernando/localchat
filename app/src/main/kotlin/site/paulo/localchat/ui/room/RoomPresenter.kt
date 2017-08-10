@@ -67,7 +67,7 @@ constructor(private val dataManager: DataManager,
     }
 
     override fun registerRoomListener(roomId: String) {
-        val childEventListener = object : ChildEventListener {
+        /*val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 view.addMessage(snapshot.getValue(ChatMessage::class.java))
             }
@@ -79,6 +79,7 @@ constructor(private val dataManager: DataManager,
         }
 
         dataManager.registerRoomChildEventListener(childEventListener, roomId)
+        Timber.d("Listening chat room $roomId")*/
     }
 
     override fun uploadImage(selectedImageUri: Uri, roomId: String) {

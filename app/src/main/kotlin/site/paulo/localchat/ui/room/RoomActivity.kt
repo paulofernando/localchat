@@ -106,12 +106,14 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
         sendBtn.setOnClickListener {
-            if (!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
+            if (!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
+                    messageText.text.toString()), chat!!.id)
             else {
                 chat = presenter.createNewRoom(this.otherUser!!)
                 chatId = chat?.id
-                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(), messageText.text.toString()), chat!!.id)
-                presenter.registerRoomListener(chat!!.id)
+                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
+                        messageText.text.toString()), chat!!.id)
+                //presenter.registerRoomListener(chat!!.id)
                 emptyRoom = false
             }
         }
@@ -121,7 +123,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     override fun showChat(chat: Chat) {
-        presenter.registerRoomListener(chat.id)
+        //presenter.registerRoomListener(chat.id)
     }
 
     override fun showError() {

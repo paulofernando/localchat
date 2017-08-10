@@ -217,22 +217,24 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         return chat
     }
 
-    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
-        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String): Boolean {
+        return registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
             .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
     }
 
-    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
-        registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String): Boolean {
+        return registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
             .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
     }
 
-    fun registerNewChatRoomChildEventListener(listener: ChildEventListener): Unit {
-
-        //TODO check if user is null
+    fun registerNewChatRoomChildEventListener(listener: ChildEventListener, _userId: String? = null): Unit {
+        var userId: String? = _userId
+        if(userId == null) {
+            userId = Utils.getFirebaseId(currentUserManager.getUser().email)
+        }
 
         registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
-                .child(Utils.getFirebaseId(currentUserManager.getUser().email))
+                .child(userId)
                 .child(FirebaseHelper.Child.CHATS), listener, "myChats")
     }
 
@@ -241,14 +243,26 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     /**************** Listeners ****************/
 
-    private fun registerChildEventListener(query: Query, listener: ChildEventListener, listenerIdentifier: String): Unit {
-        childEventListeners.put(listenerIdentifier, listener)
-        query.addChildEventListener(listener)
+    private fun registerChildEventListener(query: Query, listener: ChildEventListener, listenerIdentifier: String): Boolean {
+        if(!childEventListeners.containsKey(listenerIdentifier)) {
+            Timber.d("Registering event listener... $listenerIdentifier")
+            childEventListeners.put(listenerIdentifier, listener)
+            query.addChildEventListener(listener)
+            return true
+        }
+        Timber.d("Listener already registered. Skipping.")
+        return false
     }
 
-    private fun registerValueEventListener(query: Query, listener: ValueEventListener, listenerIdentifier: String): Unit {
-        valueEventListeners.put(listenerIdentifier, listener)
-        query.addValueEventListener(listener)
+    private fun registerValueEventListener(query: Query, listener: ValueEventListener, listenerIdentifier: String): Boolean {
+        if(!childEventListeners.containsKey(listenerIdentifier)) {
+            Timber.d("Registering value listener... $listenerIdentifier")
+            valueEventListeners.put(listenerIdentifier, listener)
+            query.addValueEventListener(listener)
+            return true
+        }
+        Timber.d("Listener already registered. Skipping.")
+        return false
     }
 
     fun removeAllListeners(): Unit {

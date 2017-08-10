@@ -39,6 +39,8 @@ class ChatAdapter
 constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
+    /* Map of chats to speed up access. <chatId, index> */
+    var chatsMapped = mutableMapOf<String, Int>()
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
@@ -55,6 +57,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     override fun getItemCount(): Int {
         return chats.size
+    }
+
+    fun setLastMessage(lastMessage:String, chatId: String): Unit {
+        if(chatsMapped.containsKey(chatId)) {
+            val index: Int = chatsMapped.get(chatId)!!
+            chats.get(index).lastMessage = lastMessage
+            this.notifyItemChanged(index)
+        }
     }
 
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -77,6 +87,8 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             itemView.setOnClickListener {
                 itemView.ctx.startActivity<RoomActivity>("chat" to chat)
             }
+
+            chatsMapped.put(chat.id, chats.indexOf(chat))
 
         }
     }

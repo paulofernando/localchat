@@ -67,11 +67,9 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<Chat>()
                 .onNext {
-                    view.showChat(it)
-
                     val childEventListener = object : ChildEventListener {
                         override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                            view.messageReceived(snapshot.getValue(ChatMessage::class.java))
+                            view.messageReceived(snapshot.getValue(ChatMessage::class.java), chatId)
                         }
 
                         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
@@ -80,8 +78,8 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
                         override fun onCancelled(databaseError: DatabaseError) {}
                     }
 
-                    dataManager.registerRoomChildEventListener(childEventListener, it.id)
-                    Timber.i("Chat room " + it.id + "registered!")
+                    if(dataManager.registerRoomChildEventListener(childEventListener, it.id))
+                        view.showChat(it)
                 }
                 .onError {
                     Timber.e(it, "There was an error loading a chat room.")
@@ -90,10 +88,10 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
             ).addTo(compositeSubscription)
     }
 
-    override fun listenNewChatRooms() {
+    override fun listenNewChatRooms(userId: String) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                Timber.i("NEW CHAT CREATED")
+                loadChatRoom(snapshot.value.toString())
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
@@ -102,8 +100,8 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerNewChatRoomChildEventListener(childEventListener)
-        Timber.i("New chat listen registered!")
+        dataManager.registerNewChatRoomChildEventListener(childEventListener, userId)
+        Timber.i("Listening for new chats...")
     }
 
     override fun loadProfilePicture(chatList: List<Chat>) {
