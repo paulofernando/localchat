@@ -68,24 +68,17 @@ constructor(private val dataManager: DataManager,
         }
     }
 
-    override fun registerRoomListener(roomId: String) {
-        MessagesManager.registerListener(this, roomId)
-        /*val childEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                view.addMessage(snapshot.getValue(ChatMessage::class.java))
+    override fun registerMessagesListener(roomId: String) {
+        val messages: MutableList<ChatMessage>? = MessagesManager.registerListener(this, roomId)
+        if(messages!= null) {
+            for(message in messages) {
+                messageReceived(message)
             }
-
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
-            override fun onCancelled(databaseError: DatabaseError) {}
         }
-
-        dataManager.registerRoomChildEventListener(childEventListener, roomId)
-        Timber.d("Listening chat room $roomId")*/
+        Timber.d("Listening chat room $roomId")
     }
 
-    override  fun messageReceived(chatMessage: ChatMessage) {
+    override fun messageReceived(chatMessage: ChatMessage) {
         view.addMessage(chatMessage)
     }
 

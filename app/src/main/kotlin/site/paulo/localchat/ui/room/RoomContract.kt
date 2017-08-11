@@ -40,7 +40,7 @@ object RoomContract {
     abstract class Presenter : BaseMvpPresenter<View>(), MessagesListener {
         abstract fun sendMessage(message: ChatMessage, roomId: String)
         abstract fun getChatData(chatId: String)
-        abstract fun registerRoomListener(chatId: String)
+        abstract fun registerMessagesListener(chatId: String)
         abstract fun createNewRoom(otherUser: User): Chat
         abstract fun uploadImage(selectedImageUri: Uri, roomId: String)
     }

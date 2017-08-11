@@ -33,8 +33,12 @@ class MessagesManager {
             chatListeners.get(chatId)?.messageReceived(chatMessage)
         }
 
-        fun registerListener(messageListener: MessagesListener, chatId: String) {
+        /**
+         * Register a message listener and returns the messages already received
+         */
+        fun registerListener(messageListener: MessagesListener, chatId: String): MutableList<ChatMessage>? {
             chatListeners.put(chatId, messageListener)
+            return chatMessages.get(chatId)
         }
     }
 
