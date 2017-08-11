@@ -97,10 +97,15 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         Timber.i("Message received: ${chatMessage.message}")
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
+        updateUnreadMessages(MessagesManager.getUnreadMessages(chatId), chatId)
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
         chatsAdapter.setLastMessage(chatMessage.message, chatId)
+    }
+
+    override fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
+        chatsAdapter.updateUnreadMessages(unreadMessages, chatId)
     }
 
 }

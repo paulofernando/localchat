@@ -28,6 +28,7 @@ object RoomContract {
 
     interface View : MvpView {
         fun addMessage(message: ChatMessage)
+        fun loadOldMessages(messages: MutableList<ChatMessage>?)
         fun messageSent(message: ChatMessage)
         fun showChat(chat: Chat)
         fun showEmptyChatRoom()

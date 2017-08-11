@@ -33,6 +33,7 @@ import at.markushi.ui.CircleButton
 import butterknife.BindView
 import butterknife.ButterKnife
 import site.paulo.localchat.R
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -130,10 +131,21 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         Toast.makeText(this, R.string.error_loading_chat_room_data, Toast.LENGTH_LONG).show()
     }
 
+    override fun loadOldMessages(messages: MutableList<ChatMessage>?) {
+        if(messages!= null) {
+            for(message in messages) {
+                roomAdapter.messages.add(message)
+            }
+        }
+        messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
+        roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
+    }
+
     override fun addMessage(message: ChatMessage) {
         roomAdapter.messages.add(message)
         messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
+        MessagesManager.readMessage(this.chatId!!) //mark message as read
     }
 
     override fun showEmptyChatRoom() {

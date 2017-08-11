@@ -6,7 +6,8 @@ import nz.bradcampbell.paperparcel.PaperParcelable
 @PaperParcel
 data class Chat(val id: String = "",
     val users: Map<String, SummarizedUser> = emptyMap(),
-    var lastMessage: String = "")
+    var lastMessage: String = "",
+    var unreadMessages: String = "")
     : PaperParcelable {
 
     companion object {

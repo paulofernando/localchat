@@ -70,11 +70,7 @@ constructor(private val dataManager: DataManager,
 
     override fun registerMessagesListener(roomId: String) {
         val messages: MutableList<ChatMessage>? = MessagesManager.registerListener(this, roomId)
-        if(messages!= null) {
-            for(message in messages) {
-                messageReceived(message)
-            }
-        }
+        view.loadOldMessages(messages)
         Timber.d("Listening chat room $roomId")
     }
 

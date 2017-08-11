@@ -17,20 +17,32 @@
 package site.paulo.localchat.data
 
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import java.util.concurrent.atomic.AtomicInteger
 
 class MessagesManager {
 
     companion object Factory {
         /** Every message is stored here */ //TODO just stored the last x messages by chat
         val chatMessages = mutableMapOf<String, MutableList<ChatMessage>>()
+        val chatUnreadMessages = mutableMapOf<String, AtomicInteger>()
         val chatListeners = mutableMapOf<String, MessagesListener>()
 
         fun add(chatMessage: ChatMessage, chatId: String) {
             if(!chatMessages.containsKey(chatId)) {
                 chatMessages.put(chatId, mutableListOf<ChatMessage>())
+                chatUnreadMessages.put(chatId, AtomicInteger(0))
             }
             chatMessages.get(chatId)?.add(chatMessage)
             chatListeners.get(chatId)?.messageReceived(chatMessage)
+            chatUnreadMessages.get(chatId)?.incrementAndGet()
+        }
+
+        fun readMessage(chatId: String) {
+            chatUnreadMessages.get(chatId)?.decrementAndGet()
+        }
+
+        fun getUnreadMessages(chatId: String): Int {
+            return chatUnreadMessages.get(chatId)?.get() ?: 0
         }
 
         /**

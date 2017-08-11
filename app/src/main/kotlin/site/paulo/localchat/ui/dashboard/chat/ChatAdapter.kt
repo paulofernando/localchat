@@ -42,13 +42,16 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     /* Map of chats to speed up access. <chatId, index> */
     var chatsMapped = mutableMapOf<String, Int>()
 
+    lateinit var chatViewHolder: ChatViewHolder
+
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_chat, parent, false)
-        return ChatViewHolder(itemView)
+        chatViewHolder = ChatViewHolder(itemView)
+        return chatViewHolder
     }
 
     override fun onBindViewHolder(holder: ChatAdapter.ChatViewHolder, position: Int) {
@@ -67,6 +70,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         }
     }
 
+    fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
+        if(chatsMapped.containsKey(chatId)) {
+            val index: Int = chatsMapped.get(chatId)!!
+            chats.get(index).unreadMessages = unreadMessages.toString()
+            this.notifyItemChanged(index)
+        }
+    }
+
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
@@ -78,6 +89,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
 
             itemView.lastMessageChatTv.text = chat.lastMessage
+            itemView.unreadChatTv.text = chat.unreadMessages
 
             itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
                 itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {

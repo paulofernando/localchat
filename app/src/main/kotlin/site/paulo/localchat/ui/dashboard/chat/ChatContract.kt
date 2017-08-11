@@ -30,6 +30,7 @@ object ChatContract {
         fun showError()
         fun messageReceived(chatMessage: ChatMessage, chatId: String)
         fun updateLastMessage(chatMessage: ChatMessage, chatId: String)
+        fun updateUnreadMessages(unreadMessages: Int, chatId: String)
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {

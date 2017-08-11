@@ -52,7 +52,7 @@
             android:layout_height="50dp"
             android:padding="12dp"
             android:src="@drawable/edit_profile_image"
-            android:background="@drawable/circle_bg"
+            android:background="@drawable/bg_circle"
             android:visibility="invisible"
             tools:visibility="visible"
             android:onClick="showImagePicker"
