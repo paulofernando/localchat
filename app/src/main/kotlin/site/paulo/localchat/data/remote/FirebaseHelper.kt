@@ -41,6 +41,10 @@ import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DataSnapshot
+
+
 
 @Singleton
 class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
@@ -56,6 +60,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     object Child {
         val AGE = "age"
         val CHATS = "chats"
+        val DELIVERED_MESSAGES = "deliveredMessages"
         val EMAIL = "email"
         val GENDER = "gender"
         val ID = "id"
@@ -236,6 +241,23 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
                 .child(userId)
                 .child(FirebaseHelper.Child.CHATS), listener, "myChats")
+    }
+
+    fun messageDelivered(chatId: String): Unit {
+        val mDeliveredRef = firebaseDatabase.getReference(Reference.CHATS).
+                child(chatId).
+                child(Child.DELIVERED_MESSAGES)
+
+        mDeliveredRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var delivered = dataSnapshot.child(currentUserManager.getUserId()).value as Long
+                mDeliveredRef.child(currentUserManager.getUserId()).setValue(++delivered)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                throw databaseError.toException()
+            }
+        })
     }
 
     /**************************************/

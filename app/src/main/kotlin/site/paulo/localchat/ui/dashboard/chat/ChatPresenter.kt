@@ -25,6 +25,7 @@ import rx.lang.kotlin.addTo
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -37,7 +38,8 @@ import javax.inject.Inject
 @ConfigPersistent
 class ChatPresenter
 @Inject
-constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
+constructor(private val dataManager: DataManager,
+            private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
     override fun loadChatRooms(userId:String) {
         dataManager.getUser(userId)
@@ -69,7 +71,11 @@ constructor(private val dataManager: DataManager) : ChatContract.Presenter() {
                 .onNext {
                     val childEventListener = object : ChildEventListener {
                         override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                            view.messageReceived(snapshot.getValue(ChatMessage::class.java), chatId)
+                            val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java)
+                            view.messageReceived(chatMessage, chatId)
+                            if(chatMessage.owner != currentUserManager.getUserId()) {
+                                dataManager.messageDelivered(chatId)
+                            }
                         }
 
                         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
