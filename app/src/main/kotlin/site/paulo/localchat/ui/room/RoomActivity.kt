@@ -100,7 +100,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
         if (chat == null) //just have the chat id
             presenter.getChatData(chatId!!)
-        else showChat(chat!!)
+        else {
+            showChat(chat!!)
+            this.chatId = chat?.id
+        }
 
         messagesList.adapter = roomAdapter
         messagesList.layoutManager = LinearLayoutManager(this)
@@ -108,13 +111,12 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
         sendBtn.setOnClickListener {
             if (!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                    messageText.text.toString()), chat!!.id)
+                    messageText.text.toString()), this.chatId!!)
             else {
                 chat = presenter.createNewRoom(this.otherUser!!)
-                chatId = chat?.id
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageText.text.toString()), chat!!.id)
-                presenter.registerMessagesListener(chat!!.id)
+                        messageText.text.toString()), this.chatId!!)
+                presenter.registerMessagesListener(this.chatId!!)
                 emptyRoom = false
             }
         }
