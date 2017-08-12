@@ -41,6 +41,8 @@ import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getFirebaseId
 import site.paulo.localchat.ui.utils.loadUrlCircle
 import timber.log.Timber
 import javax.inject.Inject
@@ -98,25 +100,28 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         this.chatId = intent.getStringExtra("chatId") //just passed from nearby users fragment
         this.otherUser = intent.getParcelableExtra<User>("otherUser") //just passed from nearby users fragment
 
-        if (chat == null) //just have the chat id
-            presenter.getChatData(chatId!!)
-        else {
-            showChat(chat!!)
-            this.chatId = chat?.id
-        }
-
         messagesList.adapter = roomAdapter
         messagesList.layoutManager = LinearLayoutManager(this)
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
+        if (!currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
+            emptyRoom = true
+        } else {
+            if (chat == null) //just have the chat id
+                presenter.getChatData(chatId!!)
+            else showChat(chat!!)
+        }
+
         sendBtn.setOnClickListener {
-            if (!emptyRoom) presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                    messageText.text.toString()), this.chatId!!)
+            if (!emptyRoom)
+                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
+                        messageText.text.toString()), chat!!.id)
             else {
                 chat = presenter.createNewRoom(this.otherUser!!)
+                chatId = chat?.id
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageText.text.toString()), this.chatId!!)
-                presenter.registerMessagesListener(this.chatId!!)
+                        messageText.text.toString()), chat!!.id)
+                presenter.registerMessagesListener(chat!!.id)
                 emptyRoom = false
             }
         }

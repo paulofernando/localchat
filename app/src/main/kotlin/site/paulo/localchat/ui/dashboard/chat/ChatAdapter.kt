@@ -72,9 +72,9 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
         if(chatsMapped.containsKey(chatId)) {
-            val index: Int = chatsMapped.get(chatId)!!
+            /*val index: Int = chatsMapped.get(chatId)!!
             chats.get(index).unreadMessages = unreadMessages.toString()
-            this.notifyItemChanged(index)
+            this.notifyItemChanged(index)*/
         }
     }
 
@@ -89,7 +89,8 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
 
             itemView.lastMessageChatTv.text = chat.lastMessage
-            itemView.unreadChatTv.text = chat.unreadMessages
+
+            //itemView.unreadChatTv.text = chat.unreadMessages
 
             itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
                 itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {

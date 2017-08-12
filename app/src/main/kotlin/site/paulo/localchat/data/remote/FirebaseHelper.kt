@@ -204,8 +204,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
         var reference = firebaseDatabase.getReference(Reference.CHATS).push()
 
-        val chat:Chat = Chat(reference.key, mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
-            Utils.getFirebaseId(otherUser.email) to summarizedOtherUser), "")
+        val chat:Chat = Chat(reference.key,
+                mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
+                        Utils.getFirebaseId(otherUser.email) to summarizedOtherUser),
+                "",
+                mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to 0,
+                        Utils.getFirebaseId(otherUser.email) to 0))
 
         reference.setValue(chat)
 

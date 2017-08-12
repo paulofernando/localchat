@@ -7,7 +7,7 @@ import nz.bradcampbell.paperparcel.PaperParcelable
 data class Chat(val id: String = "",
     val users: Map<String, SummarizedUser> = emptyMap(),
     var lastMessage: String = "",
-    val receivedMessages: Map<String, Int> = emptyMap(),
+    val deliveredMessages: Map<String, Int> = emptyMap(),
     var unreadMessages: String = "") //TODO remove
     : PaperParcelable {
 
