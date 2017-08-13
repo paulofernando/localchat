@@ -115,13 +115,13 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         sendBtn.setOnClickListener {
             if (!emptyRoom)
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageText.text.toString()), chat!!.id)
+                        messageText.text.toString()), chat?.id ?: chatId!!)
             else {
                 chat = presenter.createNewRoom(this.otherUser!!)
                 chatId = chat?.id
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageText.text.toString()), chat!!.id)
-                presenter.registerMessagesListener(chat!!.id)
+                        messageText.text.toString()), chat?.id ?: chatId!!)
+                presenter.registerMessagesListener(chat?.id ?: chatId!!)
                 emptyRoom = false
             }
         }

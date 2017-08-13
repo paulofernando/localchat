@@ -98,6 +98,7 @@ constructor(private val dataManager: DataManager,
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 loadChatRoom(snapshot.value.toString())
+                currentUserManager.getUser().chats.put(snapshot.key, snapshot.value.toString())
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}

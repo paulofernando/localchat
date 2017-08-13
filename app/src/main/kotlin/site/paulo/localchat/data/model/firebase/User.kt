@@ -11,7 +11,7 @@ data class User(
     val email: String = "",
     val gender: String = "",
     val pic: String = "",
-    val chats: Map<String, String> = emptyMap())
+    val chats: MutableMap<String, String> = mutableMapOf<String, String>())
     : PaperParcelable {
 
     companion object {
