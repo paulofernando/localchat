@@ -25,6 +25,7 @@ import rx.lang.kotlin.addTo
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -76,6 +77,7 @@ constructor(private val dataManager: DataManager,
                             if(chatMessage.owner != currentUserManager.getUserId()) {
                                 dataManager.messageDelivered(chatId)
                             }
+                            Timber.i("Unread messages ${MessagesManager.getUnreadMessages(chatId)}")
                         }
 
                         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
@@ -84,8 +86,9 @@ constructor(private val dataManager: DataManager,
                         override fun onCancelled(databaseError: DatabaseError) {}
                     }
 
-                    if(dataManager.registerRoomChildEventListener(childEventListener, it.id))
-                        view.showChat(it)
+                    //register room if it is not registered
+                    dataManager.registerRoomChildEventListener(childEventListener, it.id)
+                    view.showChat(it)
                 }
                 .onError {
                     Timber.e(it, "There was an error loading a chat room.")
@@ -96,12 +99,12 @@ constructor(private val dataManager: DataManager,
 
     override fun listenNewChatRooms(userId: String) {
         val childEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                loadChatRoom(snapshot.value.toString())
-                currentUserManager.getUser().chats.put(snapshot.key, snapshot.value.toString())
-            }
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {}
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+                loadChatRoom(dataSnapshot.value.toString())
+                currentUserManager.getUser().chats.put(dataSnapshot.key, dataSnapshot.value.toString())
+            }
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onCancelled(databaseError: DatabaseError) {}

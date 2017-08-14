@@ -104,6 +104,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         messagesList.layoutManager = LinearLayoutManager(this)
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
+
+        //TODO change this part. Refactor the data get fromnearby and chat. OtherUser can be summarizedUser in both if summarizedUser have email also.
         if (!currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
             emptyRoom = true
         } else {
@@ -125,7 +127,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 emptyRoom = false
             }
         }
-
+        MessagesManager.readMessages(this.chatId!!) //mark all messages as read
         configureToolbar()
 
     }
@@ -152,7 +154,6 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         roomAdapter.messages.add(message)
         messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
-        MessagesManager.readMessage(this.chatId!!) //mark message as read
     }
 
     override fun showEmptyChatRoom() {
@@ -194,6 +195,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+        MessagesManager.readMessages(this.chatId!!) //mark all messages as read
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

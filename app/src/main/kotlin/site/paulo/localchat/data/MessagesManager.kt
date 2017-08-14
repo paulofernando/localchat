@@ -37,8 +37,8 @@ class MessagesManager {
             chatUnreadMessages.get(chatId)?.incrementAndGet()
         }
 
-        fun readMessage(chatId: String) {
-            chatUnreadMessages.get(chatId)?.decrementAndGet()
+        fun readMessages(chatId: String) {
+            chatUnreadMessages.get(chatId)?.set(0)
         }
 
         fun getUnreadMessages(chatId: String): Int {
