@@ -69,7 +69,6 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
 
-
         return rootView
     }
 

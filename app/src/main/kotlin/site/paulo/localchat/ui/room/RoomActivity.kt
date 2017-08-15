@@ -105,8 +105,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
 
-        //TODO change this part. Refactor the data get fromnearby and chat. OtherUser can be summarizedUser in both if summarizedUser have email also.
-        if (!currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
+        if ((otherUser != null) && //come from nearby users fragment
+                !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
             emptyRoom = true
         } else {
             if (chat == null) //just have the chat id
@@ -119,6 +119,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
                         messageText.text.toString()), chat?.id ?: chatId!!)
             else {
+                //first message between users, creates a room before send it
                 chat = presenter.createNewRoom(this.otherUser!!)
                 chatId = chat?.id
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
@@ -127,7 +128,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 emptyRoom = false
             }
         }
-        MessagesManager.readMessages(this.chatId!!) //mark all messages as read
+        MessagesManager.readMessages(chat?.id ?: chatId!!) //mark all messages as read
         configureToolbar()
 
     }
@@ -186,6 +187,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
+                return true
+            }
+            android.R.id.home -> {
+                onBackPressed()
                 return true
             }
         }

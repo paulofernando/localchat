@@ -27,7 +27,7 @@ object TestDataFactory {
             email = "email$uniqueSuffix@paulo.site",
             gender = "m",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
-            chats = mapOf("a@a_com" to "cHjyfgh"))
+            chats = mutableMapOf("a@a_com" to "cHjyfgh"))
     }
 
     @JvmStatic fun makeUser(uniqueSuffix: String, chatId: String): User {
@@ -37,7 +37,7 @@ object TestDataFactory {
             email = "email$uniqueSuffix@paulo.site",
             gender = "m",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
-            chats = mapOf("a@a_com" to "cHjyfgh"))
+            chats = mutableMapOf("a@a_com" to "cHjyfgh"))
     }
 
     @JvmStatic fun makeUserEmptyChatList(uniqueSuffix: String): User {
@@ -47,7 +47,7 @@ object TestDataFactory {
             email = "email$uniqueSuffix@paulo.site",
             gender = "m",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
-            chats = emptyMap())
+            chats = mutableMapOf())
     }
 
     @JvmStatic fun makeChat(uniqueSuffix: String): Chat {
