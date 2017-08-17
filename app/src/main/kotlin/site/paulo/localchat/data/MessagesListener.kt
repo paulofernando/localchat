@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
+package site.paulo.localchat.data
 
-package site.paulo.localchat.ui.utils
+import site.paulo.localchat.data.model.firebase.ChatMessage
 
-import site.paulo.localchat.data.model.firebase.Chat
 
-class Utils {
-    companion object {}
-}
-
-fun Utils.Companion.getFirebaseId(email:String): String {
-    if(!email.equals("")) return email.replace(".", "_", false)
-    else return ""
+interface MessagesListener {
+    fun messageReceived(chatMessage: ChatMessage) {}
 }

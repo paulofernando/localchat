@@ -38,8 +38,8 @@
 
             <ImageView
                 android:id="@+id/chatRoomPicImg"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="@dimen/image_width_room"
+                android:layout_height="@dimen/image_height_room"
                 android:visibility="gone"
                 tools:visibility="visible"/>
 

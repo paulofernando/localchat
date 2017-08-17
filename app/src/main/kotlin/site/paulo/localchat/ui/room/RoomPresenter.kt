@@ -16,25 +16,31 @@
 
 package site.paulo.localchat.ui.room
 
+import android.net.Uri
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
-import site.paulo.localchat.data.remote.FirebaseHelper
 import timber.log.Timber
 import javax.inject.Inject
 
 class RoomPresenter
 @Inject
-constructor(private val firebaseDatabase: FirebaseDatabase, private val dataManager: DataManager) : RoomContract.Presenter() {
+constructor(private val dataManager: DataManager,
+    private val currentUserManager: CurrentUserManager,
+    private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
+
+    private lateinit var childEventListener: ChildEventListener
 
     override fun getChatData(chatId: String) {
         dataManager.getChatRoom(chatId)
@@ -62,10 +68,11 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val dataMana
         }
     }
 
-    override fun registerRoomListener(chatId: String) {
-        val childEventListener = object : ChildEventListener {
+    override fun registerMessagesListener(roomId: String) {
+        childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                view.addMessage(snapshot.getValue(ChatMessage::class.java))
+                Timber.d("Message received in $roomId-intern")
+                messageReceived(snapshot.getValue(ChatMessage::class.java))
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
@@ -74,10 +81,40 @@ constructor(private val firebaseDatabase: FirebaseDatabase, private val dataMana
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
+        dataManager.registerRoomChildEventListener(childEventListener, roomId, roomId + "-intern")
+        Timber.d("Listening chat room $roomId-intern")
+    }
 
+    override fun unregisterMessagesListener(roomId: String) {
+        if(childEventListener != null)
+            dataManager.unregisterRoomChildEventListener(childEventListener, roomId)
+    }
 
-        dataManager.registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(chatId).orderByChild(FirebaseHelper.Child.TIMESTAMP), childEventListener)
+    /*override fun registerMessagesListener(roomId: String) {
+        val messages: MutableList<ChatMessage>? = MessagesManager.registerListener(this, roomId)
+        view.loadOldMessages(messages)
+        Timber.d("Listening chat room $roomId")
+    }*/
+
+    override fun messageReceived(chatMessage: ChatMessage) {
+        view.addMessage(chatMessage)
+    }
+
+    override fun uploadImage(selectedImageUri: Uri, roomId: String) {
+        // Get a reference to the location where we'll store our photos
+        var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
+        // Get a reference to store file at chat_photos/<FILENAME>
+        val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
+
+        view.showLoadingImage()
+
+        // Upload file to Firebase Storage
+        photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
+            Timber.i("Image sent successfully!")
+            val downloadUrl = taskSnapshot?.downloadUrl
+            sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), roomId)
+            view.hideLoadingImage()
+        }
     }
 
     override fun createNewRoom(otherUser: User): Chat {

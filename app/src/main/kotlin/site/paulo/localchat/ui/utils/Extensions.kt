@@ -1,8 +1,10 @@
 package site.paulo.localchat.ui.utils
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
 import android.text.format.DateUtils
+import android.view.PixelCopy.request
 import android.widget.ImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.NetworkPolicy
@@ -30,13 +32,10 @@ fun Date.formattedTime(context: Context, time: Long): String {
 fun ImageView.loadUrlAndCacheOffline(url: String) {
     val imageView:ImageView  = this
     Picasso.with(context).load(url).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, object: Callback {
-
         override fun onSuccess() { }
-
         override fun onError() {
             imageView.loadUrl(url)
         }
-
     })
 }
 
@@ -45,15 +44,45 @@ fun ImageView.loadUrl(url: String?) {
 }
 
 fun ImageView.loadUrl(url: String?, request: (RequestCreator) -> RequestCreator) {
-    if(url != null) request(Picasso.with(context).load(url)).into(this)
+    if(url != null)
+        request(Picasso.with(context).load(url)).placeholder(R.drawable.empty).into(this)
+}
+
+/**
+ * The same as loadUrl but with a circle image placeholder
+ */
+fun ImageView.loadUrlCircle(url: String?, request: (RequestCreator) -> RequestCreator) {
+    if(url != null)
+        request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this)
+}
+
+fun ImageView.loadUrlCircle(url: String?, callback: Callback, request: (RequestCreator) -> RequestCreator) {
+    if (url != null)
+        request(Picasso.with(context).load(url)).placeholder(R.drawable.empty_circle).into(this, callback)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int) {
-    if(url != null) Picasso.with(context).load(url).resize(resize, resize).centerCrop().into(this)
+    if (url != null)
+        Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop().into(this)
 }
 
 fun ImageView.loadUrlAndResize(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
-    if(url != null) request(Picasso.with(context).load(url).resize(resize, resize).centerCrop()).into(this)
+    if(url != null)
+        request(Picasso.with(context).load(url).placeholder(R.drawable.empty).resize(resize, resize).centerCrop()).into(this)
+}
+
+/**
+ * The same as loadUrlAndResize but with a circle image placeholder
+ */
+fun ImageView.loadUrlAndResizeCircle(url: String?, resize: Int, request: (RequestCreator) -> RequestCreator) {
+    if (url != null)
+        request(Picasso.with(context).load(url).placeholder(R.drawable.empty_circle).resize(resize, resize).centerCrop()).into(this)
+}
+
+fun ImageView.loadUrlAndResizeCirclePlaceholder(url: String?, resize: Int, placeholder: Drawable, request: (RequestCreator) -> RequestCreator) {
+    if (url != null)
+        request(Picasso.with(context).load(url).placeholder(placeholder).resize(resize, resize).centerCrop()).into(this)
+
 }
 
 fun ImageView.loadResourceAndResize(resource: Int, resize: Int) {

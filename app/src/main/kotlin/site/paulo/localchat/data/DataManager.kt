@@ -21,6 +21,8 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
+import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -45,6 +47,14 @@ class DataManager
         firebaseHelper.registerUser(user)
     }
 
+    fun updateToken(token: String?): Unit {
+        firebaseHelper.updateToken(token)
+    }
+
+    fun updateProfilePic(url: String?): Unit {
+        firebaseHelper.updateToken(url)
+    }
+
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
         return firebaseHelper.authenticateUser(email, password)
     }
@@ -66,16 +76,41 @@ class DataManager
         return firebaseHelper.sendMessage(message, chatId, completionListener)
     }
 
-    fun registerChildEventListener(query: Query, listener: ChildEventListener): Unit {
-        firebaseHelper.registerChildEventListener(query, listener)
+    fun registerUserChildEventListener(listener: ChildEventListener): Unit {
+        firebaseHelper.registerUserChildEventListener(listener)
     }
 
-    fun registerValueEventListener(query: Query, listener: ValueEventListener): Unit {
-        firebaseHelper.registerValueEventListener(query, listener)
+    fun registerUserValueEventListener(listener: ValueEventListener): Unit {
+        firebaseHelper.registerUserValueEventListener(listener)
+    }
+
+    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String, listenerId: String? = null): Boolean {
+        return firebaseHelper.registerRoomChildEventListener(listener, roomId, listenerId ?: roomId)
+    }
+
+    fun unregisterRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
+        return firebaseHelper.unregisterRoomChildEventListener(listener, roomId)
+    }
+
+    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String, listenerId: String? = null): Boolean {
+        return firebaseHelper.registerRoomValueEventListener(listener, roomId, listenerId ?: roomId)
+    }
+
+    fun unregisterRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        return firebaseHelper.unregisterRoomValueEventListener(listener, roomId)
+    }
+
+    fun registerNewChatRoomChildEventListener(listener: ChildEventListener, userId: String? = null): Unit {
+        firebaseHelper.registerNewChatRoomChildEventListener(listener, userId)
+    }
+
+    fun messageDelivered(roomId: String): Unit {
+        firebaseHelper.messageDelivered(roomId)
     }
 
     fun removeAllListeners(): Unit {
         firebaseHelper.removeAllListeners()
     }
+
 
 }

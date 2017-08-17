@@ -31,6 +31,7 @@ import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.loadUrlAndResize
+import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
 import javax.inject.Inject
 
 class ChatAdapter
@@ -38,6 +39,10 @@ class ChatAdapter
 constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
+    /* Map of chats to speed up access. <chatId, index> */
+    var chatsMapped = mutableMapOf<String, Int>()
+
+    lateinit var chatViewHolder: ChatViewHolder
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
@@ -45,7 +50,8 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_chat, parent, false)
-        return ChatViewHolder(itemView)
+        chatViewHolder = ChatViewHolder(itemView)
+        return chatViewHolder
     }
 
     override fun onBindViewHolder(holder: ChatAdapter.ChatViewHolder, position: Int) {
@@ -54,6 +60,22 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     override fun getItemCount(): Int {
         return chats.size
+    }
+
+    fun setLastMessage(lastMessage:String, chatId: String): Unit {
+        if(chatsMapped.containsKey(chatId)) {
+            val index: Int = chatsMapped.get(chatId)!!
+            chats.get(index).lastMessage = lastMessage
+            this.notifyItemChanged(index)
+        }
+    }
+
+    fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
+        if(chatsMapped.containsKey(chatId)) {
+            /*val index: Int = chatsMapped.get(chatId)!!
+            chats.get(index).unreadMessages = unreadMessages.toString()
+            this.notifyItemChanged(index)*/
+        }
     }
 
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -68,7 +90,9 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
             itemView.lastMessageChatTv.text = chat.lastMessage
 
-            itemView.chatImg.loadUrlAndResize(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
+            //itemView.unreadChatTv.text = chat.unreadMessages
+
+            itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
                 itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {
                 request -> request.transform(CircleTransform())
             }
@@ -76,6 +100,8 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             itemView.setOnClickListener {
                 itemView.ctx.startActivity<RoomActivity>("chat" to chat)
             }
+
+            chatsMapped.put(chat.id, chats.indexOf(chat))
 
         }
     }

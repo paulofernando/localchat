@@ -21,23 +21,22 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.transition.Transition
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_chat.view.*
 import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
-import site.paulo.localchat.R.drawable.chat
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.profile.ProfileActivity
 import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.ctx
 import site.paulo.localchat.ui.utils.loadUrlAndResize
+import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
+import site.paulo.localchat.ui.utils.loadUrlAndResizeCirclePlaceholder
 import javax.inject.Inject
 
 
@@ -60,13 +59,15 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
     @Inject
     lateinit var presenter: SettingsPresenter
 
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+        presenter.attachView(this)
         setContentView(R.layout.activity_settings)
         ButterKnife.bind(this)
-
-        presenter.attachView(this)
 
         toolbar.title = resources.getString(R.string.title_settings)
         setSupportActionBar(toolbar)
@@ -82,6 +83,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
     override fun onResume() {
         super.onResume()
         presenter.loadCurrentUser()
+
     }
 
     fun launchProfileEditor() {
@@ -97,9 +99,18 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
     override fun showCurrentUserData(user: User) {
         this.user = user
-        profileImage.loadUrlAndResize(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
-            request -> request.transform(CircleTransform())
-        }
+        /*if(currentUserManager.getUser().userPicBitmap != null) {
+            profileImage.loadUrlAndResizeCirclePlaceholder(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt(),
+                BitmapDrawable(getResources(), currentUserManager.getUser().userPicBitmap)) {
+                request ->
+                request.transform(CircleTransform())
+            }
+        } else {*/
+            profileImage.loadUrlAndResizeCircle(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
+                request ->
+                request.transform(CircleTransform())
+            }
+        //}
         profileName.text = user.name
     }
 

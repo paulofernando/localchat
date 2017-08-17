@@ -17,6 +17,7 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.base.BaseMvpPresenter
 import site.paulo.localchat.ui.base.MvpView
 
@@ -27,11 +28,16 @@ object ChatContract {
         fun showChat(chat: Chat)
         fun showChatsEmpty()
         fun showError()
+        fun messageReceived(chatMessage: ChatMessage, chatId: String)
+        fun updateLastMessage(chatMessage: ChatMessage, chatId: String)
+        fun updateUnreadMessages(unreadMessages: Int, chatId: String)
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadChatRooms(userId: String)
         abstract fun loadChatRoom(chatId: String)
+        /** Listen to new chats the current user is added */
+        abstract fun listenNewChatRooms(chatId: String) //TODO remove chatId param when get user infomration before open the dashboard
         abstract fun loadProfilePicture(chatList: List<Chat>)
     }
 }

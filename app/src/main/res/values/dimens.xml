@@ -20,6 +20,12 @@
     <dimen name="image_height_user">150dp</dimen>
     <dimen name="image_width_profile">150dp</dimen>
     <dimen name="image_height_profile">150dp</dimen>
+    <dimen name="image_width_profile_loading">50dp</dimen>
+    <dimen name="image_height_profile_loading">50dp</dimen>
+    <dimen name="image_width_room">200dp</dimen>
+    <dimen name="image_height_room">200dp</dimen>
+    <dimen name="image_width_room_loading">50dp</dimen>
+    <dimen name="image_height_room_loading">50dp</dimen>
     <dimen name="image_width_send_button">40dp</dimen>
     <dimen name="image_height_send_button">40dp</dimen>
 
@@ -32,5 +38,8 @@
     <dimen name="activity_horizontal_margin">@dimen/spacing_normal</dimen>
     <dimen name="activity_vertical_margin">@dimen/spacing_large</dimen>
     <dimen name="appbar_padding_top">@dimen/spacing_normal</dimen>
+
+    <!-- 56 + 48 -->
+    <dimen name="toolbar_placeholder_height">104dp</dimen>
 
 </resources>

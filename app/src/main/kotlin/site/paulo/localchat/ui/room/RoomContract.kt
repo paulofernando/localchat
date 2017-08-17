@@ -16,6 +16,8 @@
 
 package site.paulo.localchat.ui.room
 
+import android.net.Uri
+import site.paulo.localchat.data.MessagesListener
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
@@ -26,17 +28,22 @@ object RoomContract {
 
     interface View : MvpView {
         fun addMessage(message: ChatMessage)
+        fun loadOldMessages(messages: MutableList<ChatMessage>?)
         fun messageSent(message: ChatMessage)
         fun showChat(chat: Chat)
         fun showEmptyChatRoom()
         fun showError()
+        fun showLoadingImage()
+        fun hideLoadingImage()
         fun cleanMessageField()
     }
 
-    abstract class Presenter : BaseMvpPresenter<View>() {
-        abstract fun sendMessage(message: ChatMessage, chatId: String)
+    abstract class Presenter : BaseMvpPresenter<View>(), MessagesListener {
+        abstract fun sendMessage(message: ChatMessage, roomId: String)
         abstract fun getChatData(chatId: String)
-        abstract fun registerRoomListener(chatId: String)
+        abstract fun registerMessagesListener(chatId: String)
+        abstract fun unregisterMessagesListener(chatId: String)
         abstract fun createNewRoom(otherUser: User): Chat
+        abstract fun uploadImage(selectedImageUri: Uri, roomId: String)
     }
 }

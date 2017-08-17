@@ -2,7 +2,6 @@ package site.paulo.localchat
 
 import android.app.Application
 import android.support.annotation.VisibleForTesting
-import com.squareup.leakcanary.LeakCanary
 import site.paulo.localchat.injection.component.ApplicationComponent
 import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule
@@ -15,10 +14,6 @@ class BoilerplateApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (LeakCanary.isInAnalyzerProcess(this))
-            return
-        LeakCanary.install(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

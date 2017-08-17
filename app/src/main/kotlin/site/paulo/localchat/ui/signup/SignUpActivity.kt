@@ -70,6 +70,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+        presenter.attachView(this)
 
         if (Build.VERSION.SDK_INT < 16) {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -82,8 +83,6 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
 
         setContentView(R.layout.activity_sign_up)
         ButterKnife.bind(this)
-
-        presenter.attachView(this)
 
         btnCreate.setOnClickListener {
             if(validate()) {

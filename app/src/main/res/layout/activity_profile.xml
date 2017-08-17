@@ -35,15 +35,27 @@
             android:layout_centerHorizontal="true"
             tools:src="@drawable/user_default"/>
 
+        <ProgressBar
+            android:id="@+id/loadingProfileProgress"
+            android:layout_width="@dimen/image_width_profile_loading"
+            android:layout_height="@dimen/image_height_profile_loading"
+            android:layout_gravity="center"
+            style="@android:style/Widget.ProgressBar.Large"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"/>
+
         <ImageView
             android:id="@+id/editProfileImageBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="12dp"
             android:src="@drawable/edit_profile_image"
-            android:background="@drawable/circle_bg"
+            android:background="@drawable/bg_circle"
             android:visibility="invisible"
             tools:visibility="visible"
+            android:onClick="showImagePicker"
             android:layout_alignBottom="@id/profileProfileImg"
             android:layout_alignRight="@id/profileProfileImg"
             android:layout_alignEnd="@id/profileProfileImg" />

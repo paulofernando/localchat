@@ -57,7 +57,7 @@
 
         <EditText
             android:id="@+id/messageRoomTxt"
-            android:background="@drawable/edit_text_shape"
+            android:background="@drawable/shape_edit_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/image_height_send_button"
             android:layout_gravity="bottom"
@@ -73,13 +73,36 @@
             android:layout_alignEnd="@id/messageRoomTxt"
             android:layout_alignRight="@id/messageRoomTxt">
 
-            <ImageView
-                android:id="@+id/attachImageRoomImg"
+            <RelativeLayout
                 android:layout_width="@dimen/image_width_send_button"
-                android:layout_height="@dimen/image_height_send_button"
-                android:src="@drawable/attach_pic_gray"
-                android:padding="@dimen/spacing_normal"
-                android:onClick="showImagePicker"/>
+                android:layout_height="@dimen/image_height_send_button">
+
+                <ProgressBar
+                    android:id="@+id/attachImageRoomProgressImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    style="@android:style/Widget.ProgressBar.Small"
+                    android:visibility="invisible"
+                    android:src="@drawable/attach_pic_gray"
+                    android:padding="@dimen/spacing_normal"/>
+
+                <ImageView
+                    android:id="@+id/attachImageRoomImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/attach_pic_gray"
+                    android:padding="@dimen/spacing_normal"
+                    android:onClick="showImagePicker"/>
+
+            </RelativeLayout>
+
+
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/sendRoomBtn"

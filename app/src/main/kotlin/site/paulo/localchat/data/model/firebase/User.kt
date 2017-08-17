@@ -1,5 +1,6 @@
 package site.paulo.localchat.data.model.firebase
 
+import android.graphics.Bitmap
 import nz.bradcampbell.paperparcel.PaperParcel
 import nz.bradcampbell.paperparcel.PaperParcelable
 
@@ -10,11 +11,13 @@ data class User(
     val email: String = "",
     val gender: String = "",
     val pic: String = "",
-    val chats: Map<String, String> = emptyMap())
+    val chats: MutableMap<String, String> = mutableMapOf<String, String>())
     : PaperParcelable {
 
     companion object {
         @JvmField val CREATOR = PaperParcelable.Creator(User::class.java)
     }
+
+    @Transient var userPicBitmap: Bitmap? = null
 
 }
