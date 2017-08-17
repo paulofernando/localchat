@@ -84,12 +84,20 @@ class DataManager
         firebaseHelper.registerUserValueEventListener(listener)
     }
 
-    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String): Boolean {
-        return firebaseHelper.registerRoomChildEventListener(listener, roomId)
+    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String, listenerId: String? = null): Boolean {
+        return firebaseHelper.registerRoomChildEventListener(listener, roomId, listenerId ?: roomId)
     }
 
-    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String): Boolean {
-        return firebaseHelper.registerRoomValueEventListener(listener, roomId)
+    fun unregisterRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
+        return firebaseHelper.unregisterRoomChildEventListener(listener, roomId)
+    }
+
+    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String, listenerId: String? = null): Boolean {
+        return firebaseHelper.registerRoomValueEventListener(listener, roomId, listenerId ?: roomId)
+    }
+
+    fun unregisterRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        return firebaseHelper.unregisterRoomValueEventListener(listener, roomId)
     }
 
     fun registerNewChatRoomChildEventListener(listener: ChildEventListener, userId: String? = null): Unit {

@@ -42,6 +42,7 @@ object RoomContract {
         abstract fun sendMessage(message: ChatMessage, roomId: String)
         abstract fun getChatData(chatId: String)
         abstract fun registerMessagesListener(chatId: String)
+        abstract fun unregisterMessagesListener(chatId: String)
         abstract fun createNewRoom(otherUser: User): Chat
         abstract fun uploadImage(selectedImageUri: Uri, roomId: String)
     }

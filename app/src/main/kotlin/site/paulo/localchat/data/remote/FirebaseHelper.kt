@@ -226,14 +226,28 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         return chat
     }
 
-    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String): Boolean {
+    fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String, listenerId: String? = null): Boolean {
         return registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
+            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId ?: roomId)
     }
 
-    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String): Boolean {
+    fun unregisterRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
+        Timber.d("Unregistering room $roomId")
+        removeChildListeners(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+                .child(roomId), listener)
+        childEventListeners.remove(roomId)
+    }
+
+    fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String, listenerId: String? = null): Boolean {
         return registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, roomId)
+            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId ?: roomId)
+    }
+
+    fun unregisterRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        Timber.d("Unregistering room $roomId")
+        removeValueListeners(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+                .child(roomId), listener)
+        valueEventListeners.remove(roomId)
     }
 
     fun registerNewChatRoomChildEventListener(listener: ChildEventListener, _userId: String? = null): Unit {
@@ -270,18 +284,17 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     /**************** Listeners ****************/
 
     private fun registerChildEventListener(query: Query, listener: ChildEventListener, listenerIdentifier: String): Boolean {
-        if(!childEventListeners.containsKey(listenerIdentifier)) {
-            Timber.d("Registering event listener... $listenerIdentifier")
-            childEventListeners.put(listenerIdentifier, listener)
-            query.addChildEventListener(listener)
-            return true
+        if(childEventListeners.containsKey(listenerIdentifier)) {
+            Timber.d("Removing and registering event listener $listenerIdentifier again")
+            firebaseDatabase.reference.removeEventListener(listener)
         }
-        Timber.d("Listener already registered. Skipping.")
-        return false
+        childEventListeners.put(listenerIdentifier, listener)
+        query.addChildEventListener(listener)
+        return true
     }
 
     private fun registerValueEventListener(query: Query, listener: ValueEventListener, listenerIdentifier: String): Boolean {
-        if(!childEventListeners.containsKey(listenerIdentifier)) {
+        if(!valueEventListeners.containsKey(listenerIdentifier)) {
             Timber.d("Registering value listener... $listenerIdentifier")
             valueEventListeners.put(listenerIdentifier, listener)
             query.addValueEventListener(listener)
@@ -291,13 +304,21 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         return false
     }
 
+    fun removeChildListeners(query: Query, listener: ChildEventListener): Unit {
+        query.removeEventListener(listener)
+    }
+
+    fun removeValueListeners(query: Query, listener: ValueEventListener): Unit {
+        query.removeEventListener(listener)
+    }
+
     fun removeAllListeners(): Unit {
         for ((listenerIdentifier, listener) in childEventListeners) {
-            firebaseDatabase.getReference().removeEventListener(listener)
+            firebaseDatabase.reference.removeEventListener(listener)
         }
 
         for ((listenerIdentifier, listener) in valueEventListeners) {
-            firebaseDatabase.getReference().removeEventListener(listener)
+            firebaseDatabase.reference.removeEventListener(listener)
         }
     }
 

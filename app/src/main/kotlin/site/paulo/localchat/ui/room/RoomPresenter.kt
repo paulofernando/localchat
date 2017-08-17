@@ -27,8 +27,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
-import site.paulo.localchat.data.MessagesListener
-import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -41,6 +39,8 @@ class RoomPresenter
 constructor(private val dataManager: DataManager,
     private val currentUserManager: CurrentUserManager,
     private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
+
+    private lateinit var childEventListener: ChildEventListener
 
     override fun getChatData(chatId: String) {
         dataManager.getChatRoom(chatId)
@@ -69,10 +69,32 @@ constructor(private val dataManager: DataManager,
     }
 
     override fun registerMessagesListener(roomId: String) {
+        childEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
+                Timber.d("Message received in $roomId-intern")
+                messageReceived(snapshot.getValue(ChatMessage::class.java))
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+
+        dataManager.registerRoomChildEventListener(childEventListener, roomId, roomId + "-intern")
+        Timber.d("Listening chat room $roomId-intern")
+    }
+
+    override fun unregisterMessagesListener(roomId: String) {
+        if(childEventListener != null)
+            dataManager.unregisterRoomChildEventListener(childEventListener, roomId)
+    }
+
+    /*override fun registerMessagesListener(roomId: String) {
         val messages: MutableList<ChatMessage>? = MessagesManager.registerListener(this, roomId)
         view.loadOldMessages(messages)
         Timber.d("Listening chat room $roomId")
-    }
+    }*/
 
     override fun messageReceived(chatMessage: ChatMessage) {
         view.addMessage(chatMessage)

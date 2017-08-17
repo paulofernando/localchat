@@ -199,8 +199,9 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
+        presenter.unregisterMessagesListener(chat?.id ?: chatId!!)
         presenter.detachView()
-        MessagesManager.readMessages(this.chatId!!) //mark all messages as read
+        MessagesManager.readMessages(chat?.id ?: chatId!!) //mark all messages as read
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
