@@ -71,8 +71,11 @@ constructor(private val dataManager: DataManager,
     override fun registerMessagesListener(roomId: String) {
         childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                Timber.d("Message received in $roomId-intern")
-                messageReceived(snapshot.getValue(ChatMessage::class.java))
+                val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java)
+                messageReceived(chatMessage)
+                if(!chatMessage.owner.equals(currentUserManager.getUserId()))
+                    Timber.d("Message received in $roomId-intern")
+
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}

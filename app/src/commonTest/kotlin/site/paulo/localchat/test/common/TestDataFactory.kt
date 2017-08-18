@@ -1,6 +1,7 @@
 package site.paulo.localchat.test.common
 
 import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.data.model.firebase.User
 import java.util.ArrayList
@@ -53,7 +54,7 @@ object TestDataFactory {
     @JvmStatic fun makeChat(uniqueSuffix: String): Chat {
         return Chat(
             id = "id$uniqueSuffix",
-            lastMessage = "lastMessage",
+            lastMessage = ChatMessage("", "", 0L),
             users = mapOf("abc" to makeSummarizedUser("s1")))
     }
 

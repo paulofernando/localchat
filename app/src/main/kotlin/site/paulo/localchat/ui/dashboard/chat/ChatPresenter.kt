@@ -42,6 +42,8 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
+    var loaded: Boolean = false
+
     override fun loadChatRooms(userId:String) {
         dataManager.getUser(userId)
             .observeOn(AndroidSchedulers.mainThread())
@@ -50,15 +52,14 @@ constructor(private val dataManager: DataManager,
                 .onNext {
                     if(it.chats.isEmpty()) {
                         view.showChatsEmpty()
-                    } else {
-                        it.chats.forEach {
-                            loadChatRoom(it.value)
-                        }
                     }
                 }
                 .onError {
                     view.showError()
                     Timber.e(it, "There was an error loading chats from an user.")
+                }
+                .onCompleted {
+                    loaded = true
                 }
             ).addTo(compositeSubscription)
 
@@ -99,12 +100,13 @@ constructor(private val dataManager: DataManager,
 
     override fun listenNewChatRooms(userId: String) {
         val childEventListener = object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {}
-
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 loadChatRoom(dataSnapshot.value.toString())
-                currentUserManager.getUser().chats.put(dataSnapshot.key, dataSnapshot.value.toString())
+                if (loaded && (!currentUserManager.getUser().chats.containsKey(dataSnapshot.key)))
+                    currentUserManager.getUser().chats.put(dataSnapshot.key, dataSnapshot.value.toString())
             }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) { }
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onCancelled(databaseError: DatabaseError) {}

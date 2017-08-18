@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.dashboard.nearby
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -64,7 +65,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         ButterKnife.bind(this, rootView)
 
         chatsList.adapter = chatsAdapter
-        chatsList.layoutManager = LinearLayoutManager(activity)
+        chatsList.layoutManager = LinearLayoutManager(activity as Context?)
 
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
@@ -93,7 +94,6 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     }
 
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
-        Timber.i("Message received: ${chatMessage.message}")
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
         updateUnreadMessages(MessagesManager.getUnreadMessages(chatId), chatId)
