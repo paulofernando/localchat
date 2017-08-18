@@ -186,7 +186,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         valueMessage.put(Child.TIMESTAMP, ServerValue.TIMESTAMP)
 
         val valueLastMessage = mutableMapOf<String, Any>()
-        valueLastMessage.put(Child.LAST_MESSAGE, message.message)
+        valueLastMessage.put(Child.LAST_MESSAGE, message)
 
         firebaseDatabase.getReference(Reference.MESSAGES).child(chatId).push().setValue(valueMessage, completionListener)
         firebaseDatabase.getReference(Reference.CHATS).child(chatId).updateChildren(valueLastMessage)
@@ -207,7 +207,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val chat:Chat = Chat(reference.key,
                 mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
                         Utils.getFirebaseId(otherUser.email) to summarizedOtherUser),
-                "",
+                ChatMessage("", "", 0L),
                 mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to 0,
                         Utils.getFirebaseId(otherUser.email) to 0))
 

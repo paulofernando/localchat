@@ -27,6 +27,7 @@ import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.ctx
@@ -62,7 +63,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         return chats.size
     }
 
-    fun setLastMessage(lastMessage:String, chatId: String): Unit {
+    fun setLastMessage(lastMessage: ChatMessage, chatId: String): Unit {
         if(chatsMapped.containsKey(chatId)) {
             val index: Int = chatsMapped.get(chatId)!!
             chats.get(index).lastMessage = lastMessage
@@ -88,7 +89,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             itemView.nameChatTv.text =
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
 
-            itemView.lastMessageChatTv.text = chat.lastMessage
+            itemView.lastMessageChatTv.text = chat.lastMessage.message
 
             //itemView.unreadChatTv.text = chat.unreadMessages
 
