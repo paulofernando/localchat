@@ -29,10 +29,8 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.room.RoomActivity
-import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.ctx
-import site.paulo.localchat.ui.utils.loadUrlAndResize
-import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
+import site.paulo.localchat.ui.utils.*
+import java.util.*
 import javax.inject.Inject
 
 class ChatAdapter
@@ -98,6 +96,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
 
             itemView.lastMessageChatTv.text = chat.lastMessage.message
+            itemView.lastMessageTimeTv.text = Date().formattedTime(itemView.ctx, chat.lastMessage.timestamp)
 
             //itemView.unreadChatTv.text = chat.unreadMessages
 

@@ -24,11 +24,11 @@
             android:background="@android:color/white" />
 
         <LinearLayout
+            android:id="@+id/continerChatInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/chatImg"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,33 +40,44 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_large"
                     android:textSize="@dimen/text_body"
-                    tools:text="Antony"/>
+                    tools:text="Antony" />
 
                 <TextView
                     android:id="@+id/unreadChatTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_large"
-                    tools:text="10"/>
+                    tools:text="10" />
 
             </LinearLayout>
 
-
             <TextView
                 android:id="@+id/lastMessageChatTv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/nameChatTv"
                 android:layout_marginLeft="@dimen/spacing_large"
-                android:layout_marginRight="@dimen/spacing_large"
-                android:textSize="@dimen/text_small_body"
-                android:textStyle="italic"
-                android:scrollHorizontally="true"
+                android:layout_marginRight="@dimen/spacing_normal"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textSize="@dimen/text_small_body"
+                android:textStyle="italic"
                 tools:text="last message abababababababababababababababababababababab" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/lastMessageTimeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_micro_body"
+            android:textStyle="italic"
+            tools:text="today, 12:30"
+            android:layout_below="@+id/continerChatInfo"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
