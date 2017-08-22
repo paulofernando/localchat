@@ -19,6 +19,10 @@ Libraries and tools included:
 
 You need to create a [Firebase](https://firebase.google.com) account and put the google-services.json in the project.
 
+## Screenshots (22/08/2017)
+
+<img src="https://github.com/paulofernando/localchat/blob/master/screenshots/nearby.png" width="28%" /> &nbsp; <img src="https://github.com/paulofernando/localchat/blob/master/screenshots/chats.png" width="28%" /> &nbsp; <img src="https://github.com/paulofernando/localchat/blob/master/screenshots/room.png" width="28%" />
+
 ## License
 
 ```
