@@ -89,7 +89,7 @@ class DashboardActivity: BaseActivity() {
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout!!.setupWithViewPager(mViewPager)
-        setupTabIcons()
+        //setupTabIcons()
 
     }
 

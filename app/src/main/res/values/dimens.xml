@@ -5,6 +5,7 @@
     <dimen name="text_large_body">18sp</dimen>
     <dimen name="text_body">16sp</dimen>
     <dimen name="text_small_body">12sp</dimen>
+    <dimen name="text_micro_body">10sp</dimen>
 
     <dimen name="spacing_micro">4dp</dimen>
     <dimen name="spacing_normal">8dp</dimen>
