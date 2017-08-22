@@ -68,6 +68,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             val index: Int = chatsMapped.get(chatId)!!
             chats.get(index).lastMessage = lastMessage
             this.notifyItemChanged(index)
+        } else {
+            //Look if chatMapped was not mapped. It happens when the chat is start for first time
+            for(chat in chats) {
+                if(chat.id == chatId) {
+                    chatsMapped.put(chat.id, chats.indexOf(chat))
+                    break
+                }
+            }
         }
     }
 
