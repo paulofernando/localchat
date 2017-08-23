@@ -21,7 +21,7 @@ You need to create a [Firebase](https://firebase.google.com) account and put the
 
 ## Screenshots (22/08/2017)
 
-<img src="https://github.com/paulofernando/localchat/blob/master/screenshots/nearby.png" width="28%" /> &nbsp; <img src="https://github.com/paulofernando/localchat/blob/master/screenshots/chats.png" width="28%" /> &nbsp; <img src="https://github.com/paulofernando/localchat/blob/master/screenshots/room.png" width="28%" />
+<img src="http://paulo.site/app/localchat/users.png" width="28%" /> &nbsp; <img src="http://paulo.site/app/localchat/chats.png" width="28%" /> &nbsp; <img src="http://paulo.site/app/localchat/room.png" width="28%" />
 
 ## License
 
