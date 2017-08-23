@@ -261,6 +261,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                 .child(FirebaseHelper.Child.CHATS), listener, "myChats")
     }
 
+    fun registerNewUsersChildEventListener(listener: ChildEventListener): Unit {
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
+                , listener, "nearbyUsers")
+    }
+
     fun messageDelivered(chatId: String): Unit {
         val mDeliveredRef = firebaseDatabase.getReference(Reference.CHATS).
                 child(chatId).

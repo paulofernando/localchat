@@ -24,11 +24,13 @@ object UsersNearbyContract {
 
     interface View : MvpView {
         fun showNearbyUsers(users: List<User>)
+        fun showNearbyUser(user: User)
         fun showNearbyUsersEmpty()
         fun showError()
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {
         abstract fun loadNearbyUsers()
+        abstract fun listenNearbyUsers()
     }
 }
