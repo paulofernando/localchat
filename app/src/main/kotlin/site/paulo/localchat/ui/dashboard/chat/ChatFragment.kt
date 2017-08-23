@@ -80,7 +80,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     override fun showChat(chat: Chat) {
         chatsAdapter.chats.add(chat)
-        chatsAdapter.notifyDataSetChanged()
+        chatsAdapter.notifyItemInserted(chatsAdapter.chats.size - 1)
     }
 
     override fun showChatsEmpty() {

@@ -54,17 +54,23 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
 
         presenter.loadNearbyUsers()
+        presenter.listenNearbyUsers()
 
         return rootView
     }
 
     override fun showNearbyUsers(users: List<User>) {
-        usersAdapter.users = users
+        usersAdapter.users = users.toMutableList()
+        usersAdapter.notifyDataSetChanged()
+    }
+
+    override fun showNearbyUser(user: User) {
+        usersAdapter.users.add(user)
         usersAdapter.notifyDataSetChanged()
     }
 
     override fun showNearbyUsersEmpty() {
-        usersAdapter.users = emptyList()
+        usersAdapter.users = mutableListOf<User>()
         usersAdapter.notifyDataSetChanged()
         Toast.makeText(activity, R.string.empty_nearby_users, Toast.LENGTH_LONG).show()
     }

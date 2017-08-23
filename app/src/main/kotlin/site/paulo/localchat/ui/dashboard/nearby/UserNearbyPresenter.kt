@@ -17,6 +17,9 @@
 package site.paulo.localchat.ui.user
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.lang.kotlin.addTo
@@ -37,28 +40,47 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     private val currentUser: CurrentUserManager) : UsersNearbyContract.Presenter() {
 
     override fun loadNearbyUsers() {
+        //TODO change this method to listen for new user.
         dataManager.getUsers()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<List<User>>()
                 .onNext {
                     val userEmail = firebaseAuth.currentUser?.email
-                    var userList = mutableListOf<User>()
-                    it.forEach {
-                        if(!userEmail.equals(it.email)) {
-                            userList.add(it)
-                        } else {
-                            currentUser.setUser(it)
+                    if (it.isEmpty()) {
+                        view.showNearbyUsersEmpty()
+                    } else {
+                        for (user in it) {
+                            if (userEmail.equals(user.email)) {
+                                currentUser.setUser(user)
+                                break
+                            }
                         }
-                    } //removing the current user from nearby users.
-
-                    if (it.isEmpty()) view.showNearbyUsersEmpty() else view.showNearbyUsers(userList.toList())
+                    }
                 }
                 .onError {
                     Timber.e(it, "There was an error loading the users.")
                     view.showError()
                 }
             ).addTo(compositeSubscription)
+    }
+
+    override fun listenNearbyUsers() {
+        val childEventListener = object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                val nearbUser: User = dataSnapshot.getValue(User::class.java)
+                if(!firebaseAuth.currentUser?.email.equals(nearbUser.email)) //removing the current user from nearby users.
+                    view.showNearbyUser(nearbUser)
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) { }
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+
+        dataManager.registerNewUsersChildEventListener(childEventListener)
+        Timber.i("Listening for nearby users...")
     }
 
     private val compositeSubscription = CompositeSubscription()

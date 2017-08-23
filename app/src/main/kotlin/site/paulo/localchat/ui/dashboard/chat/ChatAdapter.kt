@@ -62,11 +62,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     }
 
     fun setLastMessage(lastMessage: ChatMessage, chatId: String): Unit {
-        if(chatsMapped.containsKey(chatId)) {
-            val index: Int = chatsMapped.get(chatId)!!
-            chats.get(index).lastMessage = lastMessage
-            this.notifyItemChanged(index)
-        } else {
+        if(!chatsMapped.containsKey(chatId)) {
             //Look if chatMapped was not mapped. It happens when the chat is start for first time
             for(chat in chats) {
                 if(chat.id == chatId) {
@@ -75,6 +71,9 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                 }
             }
         }
+        val index: Int = chatsMapped.get(chatId)!!
+        chats.get(index).lastMessage = lastMessage
+        this.notifyItemChanged(index)
     }
 
     fun updateUnreadMessages(unreadMessages: Int, chatId: String) {

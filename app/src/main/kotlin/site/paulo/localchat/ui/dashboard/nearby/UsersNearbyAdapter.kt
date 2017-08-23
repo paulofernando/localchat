@@ -37,7 +37,7 @@ class UsersNearbyAdapter
 @Inject
 constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
-    var users = emptyList<User>()
+    var users = mutableListOf<User>()
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager

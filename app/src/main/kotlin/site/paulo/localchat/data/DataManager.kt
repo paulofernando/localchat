@@ -104,6 +104,10 @@ class DataManager
         firebaseHelper.registerNewChatRoomChildEventListener(listener, userId)
     }
 
+    fun registerNewUsersChildEventListener(listener: ChildEventListener): Unit {
+        firebaseHelper.registerNewUsersChildEventListener(listener)
+    }
+
     fun messageDelivered(roomId: String): Unit {
         firebaseHelper.messageDelivered(roomId)
     }
