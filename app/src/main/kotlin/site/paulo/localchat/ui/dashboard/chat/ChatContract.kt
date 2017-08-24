@@ -28,7 +28,7 @@ object ChatContract {
         fun showChat(chat: Chat)
         fun showChatsEmpty()
         fun showError()
-        fun messageReceived(chatMessage: ChatMessage, chatId: String)
+        fun messageReceived(chatMessage: ChatMessage, chatId: String, isMine: Boolean)
         fun updateLastMessage(chatMessage: ChatMessage, chatId: String)
         fun updateUnreadMessages(unreadMessages: Int, chatId: String)
     }

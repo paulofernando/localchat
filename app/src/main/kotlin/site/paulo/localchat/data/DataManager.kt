@@ -96,6 +96,10 @@ class DataManager
         return firebaseHelper.registerRoomValueEventListener(listener, roomId, listenerId ?: roomId)
     }
 
+    fun addRoomSingleValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        firebaseHelper.addRoomSingleValueEventListener(listener, roomId)
+    }
+
     fun unregisterRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
         return firebaseHelper.unregisterRoomValueEventListener(listener, roomId)
     }

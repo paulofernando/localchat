@@ -6,6 +6,8 @@ import site.paulo.localchat.injection.component.ApplicationComponent
 import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule
 import timber.log.Timber
+import com.google.firebase.database.FirebaseDatabase
+
 
 class BoilerplateApplication : Application() {
 
@@ -20,6 +22,8 @@ class BoilerplateApplication : Application() {
         }
 
         initDaggerComponent()
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
     }
 
     @VisibleForTesting

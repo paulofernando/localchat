@@ -17,6 +17,7 @@
 package site.paulo.localchat.data
 
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
 class MessagesManager {
@@ -28,21 +29,26 @@ class MessagesManager {
         val chatListeners = mutableMapOf<String, MessagesListener>()
 
         fun add(chatMessage: ChatMessage, chatId: String) {
+            chatMessages[chatId]?.add(chatMessage)
+            chatListeners[chatId]?.messageReceived(chatMessage)
+        }
+
+        fun unreadMessages(chatId: String) {
             if(!chatMessages.containsKey(chatId)) {
                 chatMessages.put(chatId, mutableListOf<ChatMessage>())
                 chatUnreadMessages.put(chatId, AtomicInteger(0))
             }
-            chatMessages.get(chatId)?.add(chatMessage)
-            chatListeners.get(chatId)?.messageReceived(chatMessage)
-            chatUnreadMessages.get(chatId)?.incrementAndGet()
+            chatUnreadMessages[chatId]?.incrementAndGet()
+            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId)}")
         }
 
         fun readMessages(chatId: String) {
-            chatUnreadMessages.get(chatId)?.set(0)
+            chatUnreadMessages[chatId]?.set(0)
+            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId)}")
         }
 
         fun getUnreadMessages(chatId: String): Int {
-            return chatUnreadMessages.get(chatId)?.get() ?: 0
+            return chatUnreadMessages[chatId]?.get() ?: 0
         }
 
         /**
@@ -50,7 +56,7 @@ class MessagesManager {
          */
         fun registerListener(messageListener: MessagesListener, chatId: String): MutableList<ChatMessage>? {
             chatListeners.put(chatId, messageListener)
-            return chatMessages.get(chatId)
+            return chatMessages[chatId]
         }
     }
 

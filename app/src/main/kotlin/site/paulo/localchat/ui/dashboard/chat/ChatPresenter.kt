@@ -19,6 +19,7 @@ package site.paulo.localchat.ui.user
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.lang.kotlin.addTo
@@ -72,13 +73,11 @@ constructor(private val dataManager: DataManager,
             .subscribe(FunctionSubscriber<Chat>()
                 .onNext {
                     val childEventListener = object : ChildEventListener {
-                        override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                            val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java)
-                            view.messageReceived(chatMessage, chatId)
-                            if(chatMessage.owner != currentUserManager.getUserId()) {
+                        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)
+                            view.messageReceived(chatMessage, chatId, chatMessage.owner == currentUserManager.getUserId())
+                            if(loaded) //just registered message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
-                            }
-                            Timber.i("Unread messages ${MessagesManager.getUnreadMessages(chatId)}")
                         }
 
                         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
@@ -87,8 +86,21 @@ constructor(private val dataManager: DataManager,
                         override fun onCancelled(databaseError: DatabaseError) {}
                     }
 
+                    val allLoadedListener = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                            loaded = true
+                            Timber.i("All data loaded from chat $it.id")
+                        }
+
+                        override fun onCancelled(dataSnapshot: DatabaseError?) { }
+
+                    }
+
                     //register room if it is not registered
                     dataManager.registerRoomChildEventListener(childEventListener, it.id)
+
+                    dataManager.addRoomSingleValueEventListener(allLoadedListener, it.id)
+
                     view.showChat(it)
                 }
                 .onError {

@@ -243,6 +243,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId ?: roomId)
     }
 
+    fun addRoomSingleValueEventListener(listener: ValueEventListener, roomId: String): Unit {
+        firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
+                .child(roomId).addListenerForSingleValueEvent(listener)
+    }
+
     fun unregisterRoomValueEventListener(listener: ValueEventListener, roomId: String): Unit {
         Timber.d("Unregistering room $roomId")
         removeValueListeners(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
