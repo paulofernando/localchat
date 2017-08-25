@@ -30,7 +30,7 @@
             android:layout_toRightOf="@id/chatImg"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -39,17 +39,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_large"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textSize="@dimen/text_body"
-                    tools:text="Antony" />
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/unreadChatTv"
+                    tools:text="Antony abababababababababababababababababababababab" />
 
                 <TextView
                     android:id="@+id/unreadChatTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/spacing_large"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_alignParentEnd="true"
                     tools:text="10" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/lastMessageChatTv"
