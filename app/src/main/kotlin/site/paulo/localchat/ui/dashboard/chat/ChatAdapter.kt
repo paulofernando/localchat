@@ -114,10 +114,11 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         }
 
         fun updateUnreadMessages(chatId: String) {
-            if(!MessagesManager.chatUnreadMessages[chatId].toString().equals("0")) {
-                itemView.unreadChatTv.text = MessagesManager.chatUnreadMessages[chatId].toString()
+            if(MessagesManager.getUnreadMessages(chatId) != 0) {
+                itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId).toString()
+                itemView.unreadChatTv.visibility = View.VISIBLE
             } else {
-                itemView.unreadChatTv.text = ""
+                itemView.unreadChatTv.visibility = View.GONE
             }
         }
 

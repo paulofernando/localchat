@@ -7,6 +7,8 @@ import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule
 import timber.log.Timber
 import com.google.firebase.database.FirebaseDatabase
+import com.anupcowkur.reservoir.Reservoir
+import java.io.IOException
 
 
 class BoilerplateApplication : Application() {
@@ -22,6 +24,13 @@ class BoilerplateApplication : Application() {
         }
 
         initDaggerComponent()
+
+        try {
+            Reservoir.init(this, 2048) //in bytes
+        } catch (e: IOException) {
+            Timber.e(e.message)
+        }
+
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
     }

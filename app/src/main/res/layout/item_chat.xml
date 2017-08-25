@@ -53,7 +53,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_alignParentEnd="true"
-                    tools:text="10" />
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:textColor="@color/color_chat_unread_bubble_text"
+                    android:background="@drawable/shape_unread_bubble"
+                    tools:text="1" />
 
             </RelativeLayout>
 

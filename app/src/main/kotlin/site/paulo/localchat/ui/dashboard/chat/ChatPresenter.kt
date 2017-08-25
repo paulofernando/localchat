@@ -59,9 +59,6 @@ constructor(private val dataManager: DataManager,
                     view.showError()
                     Timber.e(it, "There was an error loading chats from an user.")
                 }
-                .onCompleted {
-                    loaded = true
-                }
             ).addTo(compositeSubscription)
 
     }
@@ -75,9 +72,12 @@ constructor(private val dataManager: DataManager,
                     val childEventListener = object : ChildEventListener {
                         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)
-                            view.messageReceived(chatMessage, chatId, chatMessage.owner == currentUserManager.getUserId())
-                            if(loaded) //just registered message delivered if is a new message.
+                            view.messageReceived(chatMessage, chatId)
+                            if(loaded) {//just registered message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
+                                if(chatMessage.owner != currentUserManager.getUserId()) //not mine
+                                    MessagesManager.unreadMessages(chatId)
+                            }
                         }
 
                         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}

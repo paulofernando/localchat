@@ -93,9 +93,8 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         Toast.makeText(activity, R.string.error_loading_chat, Toast.LENGTH_LONG).show()
     }
 
-    override fun messageReceived(chatMessage: ChatMessage, chatId: String, isMine: Boolean) {
+    override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
         MessagesManager.add(chatMessage, chatId)
-        if(!isMine) MessagesManager.unreadMessages(chatId)
         updateLastMessage(chatMessage, chatId)
     }
 

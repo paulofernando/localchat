@@ -130,6 +130,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.github.markushi:circlebutton:1.1'
+    compile 'com.anupcowkur:reservoir:3.1.0'
 
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.google.firebase:firebase-database:10.0.1'
