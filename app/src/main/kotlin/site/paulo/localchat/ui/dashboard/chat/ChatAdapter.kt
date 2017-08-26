@@ -99,7 +99,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             itemView.lastMessageChatTv.text = chat.lastMessage.message
             itemView.lastMessageTimeTv.text = Date().formattedTime(itemView.ctx, chat.lastMessage.timestamp)
 
-            updateUnreadMessages(chat.id)
+            updateUnreadMessages(chat.id, currentUserManager.getUserId())
 
             itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
                 itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {
@@ -108,14 +108,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
             itemView.setOnClickListener {
                 itemView.ctx.startActivity<RoomActivity>("chat" to chat)
-                MessagesManager.readMessages(chat.id)
-                updateUnreadMessages(chat.id)
+                MessagesManager.readMessages(chat.id, currentUserManager.getUserId())
+                updateUnreadMessages(chat.id, currentUserManager.getUserId())
             }
         }
 
-        fun updateUnreadMessages(chatId: String) {
-            if(MessagesManager.getUnreadMessages(chatId) != 0) {
-                itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId).toString()
+        fun updateUnreadMessages(chatId: String, userId: String) {
+            if(MessagesManager.getUnreadMessages(chatId, userId) != 0) {
+                itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId, userId).toString()
                 itemView.unreadChatTv.visibility = View.VISIBLE
             } else {
                 itemView.unreadChatTv.visibility = View.GONE

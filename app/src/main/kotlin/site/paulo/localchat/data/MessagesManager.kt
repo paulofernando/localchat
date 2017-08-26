@@ -35,12 +35,12 @@ class MessagesManager {
             chatListeners[chatId]?.messageReceived(chatMessage)
         }
 
-        fun unreadMessages(chatId: String) {
+        fun unreadMessages(chatId: String, userId: String) {
             if(!chatMessages.containsKey(chatId)) {
                 chatMessages.put(chatId, mutableListOf<ChatMessage>())
             }
             try {
-                val key = "$chatId-unread"
+                val key = "$chatId-unread-$userId"
                 if(!Reservoir.contains(key)) {
                     Reservoir.put(key, AtomicInteger(0))
                 }
@@ -49,26 +49,21 @@ class MessagesManager {
             } catch (e: IOException) {
                 Timber.e(e.message)
             }
-            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId)}")
+            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId, userId)}")
         }
 
-        fun readMessages(chatId: String) {
+        fun readMessages(chatId: String, userId: String) {
             try {
-                val key = "$chatId-unread"
-                if(!Reservoir.contains(key)) {
-                    Reservoir.put(key, AtomicInteger(0))
-                }
-                val unread = Reservoir.get<AtomicInteger>("$chatId-unread", AtomicInteger::class.java)
-                Reservoir.put(key, AtomicInteger(0))
+                Reservoir.put("$chatId-unread-$userId", AtomicInteger(0))
             } catch (e: IOException) {
                 Timber.e(e.message)
             }
-            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId)}")
+            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId, userId)}")
         }
 
-        fun getUnreadMessages(chatId: String): Int {
+        fun getUnreadMessages(chatId: String, userId: String): Int {
             try {
-                val key = "$chatId-unread"
+                val key = "$chatId-unread-$userId"
                 if(!Reservoir.contains(key)) {
                     Reservoir.put(key, AtomicInteger(0))
                 }

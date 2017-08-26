@@ -76,7 +76,7 @@ constructor(private val dataManager: DataManager,
                             if(loaded) {//just registered message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
                                 if(chatMessage.owner != currentUserManager.getUserId()) //not mine
-                                    MessagesManager.unreadMessages(chatId)
+                                    MessagesManager.unreadMessages(chatId, currentUserManager.getUserId())
                             }
                         }
 
