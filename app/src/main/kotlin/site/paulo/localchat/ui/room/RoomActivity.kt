@@ -155,7 +155,6 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         roomAdapter.messages.add(message)
         messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
-        MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId())
     }
 
     override fun showEmptyChatRoom() {

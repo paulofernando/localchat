@@ -43,7 +43,7 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
-    var loaded: Boolean = false
+    var loaded = mutableMapOf<String, Boolean>()
 
     override fun loadChatRooms(userId:String) {
         dataManager.getUser(userId)
@@ -51,9 +51,12 @@ constructor(private val dataManager: DataManager,
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<User>()
                 .onNext {
-                    if(it.chats.isEmpty()) {
+                    if(it.chats.isEmpty())
                         view.showChatsEmpty()
-                    }
+                    else
+                        for((key) in it.chats)
+                            loaded.put(key, false)
+
                 }
                 .onError {
                     view.showError()
@@ -73,7 +76,7 @@ constructor(private val dataManager: DataManager,
                         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)
                             view.messageReceived(chatMessage, chatId)
-                            if(loaded) {//just registered message delivered if is a new message.
+                            if((loaded[chatId] != null) && loaded.get(chatId)!!) {//just registered message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
                                 if(chatMessage.owner != currentUserManager.getUserId()) //not mine
                                     MessagesManager.unreadMessages(chatId, currentUserManager.getUserId())
@@ -88,10 +91,9 @@ constructor(private val dataManager: DataManager,
 
                     val allLoadedListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                            loaded = true
-                            Timber.i("All data loaded from chat $it.id")
+                            loaded[it.id] = true
+                            Timber.i("All data loaded from chat ${it.id}")
                         }
-
                         override fun onCancelled(dataSnapshot: DatabaseError?) { }
 
                     }
@@ -114,7 +116,8 @@ constructor(private val dataManager: DataManager,
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 loadChatRoom(dataSnapshot.value.toString())
-                if (loaded && (!currentUserManager.getUser().chats.containsKey(dataSnapshot.key)))
+                if (((loaded[dataSnapshot.value.toString()] != null) && (loaded[dataSnapshot.value.toString()]!!))
+                        && (!currentUserManager.getUser().chats.containsKey(dataSnapshot.key)))
                     currentUserManager.getUser().chats.put(dataSnapshot.key, dataSnapshot.value.toString())
             }
 
