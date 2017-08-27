@@ -117,8 +117,7 @@ class DashboardActivity: BaseActivity() {
             }
             R.id.action_signout -> {
                 presenter.logout()
-                startActivity<SignInActivity>() //TODO clear activity stack
-                return true
+                finish()
             }
         }
 

@@ -60,8 +60,6 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     @BindView(R.id.signupSignInLink)
     lateinit var linkSignUp: TextView
 
-    var alertDialog:AlertDialogBuilder? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
@@ -127,10 +125,11 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     override fun showFailSignIn() {
         spinnerDialog?.cancel()
 
-        if(alertDialog == null) {
-            alertDialog = alert(R.string.auth_failed)
-        }
-        Handler(Looper.getMainLooper()).post({ alertDialog?.show() })
+        alert(R.string.auth_failed) {
+            title(R.string.auth_failed_title)
+            cancellable(true)
+        }.show()
+
     }
 
     override fun onDestroy() {

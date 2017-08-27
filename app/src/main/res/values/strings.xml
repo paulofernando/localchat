@@ -37,6 +37,7 @@
     <string name="chars_range">between %1$d and %2$d alphanumeric characters</string>
     <string name="enter_valid_email">enter a valid email address</string>
     <string name="auth_failed">Email and Password don\'t match!</string>
+    <string name="auth_failed_title">Auth failed</string>
     <string name="empty_chat">There aren\'t any messages</string>
     <string name="empty_nearby_users">There isn\'t any nearby user</string>
 
