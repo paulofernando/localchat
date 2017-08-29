@@ -1,4 +1,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="#E84F3D" />
+    android:shape="rectangle">
+    <solid android:color="@color/color_chat_unread_bubble_background"/>
+    <corners
+        android:bottomLeftRadius="15dp"
+        android:bottomRightRadius="15dp"
+        android:topLeftRadius="15dp"
+        android:topRightRadius="15dp" />
 </shape>

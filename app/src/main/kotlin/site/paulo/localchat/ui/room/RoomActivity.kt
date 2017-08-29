@@ -128,7 +128,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 emptyRoom = false
             }
         }
-        MessagesManager.readMessages(chat?.id ?: chatId!!) //mark all messages as read
+        MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
         configureToolbar()
 
     }
@@ -201,7 +201,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         super.onDestroy()
         presenter.unregisterMessagesListener(chat?.id ?: chatId!!)
         presenter.detachView()
-        MessagesManager.readMessages(chat?.id ?: chatId!!) //mark all messages as read
+        MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

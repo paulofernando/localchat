@@ -96,15 +96,10 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
-        updateUnreadMessages(MessagesManager.getUnreadMessages(chatId), chatId)
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
         chatsAdapter.setLastMessage(chatMessage, chatId)
-    }
-
-    override fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
-        chatsAdapter.updateUnreadMessages(unreadMessages, chatId)
     }
 
 }

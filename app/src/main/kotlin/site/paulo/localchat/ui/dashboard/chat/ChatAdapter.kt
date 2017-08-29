@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -78,9 +79,9 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
         if(chatsMapped.containsKey(chatId)) {
-            /*val index: Int = chatsMapped.get(chatId)!!
-            chats.get(index).unreadMessages = unreadMessages.toString()
-            this.notifyItemChanged(index)*/
+            val index: Int = chatsMapped.get(chatId)!!
+            //chats.get(index).unreadMessages = unreadMessages.toString()
+            this.notifyItemChanged(index)
         }
     }
 
@@ -91,13 +92,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             var otherUserIndex: Int = 0
             if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
 
+            chatsMapped.put(chat.id, chats.indexOf(chat))
+
             itemView.nameChatTv.text =
                 chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
-
             itemView.lastMessageChatTv.text = chat.lastMessage.message
             itemView.lastMessageTimeTv.text = Date().formattedTime(itemView.ctx, chat.lastMessage.timestamp)
 
-            //itemView.unreadChatTv.text = chat.unreadMessages
+            updateUnreadMessages(chat.id, currentUserManager.getUserId())
 
             itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
                 itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {
@@ -106,10 +108,19 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
             itemView.setOnClickListener {
                 itemView.ctx.startActivity<RoomActivity>("chat" to chat)
+                MessagesManager.readMessages(chat.id, currentUserManager.getUserId())
+                updateUnreadMessages(chat.id, currentUserManager.getUserId())
             }
-
-            chatsMapped.put(chat.id, chats.indexOf(chat))
-
         }
+
+        fun updateUnreadMessages(chatId: String, userId: String) {
+            if(MessagesManager.getUnreadMessages(chatId, userId) != 0) {
+                itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId, userId).toString()
+                itemView.unreadChatTv.visibility = View.VISIBLE
+            } else {
+                itemView.unreadChatTv.visibility = View.GONE
+            }
+        }
+
     }
 }
