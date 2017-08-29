@@ -33,6 +33,8 @@ import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -90,9 +92,14 @@ constructor(private val dataManager: DataManager,
                     }
 
                     val allLoadedListener = object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
                             loaded[it.id] = true
                             Timber.i("All data loaded from chat ${it.id}")
+                            val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)
+                            if(chatMessage.owner != currentUserManager.getUserId())
+                                if(!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
+                                    currentUserManager.getUser().chats.put(chatMessage.owner, it.id)
+                                }
                         }
                         override fun onCancelled(dataSnapshot: DatabaseError?) { }
 
