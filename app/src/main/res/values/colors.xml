@@ -11,7 +11,7 @@
     <color name="color_room_background">@color/color_background_default</color>
     <color name="color_room_my_bubble_background">@color/color_highlight_default</color>
     <color name="color_room_my_bubble_pressed_background">#a8d96d</color>
-    <color name="color_chat_unread_bubble_background">#a8d96d</color>
+    <color name="color_chat_unread_bubble_background">#f1983a</color>
     <color name="color_room_send_btn_background">@color/colorAccent</color>
     <color name="color_nearby_users_background">@color/color_background_default</color>
     <color name="color_chats_background">@color/color_background_default</color>
