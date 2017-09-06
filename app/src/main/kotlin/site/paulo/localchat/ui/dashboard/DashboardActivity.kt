@@ -29,17 +29,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.iid.FirebaseInstanceId
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
-import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.settings.SettingsActivity
-import site.paulo.localchat.ui.signin.SignInActivity
-import timber.log.Timber
 import javax.inject.Inject
+
 
 class DashboardActivity: BaseActivity() {
 
@@ -118,6 +115,9 @@ class DashboardActivity: BaseActivity() {
             R.id.action_signout -> {
                 presenter.logout()
                 finish()
+            }
+            R.id.action_about -> {
+                return true //TODO implement about screen call
             }
         }
 
