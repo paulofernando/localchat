@@ -121,24 +121,6 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
 
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'io.reactivex:rxkotlin:0.60.0'
-    compile 'com.jakewharton.timber:timber:4.4.0'
-    compile 'com.squareup.sqlbrite:sqlbrite:1.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.github.markushi:circlebutton:1.1'
-    compile 'com.anupcowkur:reservoir:3.1.0'
-
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
-    compile 'com.google.firebase:firebase-database:10.0.1'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
-    compile 'com.google.firebase:firebase-storage:10.0.1'
-    compile 'com.kelvinapps:rxfirebase:0.0.15'
-
-
     // Unit tests dependencies
     testCompile jUnit
     testCompile mockito
@@ -155,6 +137,21 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxkotlin:0.60.0'
+    compile 'com.jakewharton.timber:timber:4.4.0'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.github.markushi:circlebutton:1.1'
+    compile 'com.anupcowkur:reservoir:3.1.0'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
+    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.firebase:firebase-storage:10.0.1'
+    compile 'com.kelvinapps:rxfirebase:0.0.15'
     testCompile 'org.robolectric:robolectric:3.1.4'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 }

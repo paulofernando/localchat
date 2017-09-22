@@ -31,6 +31,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
+import site.paulo.localchat.ui.about.AboutActivity
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
@@ -117,7 +118,8 @@ class DashboardActivity: BaseActivity() {
                 finish()
             }
             R.id.action_about -> {
-                return true //TODO implement about screen call
+                startActivity<AboutActivity>()
+                return true
             }
         }
 
