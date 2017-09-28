@@ -21,20 +21,14 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.squareup.picasso.Callback
+import kotlinx.android.synthetic.main.activity_profile.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
@@ -49,38 +43,6 @@ import javax.inject.Inject
 class ProfileActivity : BaseActivity(), ProfileContract.View {
 
     internal val RC_PHOTO_PICKER = 1
-
-    @BindView(R.id.toolbarProfile)
-    lateinit var toolbar: Toolbar
-
-    @BindView(R.id.profileProfileImg)
-    lateinit var profileImg: ImageView
-
-    @BindView(R.id.editProfileImageBtn)
-    lateinit var changeImage: ImageView
-
-    @BindView(R.id.nameUserProfileLabel) lateinit var nameLb: TextView
-    @BindView(R.id.nameUserProfileTxt) lateinit var nameTxt: EditText
-    @BindView(R.id.nameUserEditProfileImg) lateinit var nameEditImg: ImageView
-    @BindView(R.id.nameUserCancelProfileImg) lateinit var nameCancelImg: ImageView
-    @BindView(R.id.nameUserConfirmProfileImg) lateinit var nameConfirmImg: ImageView
-    @BindView(R.id.nameUserEditProfileContainer) lateinit var nameEditContainer: LinearLayout
-
-    @BindView(R.id.emailUserProfileLabel)
-    lateinit var emailLb: TextView
-
-    @BindView(R.id.ageUserProfileLabel) lateinit var ageLb: TextView
-    @BindView(R.id.ageUserProfileTxt) lateinit var ageTxt: EditText
-    @BindView(R.id.ageUserEditProfileImg) lateinit var ageEditImg: ImageView
-    @BindView(R.id.ageUserCancelProfileImg) lateinit var ageCancelImg: ImageView
-    @BindView(R.id.ageUserConfirmProfileImg) lateinit var ageConfirmImg: ImageView
-    @BindView(R.id.ageUserEditProfileContainer) lateinit var ageEditContainer: LinearLayout
-
-    @BindView(R.id.genderUserProfileLabel)
-    lateinit var genderLb: TextView
-
-    @BindView(R.id.loadingProfileProgress)
-    lateinit var loadingProfileProgress: ProgressBar
 
     lateinit var user: User
 
@@ -97,30 +59,29 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
         activityComponent.inject(this)
         presenter.attachView(this)
         setContentView(R.layout.activity_profile)
-        ButterKnife.bind(this)
 
-        toolbar.title = resources.getString(R.string.title_profile)
-        setSupportActionBar(toolbar)
+        toolbarProfile.title = resources.getString(R.string.title_profile)
+        setSupportActionBar(toolbarProfile)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         user = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
         var profilePic: Bitmap = intent.getParcelableExtra<Bitmap>(resources.getString(R.string.user_profile_image))
 
-        profileImg.setImageBitmap(profilePic)
+        profileProfileImg.setImageBitmap(profilePic)
         showCurrentUserData()
     }
 
     override fun showCurrentUserData() {
-        nameLb.text = user.name
-        nameTxt.setText(user.name, TextView.BufferType.EDITABLE)
-        ageLb.text = user.age.toString()
-        ageTxt.setText(user.age.toString(), TextView.BufferType.EDITABLE)
-        emailLb.text = user.email
+        nameUserProfileLabel.text = user.name
+        nameUserProfileTxt.setText(user.name, TextView.BufferType.EDITABLE)
+        ageUserProfileLabel.text = user.age.toString()
+        ageUserProfileTxt.setText(user.age.toString(), TextView.BufferType.EDITABLE)
+        emailUserProfileLabel.text = user.email
 
         when (user.gender) {
-            "m" -> genderLb.text = resources.getString(R.string.lb_gender_male)
-            "f" -> genderLb.text = resources.getString(R.string.lb_gender_female)
+            "m" -> genderUserProfileLabel.text = resources.getString(R.string.lb_gender_male)
+            "f" -> genderUserProfileLabel.text = resources.getString(R.string.lb_gender_female)
         }
 
     }
@@ -128,12 +89,12 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     /**************** Name *********************/
 
     override fun editName(view: View) {
-        cancelAgeEdition(ageTxt)
-        nameLb.visibility = View.GONE
-        nameEditImg.visibility = View.GONE
-        nameTxt.visibility = View.VISIBLE
-        nameEditContainer.visibility = View.VISIBLE
-        lastValue = nameLb.text.toString()
+        cancelAgeEdition(ageUserProfileTxt)
+        nameUserProfileLabel.visibility = View.GONE
+        nameUserEditProfileImg.visibility = View.GONE
+        nameUserProfileTxt.visibility = View.VISIBLE
+        nameUserEditProfileContainer.visibility = View.VISIBLE
+        lastValue = nameUserProfileLabel.text.toString()
     }
 
     override fun cancelNameEdition(view: View) {
@@ -141,16 +102,16 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     }
 
     override fun confirmNameEdition(view: View) {
-        val name = nameTxt.text.toString()
+        val name = nameUserProfileTxt.text.toString()
         val minimumCharsName: Int = resources.getString(R.string.number_minimum_chars_user_name).toInt()
         val maximumCharsName: Int = resources.getString(R.string.number_maximum_chars_user_name).toInt()
         if (name.isEmpty() || name.length < minimumCharsName || name.length > maximumCharsName) {
-            nameTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
+            nameUserProfileTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
         } else {
-            nameTxt.error = null
-            if (!lastValue!!.equals(nameTxt.text.toString())) {
-                nameLb.text = nameTxt.text
-                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameTxt.text.toString())
+            nameUserProfileTxt.error = null
+            if (!lastValue!!.equals(nameUserProfileTxt.text.toString())) {
+                nameUserProfileLabel.text = nameUserProfileTxt.text
+                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameUserProfileTxt.text.toString())
             }
             hideNameConfirmationButton()
         }
@@ -159,12 +120,12 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     /**************** Age *********************/
 
     override fun editAge(view: View) {
-        cancelAgeEdition(nameTxt)
-        ageLb.visibility = View.GONE
-        ageEditImg.visibility = View.GONE
-        ageTxt.visibility = View.VISIBLE
-        ageEditContainer.visibility = View.VISIBLE
-        lastValue = nameLb.text.toString()
+        cancelAgeEdition(nameUserProfileTxt)
+        ageUserProfileLabel.visibility = View.GONE
+        ageUserEditProfileImg.visibility = View.GONE
+        ageUserProfileTxt.visibility = View.VISIBLE
+        ageUserEditProfileContainer.visibility = View.VISIBLE
+        lastValue = nameUserProfileLabel.text.toString()
     }
 
     override fun cancelAgeEdition(view: View) {
@@ -172,16 +133,16 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     }
 
     override fun confirmAgeEdition(view: View) {
-        val age = ageTxt.text.toString().toLong()
+        val age = ageUserProfileTxt.text.toString().toLong()
         val minimumAge: Int = resources.getString(R.string.number_minimum_age).toInt()
         val maximumAge: Int = resources.getString(R.string.number_maximum_age).toInt()
-        if (ageTxt.text.isEmpty() || age !in (minimumAge - 1)..(maximumAge + 1)) {
-            ageTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
+        if (ageUserProfileTxt.text.isEmpty() || age !in (minimumAge - 1)..(maximumAge + 1)) {
+            ageUserProfileTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
         } else {
-            ageTxt.error = null
-            if (!lastValue!!.equals(ageTxt.text.toString())) {
-                ageLb.text = ageTxt.text
-                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageTxt.text.toString())
+            ageUserProfileTxt.error = null
+            if (!lastValue!!.equals(ageUserProfileTxt.text.toString())) {
+                ageUserProfileLabel.text = ageUserProfileTxt.text
+                presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageUserProfileTxt.text.toString())
             }
             hideAgeConfirmationButton()
         }
@@ -190,26 +151,26 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     override fun updatePic(url: String) {
         var callback: com.squareup.picasso.Callback =  object: Callback {
             override fun onSuccess() {
-                currentUserManager.setPic((profileImg.drawable as BitmapDrawable).bitmap)
+                currentUserManager.setPic((profileProfileImg.drawable as BitmapDrawable).bitmap)
                 loadingProfileProgress.visibility = View.INVISIBLE
             }
 
             override fun onError() { }
         }
 
-        profileImg.loadUrlCircle(url, callback) {
+        profileProfileImg.loadUrlCircle(url, callback) {
             request -> request.transform(CircleTransform())
         }
     }
 
     override fun onStart() {
         super.onStart()
-        changeImage.postDelayed({ animateButton() }, 300)
+        editProfileImageBtn.postDelayed({ animateButton() }, 300)
     }
 
     override fun onBackPressed() {
         animateReverseButton()
-        changeImage.postDelayed({ super.onBackPressed() }, 200)
+        editProfileImageBtn.postDelayed({ super.onBackPressed() }, 200)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -237,23 +198,23 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     }
 
     fun hideAgeConfirmationButton() {
-        ageLb.visibility = View.VISIBLE
-        ageEditImg.visibility = View.VISIBLE
-        ageTxt.visibility = View.GONE
-        ageEditContainer.visibility = View.GONE
+        ageUserProfileLabel.visibility = View.VISIBLE
+        ageUserEditProfileImg.visibility = View.VISIBLE
+        ageUserProfileTxt.visibility = View.GONE
+        ageUserEditProfileContainer.visibility = View.GONE
     }
 
     fun hideNameConfirmationButton() {
-        nameLb.visibility = View.VISIBLE
-        nameEditImg.visibility = View.VISIBLE
-        nameTxt.visibility = View.GONE
-        nameEditContainer.visibility = View.GONE
+        nameUserProfileLabel.visibility = View.VISIBLE
+        nameUserEditProfileImg.visibility = View.VISIBLE
+        nameUserProfileTxt.visibility = View.GONE
+        nameUserEditProfileContainer.visibility = View.GONE
     }
 
     fun animateButton() {
-        changeImage.visibility = View.VISIBLE
+        editProfileImageBtn.visibility = View.VISIBLE
         var myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale)
-        changeImage.startAnimation(myAnim)
+        editProfileImageBtn.startAnimation(myAnim)
     }
 
     fun animateReverseButton() {
@@ -264,10 +225,10 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
             override fun onAnimationStart(animation: Animation) {}
 
             override fun onAnimationEnd(animation: Animation) {
-                changeImage.visibility = View.INVISIBLE
+                editProfileImageBtn.visibility = View.INVISIBLE
             }
         })
-        changeImage.startAnimation(myAnim)
+        editProfileImageBtn.startAnimation(myAnim)
     }
 
 
