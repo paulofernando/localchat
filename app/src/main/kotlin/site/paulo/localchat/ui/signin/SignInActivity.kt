@@ -18,47 +18,22 @@ package site.paulo.localchat.ui.signin
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import org.jetbrains.anko.AlertDialogBuilder
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.startActivity
+import kotlinx.android.synthetic.main.activity_sign_in.*
+import org.jetbrains.anko.*
 import site.paulo.localchat.R
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import site.paulo.localchat.ui.signup.SignUpActivity
 import javax.inject.Inject
-import android.content.Intent
-import org.jetbrains.anko.clearTask
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.newTask
 
 
 class SignInActivity : BaseActivity(), SignInContract.View {
 
     @Inject
     lateinit var presenter: SignInPresenter
-
-    @BindView(R.id.emailSignInTxt)
-    lateinit var inputEmail: EditText
-
-    @BindView(R.id.passwordSignInTxt)
-    lateinit var inputPassword: EditText
-
-    @BindView(R.id.loginSignInBtn)
-    lateinit var btnLogin: Button
-
-    @BindView(R.id.signupSignInLink)
-    lateinit var linkSignUp: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,25 +50,22 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         }
 
         setContentView(R.layout.activity_sign_in)
-        ButterKnife.bind(this)
 
-
-
-        btnLogin.setOnClickListener {
-            if(validate()) presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
+        loginSignInBtn.setOnClickListener {
+            if(validate()) presenter.signIn(emailSignInTxt.text.toString(), passwordSignInTxt.text.toString())
         }
 
-        inputPassword.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        passwordSignInTxt.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             // If the event is a key-down event on the "enter" button
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform action on key press
-                if(validate()) presenter.signIn(inputEmail.text.toString(), inputPassword.text.toString())
+                if(validate()) presenter.signIn(emailSignInTxt.text.toString(), passwordSignInTxt.text.toString())
                 return@OnKeyListener true
             }
             false
         })
 
-        linkSignUp.setOnClickListener {
+        signupSignInLink.setOnClickListener {
             startActivity<SignUpActivity>()
         }
 
@@ -101,11 +73,11 @@ class SignInActivity : BaseActivity(), SignInContract.View {
     }
 
     fun validate(): Boolean {
-        if(inputEmail.text.toString().equals("")) {
-            inputEmail.error = "enter an email address"
+        if(emailSignInTxt.text.toString().equals("")) {
+            emailSignInTxt.error = "enter an email address"
             return false
-        } else if(inputPassword.text.toString().equals("")) {
-            inputPassword.error = "enter a password"
+        } else if(passwordSignInTxt.text.toString().equals("")) {
+            passwordSignInTxt.error = "enter a password"
             return false
         } else {
             if(spinnerDialog == null) {

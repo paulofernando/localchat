@@ -20,18 +20,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.Toast
-import at.markushi.ui.CircleButton
-import butterknife.BindView
-import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
@@ -60,29 +53,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     @Inject
     lateinit var roomAdapter: RoomAdapter
 
-    @BindView(R.id.messageRoomTxt)
-    lateinit var messageText: EditText
-
-    @BindView(R.id.sendRoomBtn)
-    lateinit var sendBtn: CircleButton
-
-    @BindView(R.id.toolbarRoom)
-    lateinit var toolbar: Toolbar
-
-    @BindView(R.id.messagesRoomList)
-    lateinit var messagesList: RecyclerView
-
-    @BindView(R.id.otherUserImg)
-    lateinit var otherUserPic: ImageView
-
-    @BindView(R.id.attachImageRoomImg)
-    lateinit var attachImage: ImageView
-
-    @BindView(R.id.attachImageRoomProgressImg)
-    lateinit var attachImageProgress: ProgressBar
-
     var emptyRoom: Boolean = false
-
     var chat: Chat? = null
     var otherUser: User? = null
     var chatId: String? = null
@@ -93,16 +64,15 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         activityComponent.inject(this)
         presenter.attachView(this)
         setContentView(R.layout.activity_room)
-        ButterKnife.bind(this)
 
         this.chat = intent.getParcelableExtra<Chat>("chat") //just passed from chat fragment
 
         this.chatId = intent.getStringExtra("chatId") //just passed from nearby users fragment
         this.otherUser = intent.getParcelableExtra<User>("otherUser") //just passed from nearby users fragment
 
-        messagesList.adapter = roomAdapter
-        messagesList.layoutManager = LinearLayoutManager(this)
-        (messagesList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
+        messagesRoomList.adapter = roomAdapter
+        messagesRoomList.layoutManager = LinearLayoutManager(this)
+        (messagesRoomList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
 
         if ((otherUser != null) && //come from nearby users fragment
@@ -114,16 +84,16 @@ class RoomActivity : BaseActivity(), RoomContract.View {
             else showChat(chat!!)
         }
 
-        sendBtn.setOnClickListener {
+        sendRoomBtn.setOnClickListener {
             if (!emptyRoom)
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageText.text.toString()), chat?.id ?: chatId!!)
+                        messageRoomTxt.text.toString()), chat?.id ?: chatId!!)
             else {
                 //first message between users, creates a room before send it
                 chat = presenter.createNewRoom(this.otherUser!!)
                 chatId = chat?.id
                 presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageText.text.toString()), chat?.id ?: chatId!!)
+                        messageRoomTxt.text.toString()), chat?.id ?: chatId!!)
                 presenter.registerMessagesListener(chat?.id ?: chatId!!)
                 emptyRoom = false
             }
@@ -147,13 +117,13 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 roomAdapter.messages.add(message)
             }
         }
-        messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
+        messagesRoomList.smoothScrollToPosition(roomAdapter.getItemCount())
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
     }
 
     override fun addMessage(message: ChatMessage) {
         roomAdapter.messages.add(message)
-        messagesList.smoothScrollToPosition(roomAdapter.getItemCount())
+        messagesRoomList.smoothScrollToPosition(roomAdapter.getItemCount())
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
     }
 
@@ -162,17 +132,17 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     override fun showLoadingImage() {
-        attachImage.visibility = View.INVISIBLE
-        attachImageProgress.visibility = View.VISIBLE
+        attachImageRoomImg.visibility = View.INVISIBLE
+        attachImageRoomProgressImg.visibility = View.VISIBLE
     }
 
     override fun hideLoadingImage() {
-        attachImage.visibility = View.VISIBLE
-        attachImageProgress.visibility = View.INVISIBLE
+        attachImageRoomImg.visibility = View.VISIBLE
+        attachImageRoomProgressImg.visibility = View.INVISIBLE
     }
 
     override fun cleanMessageField() {
-        messageText.text.clear()
+        messageRoomTxt.text.clear()
     }
 
     override fun messageSent(message: ChatMessage) {
@@ -219,8 +189,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     private fun configureToolbar() {
         if (this.otherUser != null) {
-            toolbar.title = otherUser?.name ?: ""
-            otherUserPic.loadUrlCircle(otherUser?.pic) {
+            toolbarRoom.title = otherUser?.name ?: ""
+            otherUserImg.loadUrlCircle(otherUser?.pic) {
                 request -> request.transform(CircleTransform())
             }
         } else if (this.chat != null) {
@@ -229,13 +199,13 @@ class RoomActivity : BaseActivity(), RoomContract.View {
             var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
             chatId = (chat as Chat)?.id
 
-            toolbar.title = summarizedUser?.name
-            otherUserPic.loadUrlCircle(summarizedUser?.pic) {
+            toolbarRoom.title = summarizedUser?.name
+            otherUserImg.loadUrlCircle(summarizedUser?.pic) {
                 request ->
                 request.transform(CircleTransform())
             }
         }
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbarRoom)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }

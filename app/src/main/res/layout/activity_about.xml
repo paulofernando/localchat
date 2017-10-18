@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background_default"
+    tools:context="site.paulo.localchat.ui.about.AboutActivity">
+
+    <ImageButton
+        android:id="@+id/logoAboutImg"
+        android:layout_width="@dimen/image_width_logo_about"
+        android:layout_height="@dimen/image_height_logo_about"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/color_background_default"
+        app:srcCompat="@drawable/logo"
+        android:layout_above="@+id/appNameAboutTxt"
+        android:layout_alignEnd="@+id/appNameAboutTxt" />
+
+    <TextView
+        android:id="@+id/appNameAboutTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:layout_centerVertical="true"
+        tools:text="App Name"/>
+
+    <TextView
+        android:id="@+id/appVersionAboutTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="12dp"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/appNameAboutTxt"
+        tools:text="App Name"/>
+
+</RelativeLayout>

@@ -22,50 +22,21 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
+import android.widget.ArrayAdapter
 import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
-import site.paulo.localchat.R.drawable.gender
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import javax.inject.Inject
-import android.widget.ArrayAdapter
-import timber.log.Timber
-import java.util.ArrayList
-
 
 class SignUpActivity : BaseActivity(), SignUpContract.View {
 
     @Inject
     lateinit var presenter: SignUpPresenter
-
-    @BindView(R.id.emailSignUpTxt)
-    lateinit var inEmail: EditText
-
-    @BindView(R.id.passwordSignUpTxt)
-    lateinit var inPassword: EditText
-
-    @BindView(R.id.nameSignUpTxt)
-    lateinit var inName: EditText
-
-    @BindView(R.id.ageSignUpTxt)
-    lateinit var inAge: EditText
-
-    @BindView(R.id.genderSignUpSpinner)
-    lateinit var inGender: Spinner
-
-    @BindView(R.id.createSignUpBtn)
-    lateinit var btnCreate: Button
-
-    @BindView(R.id.signinSignUpLink)
-    lateinit var linkSignIn: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,23 +53,22 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         }
 
         setContentView(R.layout.activity_sign_up)
-        ButterKnife.bind(this)
 
-        btnCreate.setOnClickListener {
+        createSignUpBtn.setOnClickListener {
             if(validate()) {
                 spinnerDialog = indeterminateProgressDialog(R.string.registering)
-                presenter.signUp(inEmail.text.toString(), inPassword.text.toString(),
-                    inName.text.toString(), inAge.text.toString().toLong(), getSelectedGender())
+                presenter.signUp(emailSignUpTxt.text.toString(), passwordSignUpTxt.text.toString(),
+                        nameSignUpTxt.text.toString(), ageSignUpTxt.text.toString().toLong(), getSelectedGender())
             }
         }
 
-        linkSignIn.setOnClickListener {
+        signinSignUpLink.setOnClickListener {
             finish()
         }
 
         val adapter = ArrayAdapter.createFromResource(this, R.array.genders, R.layout.spinner_item)
         adapter.setDropDownViewResource(R.layout.spinner_item)
-        inGender.setAdapter(adapter)
+        genderSignUpSpinner.setAdapter(adapter)
     }
 
     override fun showSuccessFullSignUp() {
@@ -121,44 +91,44 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         val minimumAge: Int = resources.getString(R.string.number_minimum_age).toInt()
         val maximumAge: Int = resources.getString(R.string.number_maximum_age).toInt()
 
-        val email = inEmail.text.toString()
-        val password = inPassword.text.toString()
-        val name = inName.text.toString()
-        val age = if (inAge.text.isEmpty()) 0 else inAge.text.toString().toLong()
+        val email = emailSignUpTxt.text.toString()
+        val password = passwordSignUpTxt.text.toString()
+        val name = nameSignUpTxt.text.toString()
+        val age = if (ageSignUpTxt.text.isEmpty()) 0 else ageSignUpTxt.text.toString().toLong()
 
         if (name.isEmpty() || name.length < minimumCharsName || name.length > maximumCharsName) {
-            inName.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
+            nameSignUpTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
             valid = false
         } else {
-            inName.error = null
+            nameSignUpTxt.error = null
         }
 
-        if (inEmail.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            inEmail.error = resources.getString(R.string.error_email_valid)
+        if (emailSignUpTxt.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailSignUpTxt.error = resources.getString(R.string.error_email_valid)
             valid = false
         } else {
-            inEmail.error = null
+            emailSignUpTxt.error = null
         }
 
-        if (inPassword.text.isEmpty() || password.length < minimumCharsPassword || password.length > maximumCharsPassword) {
-            inPassword.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsPassword, maximumCharsPassword)
+        if (passwordSignUpTxt.text.isEmpty() || password.length < minimumCharsPassword || password.length > maximumCharsPassword) {
+            passwordSignUpTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsPassword, maximumCharsPassword)
             valid = false
         } else {
-            inPassword.error = null
+            passwordSignUpTxt.error = null
         }
 
-        if (inAge.text.isEmpty() || age !in (minimumAge - 1) .. (maximumAge + 1)) {
-            inAge.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
+        if (ageSignUpTxt.text.isEmpty() || age !in (minimumAge - 1) .. (maximumAge + 1)) {
+            ageSignUpTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
             valid = false
         } else {
-            inAge.error = null
+            ageSignUpTxt.error = null
         }
 
         if(getSelectedGender().equals((""))) {
-            (inGender.selectedView as TextView).error = resources.getString(R.string.error_gender)
+            (genderSignUpSpinner.selectedView as TextView).error = resources.getString(R.string.error_gender)
             valid = false
         } else {
-            (inGender.selectedView as TextView).error = null
+            (genderSignUpSpinner.selectedView as TextView).error = null
         }
 
         return valid
@@ -170,7 +140,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
     }
 
     private fun getSelectedGender(): String {
-        when((inGender.selectedView as TextView).text.toString()) {
+        when((genderSignUpSpinner.selectedView as TextView).text.toString()) {
             resources.getString(R.string.spinner_gender_female) -> return "f"
             resources.getString(R.string.spinner_gender_male) -> return "m"
             resources.getString(R.string.spinner_gender_non_binary) -> return "n"

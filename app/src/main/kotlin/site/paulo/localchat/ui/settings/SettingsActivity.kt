@@ -20,13 +20,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
@@ -34,25 +28,11 @@ import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.profile.ProfileActivity
 import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.loadUrlAndResize
 import site.paulo.localchat.ui.utils.loadUrlAndResizeCircle
-import site.paulo.localchat.ui.utils.loadUrlAndResizeCirclePlaceholder
 import javax.inject.Inject
 
 
 class SettingsActivity: BaseActivity(), SettingsContract.View   {
-
-    @BindView(R.id.toolbarSettings)
-    lateinit var toolbar: Toolbar
-
-    @BindView(R.id.profileContainer)
-    lateinit var profileContainer:RelativeLayout
-
-    @BindView(R.id.nameSettingsTxt)
-    lateinit var profileName:TextView
-
-    @BindView(R.id.profileSettingsImg)
-    lateinit var profileImage: ImageView
 
     private var user:User? = null
 
@@ -67,10 +47,9 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
         activityComponent.inject(this)
         presenter.attachView(this)
         setContentView(R.layout.activity_settings)
-        ButterKnife.bind(this)
 
-        toolbar.title = resources.getString(R.string.title_settings)
-        setSupportActionBar(toolbar)
+        toolbarSettings.title = resources.getString(R.string.title_settings)
+        setSupportActionBar(toolbarSettings)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -90,9 +69,9 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
         val intent = Intent(this, ProfileActivity::class.java)
 
         intent.putExtra(getString(R.string.user_name), user)
-        intent.putExtra(getString(R.string.user_profile_image), (profileImage.drawable as BitmapDrawable).bitmap)
+        intent.putExtra(getString(R.string.user_profile_image), (profileSettingsImg.drawable as BitmapDrawable).bitmap)
         val transitionName = getString(R.string.profile_image_name)
-        val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this, profileImage, transitionName)
+        val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this, profileSettingsImg, transitionName)
 
         startActivity(intent, transitionActivityOptions.toBundle())
     }
@@ -106,12 +85,12 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
                 request.transform(CircleTransform())
             }
         } else {*/
-            profileImage.loadUrlAndResizeCircle(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
+        profileSettingsImg.loadUrlAndResizeCircle(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
                 request ->
                 request.transform(CircleTransform())
             }
         //}
-        profileName.text = user.name
+        nameSettingsTxt.text = user.name
     }
 
 }

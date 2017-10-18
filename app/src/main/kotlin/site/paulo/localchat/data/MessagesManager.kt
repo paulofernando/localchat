@@ -74,6 +74,10 @@ class MessagesManager {
             return 0
         }
 
+        fun hasUnread(chatId: String, userId: String): Boolean {
+            return getUnreadMessages(chatId, userId) > 0
+        }
+
         /**
          * Register a message listener and returns the messages already received
          */

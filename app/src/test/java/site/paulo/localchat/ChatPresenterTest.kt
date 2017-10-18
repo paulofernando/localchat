@@ -15,6 +15,7 @@ import org.mockito.Mockito.verify
 import org.mockito.runners.MockitoJUnitRunner
 import rx.Observable
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.dashboard.nearby.ChatContract
@@ -37,10 +38,12 @@ class ChatPresenterTest {
     lateinit var mockDataManager: DataManager
     @Mock
     lateinit var mockFirebaseAuth: FirebaseAuth
+    @Mock
+    lateinit var mockCurrentUserManager: CurrentUserManager
 
     @Before
     fun setUp() {
-        chatPresenter = ChatPresenter(mockDataManager)
+        chatPresenter = ChatPresenter(mockDataManager, mockCurrentUserManager)
         chatPresenter.attachView(mockChatMvpView)
     }
 
