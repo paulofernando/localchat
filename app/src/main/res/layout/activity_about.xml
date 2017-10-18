@@ -14,10 +14,9 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:background="@color/color_background_default"
-        android:layout_marginTop="18dp"
         app:srcCompat="@drawable/logo"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/appNameAboutTxt"
+        android:layout_alignEnd="@+id/appNameAboutTxt" />
 
     <TextView
         android:id="@+id/appNameAboutTxt"
