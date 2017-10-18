@@ -40,7 +40,7 @@ constructor(private val dataManager: DataManager,
     private val currentUserManager: CurrentUserManager,
     private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
 
-    private lateinit var childEventListener: ChildEventListener
+    private var childEventListener: ChildEventListener? = null
 
     override fun getChatData(chatId: String) {
         dataManager.getChatRoom(chatId)
@@ -84,13 +84,13 @@ constructor(private val dataManager: DataManager,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerRoomChildEventListener(childEventListener, roomId, roomId + "-intern")
+        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, roomId, roomId + "-intern")
         Timber.d("Listening chat room $roomId-intern")
     }
 
     override fun unregisterMessagesListener(roomId: String) {
         if(childEventListener != null)
-            dataManager.unregisterRoomChildEventListener(childEventListener, roomId)
+            dataManager.unregisterRoomChildEventListener(childEventListener!!, roomId)
     }
 
     /*override fun registerMessagesListener(roomId: String) {
