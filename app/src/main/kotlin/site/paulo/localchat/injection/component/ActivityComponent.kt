@@ -1,6 +1,7 @@
 package site.paulo.localchat.injection.component
 
 import dagger.Subcomponent
+import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.injection.PerActivity
 import site.paulo.localchat.injection.module.ActivityModule
 import site.paulo.localchat.ui.dashboard.DashboardActivity
@@ -24,7 +25,6 @@ interface ActivityComponent {
     fun inject(dashboardActivity: DashboardActivity)
     fun inject(settingsActivity: SettingsActivity)
     fun inject(profileActivity: ProfileActivity)
-
 
     fun inject(usersUsersNearbyFragment: UsersNearbyFragment)
     fun inject(chatFragment: ChatFragment)

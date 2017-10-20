@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.data
 
+import android.location.Location
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
@@ -53,6 +54,10 @@ class DataManager
 
     fun updateProfilePic(url: String?): Unit {
         firebaseHelper.updateToken(url)
+    }
+
+    fun updateUserLocation(location: Location?): Unit {
+        firebaseHelper.updateUserLocation(location)
     }
 
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {

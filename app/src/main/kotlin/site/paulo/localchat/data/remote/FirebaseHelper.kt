@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.data.remote
 
+import android.location.Location
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -58,6 +59,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     object Child {
+        val ACCURACY = "acc"
         val AGE = "age"
         val CHATS = "chats"
         val DELIVERED_MESSAGES = "deliveredMessages"
@@ -65,6 +67,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val GENDER = "gender"
         val ID = "id"
         val LAST_MESSAGE = "lastMessage"
+        val LATITUDE = "lat"
+        val LONGITUDE = "lon"
         val MESSAGE = "message"
         val NAME = "name"
         val OWNER = "owner"
@@ -161,6 +165,21 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             firebaseDatabase.getReference(Reference.USERS)
                 .child(currentUserManager.getUserId())
                 .updateChildren(v, completionListener)
+        }
+    }
+
+    fun updateUserLocation(location: Location?): Unit {
+        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            Timber.d("Location updated")
+        }
+        if(location != null) {
+            val v = mutableMapOf<String, Any>()
+            v.put(Child.LATITUDE, location.latitude)
+            v.put(Child.LONGITUDE, location.longitude)
+            v.put(Child.ACCURACY, location.accuracy)
+            firebaseDatabase.getReference(Reference.USERS)
+                    .child(currentUserManager.getUserId())
+                    .updateChildren(v, completionListener)
         }
     }
 
