@@ -22,6 +22,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import site.paulo.localchat.data.DataManager
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,10 +38,16 @@ constructor(private val dataManager: DataManager) {
         locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
     }
 
+    fun stop() {
+        locationManager?.removeUpdates(locationListener)
+    }
+
     var locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            println("Location: long -> ${location.longitude} | lat -> ${location.latitude}")
+            Timber.d("Location: lon -> ${location.longitude} | lat -> ${location.latitude}")
             dataManager.updateUserLocation(location)
+            Timber.d("Location has been sent to server")
+            stop()
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}

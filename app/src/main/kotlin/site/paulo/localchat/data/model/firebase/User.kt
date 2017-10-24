@@ -11,6 +11,9 @@ data class User(
     val email: String = "",
     val gender: String = "",
     val pic: String = "",
+    val acc: Long = 0L,
+    val lat: Long = 0L,
+    val lon: Long = 0L,
     val chats: MutableMap<String, String> = mutableMapOf<String, String>())
     : PaperParcelable {
 

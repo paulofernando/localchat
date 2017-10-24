@@ -17,6 +17,8 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import android.os.Bundle
+import android.os.Handler
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -25,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseFragment
@@ -43,6 +46,9 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     @BindView(R.id.usersNearbyList)
     lateinit var usersNearbyList: RecyclerView
 
+    @BindView(R.id.usersNearbySwipeLayout)
+    lateinit var usersNearbySwipeLayout: SwipeRefreshLayout
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
@@ -55,6 +61,15 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
 
         presenter.loadNearbyUsers()
         presenter.listenNearbyUsers()
+
+        usersNearbySwipeLayout.setOnRefreshListener(object: SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                Handler().postDelayed(Runnable {
+                    usersNearbySwipeLayout.setRefreshing(false)
+                }, 2000)
+            }
+
+        })
 
         return rootView
     }

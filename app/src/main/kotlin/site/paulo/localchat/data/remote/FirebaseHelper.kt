@@ -172,7 +172,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Location updated")
         }
-        if(location != null) {
+        if((location != null) && (currentUserManager.getUserId() != null)) {
             val v = mutableMapOf<String, Any>()
             v.put(Child.LATITUDE, location.latitude)
             v.put(Child.LONGITUDE, location.longitude)
