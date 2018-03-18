@@ -93,7 +93,6 @@ class DashboardActivity: BaseActivity() {
         tabLayout!!.setupWithViewPager(mViewPager)
         //setupTabIcons()
 
-
         startUserLocationManager()
     }
 
@@ -108,6 +107,7 @@ class DashboardActivity: BaseActivity() {
             PackageManager.PERMISSION_GRANTED -> {
                 var userLocationManager: UserLocationManager = UserLocationManager(dataManager)
                 userLocationManager.start(this)
+                //TODO update location in datebase after permission granted
             }
             PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }

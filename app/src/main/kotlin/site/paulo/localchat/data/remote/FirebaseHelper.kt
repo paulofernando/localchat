@@ -17,6 +17,7 @@
 package site.paulo.localchat.data.remote
 
 import android.location.Location
+import ch.hsr.geohash.GeoHash
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -65,9 +66,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val DELIVERED_MESSAGES = "deliveredMessages"
         val EMAIL = "email"
         val GENDER = "gender"
+        val GEOHASH = "geohash"
         val ID = "id"
         val LAST_MESSAGE = "lastMessage"
         val LATITUDE = "lat"
+        val LOCATION = "loc"
         val LONGITUDE = "lon"
         val MESSAGE = "message"
         val NAME = "name"
@@ -172,13 +175,17 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Location updated")
         }
+
         if((location != null) && (currentUserManager.getUserId() != null)) {
+            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 12)
             val v = mutableMapOf<String, Any>()
             v.put(Child.LATITUDE, location.latitude)
             v.put(Child.LONGITUDE, location.longitude)
             v.put(Child.ACCURACY, location.accuracy)
+            v.put(Child.GEOHASH, geoHash)
             firebaseDatabase.getReference(Reference.USERS)
                     .child(currentUserManager.getUserId())
+                    .child(Child.LOCATION)
                     .updateChildren(v, completionListener)
         }
     }
