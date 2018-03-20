@@ -29,7 +29,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.UserNearbyPresenter
 import site.paulo.localchat.ui.user.UsersNearbyAdapter
@@ -59,7 +59,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         usersNearbyList.adapter = usersAdapter
         usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
 
-        presenter.loadNearbyUsers()
+        presenter.loadUsers()
         presenter.listenNearbyUsers()
 
         usersNearbySwipeLayout.setOnRefreshListener(object: SwipeRefreshLayout.OnRefreshListener {
@@ -74,18 +74,18 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         return rootView
     }
 
-    override fun showNearbyUsers(users: List<User>) {
-        usersAdapter.users = users.toMutableList()
+    override fun showNearbyUsers(nearbyUser: List<NearbyUser>) {
+        usersAdapter.nearbyUser = nearbyUser.toMutableList()
         usersAdapter.notifyDataSetChanged()
     }
 
-    override fun showNearbyUser(user: User) {
-        usersAdapter.users.add(user)
+    override fun showNearbyUser(nearbyUser: NearbyUser) {
+        usersAdapter.nearbyUser.add(nearbyUser)
         usersAdapter.notifyDataSetChanged()
     }
 
     override fun showNearbyUsersEmpty() {
-        usersAdapter.users = mutableListOf<User>()
+        usersAdapter.nearbyUser = mutableListOf<NearbyUser>()
         usersAdapter.notifyDataSetChanged()
         Toast.makeText(activity, R.string.empty_nearby_users, Toast.LENGTH_LONG).show()
     }

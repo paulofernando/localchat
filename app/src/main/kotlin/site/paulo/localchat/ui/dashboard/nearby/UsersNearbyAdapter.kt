@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.item_user.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
@@ -37,7 +37,7 @@ class UsersNearbyAdapter
 @Inject
 constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
-    var users = mutableListOf<User>()
+    var nearbyUser = mutableListOf<NearbyUser>()
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
@@ -49,16 +49,16 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: UsersNearbyAdapter.UserViewHolder, position: Int) {
-        holder.bindUser(users[position])
+        holder.bindUser(nearbyUser[position])
     }
 
     override fun getItemCount(): Int {
-        return users.size
+        return nearbyUser.size
     }
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindUser(user: User) {
-            with(user) {
+        fun bindUser(nearbyUser: NearbyUser) {
+            with(nearbyUser) {
 
                 if(!pic.equals(""))
                     itemView.profileNearbyUserImg.loadUrlAndResize(pic,
@@ -72,7 +72,7 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
                 itemView.setOnClickListener {
                     val chatId:String = currentUserManager.getUser().chats.get(Utils.getFirebaseId(email)) ?: ""
-                    itemView.ctx.startActivity<RoomActivity>("chatId" to chatId, "otherUser" to user)
+                    itemView.ctx.startActivity<RoomActivity>("chatId" to chatId, "otherUser" to nearbyUser)
                 }
             }
         }

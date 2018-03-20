@@ -28,24 +28,18 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseAuth
-import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.firebase.Chat
-import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.SummarizedUser
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
-import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
-
+import site.paulo.localchat.data.model.firebase.*
 
 
 @Singleton
@@ -57,6 +51,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val CHATS = "chats"
         val MESSAGES = "messages"
         val USERS = "users"
+        val GEOHASHES = "geohashes"
     }
 
     object Child {
@@ -69,6 +64,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val GEOHASH = "geohash"
         val ID = "id"
         val LAST_MESSAGE = "lastMessage"
+        val LAST_GEO_UPDATE = "lastGeoUpdate"
         val LATITUDE = "lat"
         val LOCATION = "loc"
         val LONGITUDE = "lon"
@@ -95,6 +91,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     fun getUsers(): Observable<List<User>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.USERS),
             DataSnapshotMapper.listOf(User::class.java))
+    }
+
+    fun getNearbyUsers(geoHash: String): Observable<List<Object>> {
+        return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.GEOHASHES).child(geoHash),
+                DataSnapshotMapper.listOf(Object::class.java))
     }
 
     fun getUser(userId:String): Observable<User> {
@@ -176,8 +177,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Timber.d("Location updated")
         }
 
+        val completionListener2 = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            Timber.d("Geohash updated")
+        }
+
         if((location != null) && (currentUserManager.getUserId() != null)) {
-            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 12)
+            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 6)
             val v = mutableMapOf<String, Any>()
             v.put(Child.LATITUDE, location.latitude)
             v.put(Child.LONGITUDE, location.longitude)
@@ -187,6 +192,19 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                     .child(currentUserManager.getUserId())
                     .child(Child.LOCATION)
                     .updateChildren(v, completionListener)
+
+            val v2 = mutableMapOf<String, Any>()
+            val currentUser = currentUserManager.getUser()
+            v2.put(Child.NAME, currentUser.name)
+            v2.put(Child.PIC, currentUser.pic)
+            v2.put(Child.EMAIL, currentUser.email)
+            v2.put(Child.AGE, currentUser.age)
+            v2.put(Child.LAST_GEO_UPDATE, ServerValue.TIMESTAMP)
+            firebaseDatabase.getReference(Reference.GEOHASHES)
+                    .child(geoHash)
+                    .push()
+                    .setValue(v2, completionListener2)
+
         }
     }
 
@@ -223,7 +241,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Chat::class.java)
     }
 
-    fun createNewRoom(otherUser:User): Chat {
+    fun createNewRoom(otherUser: NearbyUser): Chat {
         val summarizedCurrentUser: SummarizedUser = SummarizedUser(currentUserManager.getUser().name,
             currentUserManager.getUser().pic)
         val summarizedOtherUser:SummarizedUser = SummarizedUser(otherUser.name, otherUser.pic)
@@ -293,8 +311,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun registerNewUsersChildEventListener(listener: ChildEventListener): Unit {
-        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
-                , listener, "nearbyUsers")
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.GEOHASHES),
+                listener, "nearbyUsers")
     }
 
     fun messageDelivered(chatId: String): Unit {

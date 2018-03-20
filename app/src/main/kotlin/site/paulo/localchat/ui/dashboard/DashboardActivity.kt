@@ -105,8 +105,8 @@ class DashboardActivity: BaseActivity() {
         val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         when (permissionCheck) {
             PackageManager.PERMISSION_GRANTED -> {
-                var userLocationManager: UserLocationManager = UserLocationManager(dataManager)
-                userLocationManager.start(this)
+                var userLocationManager: UserLocationManager = UserLocationManager.instance
+                userLocationManager.init(this, dataManager)
                 //TODO update location in datebase after permission granted
             }
             PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)

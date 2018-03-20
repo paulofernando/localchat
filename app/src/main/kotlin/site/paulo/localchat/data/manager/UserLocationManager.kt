@@ -27,15 +27,30 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserLocationManager
-@Inject
-constructor(private val dataManager: DataManager) {
+class UserLocationManager {
 
     var locationManager: LocationManager? = null
+    var dataManager: DataManager? = null
+    var context: Context? = null
 
-    fun start(context: Context) {
-        locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+    private object Holder { val INSTANCE = UserLocationManager() }
+
+    companion object {
+        val instance: UserLocationManager by lazy { Holder.INSTANCE }
+    }
+
+    fun init(context: Context, dataManager: DataManager) {
+        this.context = context
+        this.dataManager = dataManager
+    }
+
+    fun start() {
+        if(context != null && dataManager != null) {
+            locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+        } else {
+            Timber.e("Context or DataManager not initiliazed")
+        }
     }
 
     fun stop() {
@@ -45,7 +60,7 @@ constructor(private val dataManager: DataManager) {
     var locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Timber.d("Location: lon -> ${location.longitude} | lat -> ${location.latitude}")
-            dataManager.updateUserLocation(location)
+            dataManager?.updateUserLocation(location)
             Timber.d("Location has been sent to server")
             stop()
         }

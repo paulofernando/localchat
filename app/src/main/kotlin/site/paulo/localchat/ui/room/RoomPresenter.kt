@@ -30,7 +30,7 @@ import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.model.firebase.NearbyUser
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -120,7 +120,7 @@ constructor(private val dataManager: DataManager,
         }
     }
 
-    override fun createNewRoom(otherUser: User): Chat {
+    override fun createNewRoom(otherUser: NearbyUser): Chat {
         return dataManager.createNewRoom(otherUser)
     }
 
