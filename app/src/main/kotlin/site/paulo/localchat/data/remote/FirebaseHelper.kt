@@ -181,8 +181,20 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Timber.d("Geohash updated")
         }
 
+        val removeListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            Timber.d("Removed from old area")
+        }
+
         if((location != null) && (currentUserManager.getUserId() != null)) {
             val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 6)
+            val currentUser = currentUserManager.getUser()
+
+            if(!geoHash.equals(currentUser.geohash))
+                firebaseDatabase.getReference(Reference.GEOHASHES)
+                        .child(currentUser.geohash)
+                        .child(currentUserManager.getUserId())
+                        .removeValue(removeListener)
+
             val v = mutableMapOf<String, Any>()
             v.put(Child.LATITUDE, location.latitude)
             v.put(Child.LONGITUDE, location.longitude)
@@ -190,11 +202,9 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             v.put(Child.GEOHASH, geoHash)
             firebaseDatabase.getReference(Reference.USERS)
                     .child(currentUserManager.getUserId())
-                    .child(Child.LOCATION)
                     .updateChildren(v, completionListener)
 
             val v2 = mutableMapOf<String, Any>()
-            val currentUser = currentUserManager.getUser()
             v2.put(Child.NAME, currentUser.name)
             v2.put(Child.PIC, currentUser.pic)
             v2.put(Child.EMAIL, currentUser.email)
@@ -202,9 +212,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             v2.put(Child.LAST_GEO_UPDATE, ServerValue.TIMESTAMP)
             firebaseDatabase.getReference(Reference.GEOHASHES)
                     .child(geoHash)
-                    .push()
-                    .setValue(v2, completionListener2)
-
+                    .child(currentUserManager.getUserId())
+                    .updateChildren(v2, completionListener2)
         }
     }
 

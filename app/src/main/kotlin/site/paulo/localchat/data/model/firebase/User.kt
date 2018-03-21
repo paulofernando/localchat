@@ -14,6 +14,7 @@ data class User(
     val acc: Long = 0L,
     val lat: Long = 0L,
     val lon: Long = 0L,
+    val geohash: String = "",
     val chats: MutableMap<String, String> = mutableMapOf<String, String>())
     : PaperParcelable {
 
