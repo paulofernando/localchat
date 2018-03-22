@@ -16,28 +16,29 @@
 
 package site.paulo.localchat.ui.dashboard
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
+import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.ui.about.AboutActivity
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.settings.SettingsActivity
 import javax.inject.Inject
-
 
 class DashboardActivity: BaseActivity() {
 
@@ -62,6 +63,9 @@ class DashboardActivity: BaseActivity() {
 
     @Inject
     lateinit var presenter: DashboardPresenter
+
+    @Inject
+    lateinit var dataManager: DataManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,11 +93,24 @@ class DashboardActivity: BaseActivity() {
         tabLayout!!.setupWithViewPager(mViewPager)
         //setupTabIcons()
 
+        startUserLocationManager()
     }
 
     private fun setupTabIcons() {
         tabLayout?.getTabAt(0)?.setIcon(tabIcons[0])
         tabLayout?.getTabAt(1)?.setIcon(tabIcons[1])
+    }
+
+    fun startUserLocationManager() {
+        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        when (permissionCheck) {
+            PackageManager.PERMISSION_GRANTED -> {
+                var userLocationManager: UserLocationManager = UserLocationManager.instance
+                userLocationManager.init(this, dataManager)
+                //TODO update location in datebase after permission granted
+            }
+            PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
     }
 
 

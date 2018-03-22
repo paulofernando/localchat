@@ -89,38 +89,29 @@ dependencies {
     final PAPERPARCEL_VERSION = '1.0.1'
     final RETROFIT_VERSION = '2.1.0'
     final HAMCREST_VERSION = '1.3'
-
     def daggerCompiler = "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     def jUnit = "junit:junit:4.12"
     def mockito = "org.mockito:mockito-core:2.2.1"
     def mockitoKotlin = "com.nhaarman:mockito-kotlin:0.8.0"
-
     // App Dependencies
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt daggerCompiler
-
     compile "org.jetbrains.anko:anko-sdk15:$anko_version"
-
     compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
-
     compile "com.github.grandstaish.paperparcel:paperparcel:$PAPERPARCEL_VERSION"
     compile "com.github.grandstaish.paperparcel:paperparcel-kotlin:$PAPERPARCEL_VERSION"
     kapt "com.github.grandstaish.paperparcel:compiler:$PAPERPARCEL_VERSION"
-
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
-
     // Unit tests dependencies
     testCompile jUnit
     testCompile mockito
@@ -128,7 +119,6 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-core:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-library:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-integration:$HAMCREST_VERSION"
-
     // Instrumentation test dependencies
     androidTestCompile jUnit
     androidTestCompile mockito
@@ -136,7 +126,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxkotlin:0.60.0'
@@ -152,8 +141,10 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.kelvinapps:rxfirebase:0.0.15'
+    compile 'com.xw.repo:bubbleseekbar:3.14-lite'
     testCompile 'org.robolectric:robolectric:3.1.4'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile files('lib/geohash-1.3.0.jar')
 }
 
 kapt {

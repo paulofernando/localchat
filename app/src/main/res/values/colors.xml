@@ -20,6 +20,8 @@
 
     <color name="color_profile_information_component">#ffffff</color>
     <color name="color_edit_text_background">#ffffff</color>
+    <color name="color_distance_slider_track">#b6c2da</color>
+    <color name="color_distance_slider_text">#ffffff</color>
 
     <!-- texts -->
     <color name="color_title_text">#FFFFFF</color>

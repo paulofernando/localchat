@@ -16,16 +16,15 @@
 
 package site.paulo.localchat.data
 
+import android.location.Location
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
-import com.kelvinapps.rxfirebase.RxFirebaseChildEvent
-import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import rx.Observable
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
 import javax.inject.Inject
@@ -37,6 +36,10 @@ class DataManager
 
     fun getUsers(): Observable<List<User>> {
         return firebaseHelper.getUsers()
+    }
+
+    fun getNearbyUsers(geoHash: String): Observable<List<Object>> {
+        return firebaseHelper.getNearbyUsers(geoHash)
     }
 
     fun getUser(userId: String): Observable<User> {
@@ -55,6 +58,10 @@ class DataManager
         firebaseHelper.updateToken(url)
     }
 
+    fun updateUserLocation(location: Location?): Unit {
+        firebaseHelper.updateUserLocation(location)
+    }
+
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
         return firebaseHelper.authenticateUser(email, password)
     }
@@ -68,7 +75,7 @@ class DataManager
         return firebaseHelper.getChatRoom(chatId)
     }
 
-    fun createNewRoom(otherUser: User): Chat {
+    fun createNewRoom(otherUser: NearbyUser): Chat {
         return firebaseHelper.createNewRoom(otherUser)
     }
 

@@ -17,6 +17,8 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import android.os.Bundle
+import android.os.Handler
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -25,8 +27,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import site.paulo.localchat.R
-import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.user.UserNearbyPresenter
 import site.paulo.localchat.ui.user.UsersNearbyAdapter
@@ -43,6 +46,9 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     @BindView(R.id.usersNearbyList)
     lateinit var usersNearbyList: RecyclerView
 
+    @BindView(R.id.usersNearbySwipeLayout)
+    lateinit var usersNearbySwipeLayout: SwipeRefreshLayout
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
@@ -53,24 +59,43 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         usersNearbyList.adapter = usersAdapter
         usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
 
-        presenter.loadNearbyUsers()
-        presenter.listenNearbyUsers()
+        presenter.loadUsers()
+
+        usersNearbySwipeLayout.setOnRefreshListener(object: SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                Handler().postDelayed(Runnable {
+                    usersNearbySwipeLayout.setRefreshing(false)
+                }, 2000)
+            }
+
+        })
 
         return rootView
     }
 
-    override fun showNearbyUsers(users: List<User>) {
-        usersAdapter.users = users.toMutableList()
+    override fun showNearbyUsers(nearbyUser: List<NearbyUser>) {
+        usersAdapter.nearbyUsers = nearbyUser.toMutableList()
         usersAdapter.notifyDataSetChanged()
     }
 
-    override fun showNearbyUser(user: User) {
-        usersAdapter.users.add(user)
-        usersAdapter.notifyDataSetChanged()
+    override fun showNearbyUser(nearbyUser: NearbyUser) {
+        val foundUser = usersAdapter.nearbyUsers.any { it.email.equals(nearbyUser.email) }
+        if(!foundUser) {
+            usersAdapter.nearbyUsers.add(nearbyUser)
+            usersAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun removeNearbyUser(nearbyUser: NearbyUser) {
+        val foundUsers = usersAdapter.nearbyUsers.filter { it.email.equals(nearbyUser.email) }
+        if(!foundUsers.isEmpty()) {
+            usersAdapter.nearbyUsers.removeAll(foundUsers)
+            usersAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun showNearbyUsersEmpty() {
-        usersAdapter.users = mutableListOf<User>()
+        usersAdapter.nearbyUsers = mutableListOf<NearbyUser>()
         usersAdapter.notifyDataSetChanged()
         Toast.makeText(activity, R.string.empty_nearby_users, Toast.LENGTH_LONG).show()
     }

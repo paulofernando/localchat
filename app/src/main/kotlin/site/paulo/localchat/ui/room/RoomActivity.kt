@@ -28,10 +28,7 @@ import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.firebase.Chat
-import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.SummarizedUser
-import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.model.firebase.*
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.utils.CircleTransform
 import site.paulo.localchat.ui.utils.Utils
@@ -55,7 +52,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     var emptyRoom: Boolean = false
     var chat: Chat? = null
-    var otherUser: User? = null
+    var otherUser: NearbyUser? = null
     var chatId: String? = null
 
 
@@ -68,7 +65,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         this.chat = intent.getParcelableExtra<Chat>("chat") //just passed from chat fragment
 
         this.chatId = intent.getStringExtra("chatId") //just passed from nearby users fragment
-        this.otherUser = intent.getParcelableExtra<User>("otherUser") //just passed from nearby users fragment
+        this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
         messagesRoomList.layoutManager = LinearLayoutManager(this)
