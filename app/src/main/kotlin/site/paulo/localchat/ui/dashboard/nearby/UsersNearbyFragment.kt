@@ -60,7 +60,6 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
 
         presenter.loadUsers()
-        presenter.listenNearbyUsers()
 
         usersNearbySwipeLayout.setOnRefreshListener(object: SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
@@ -75,17 +74,28 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     }
 
     override fun showNearbyUsers(nearbyUser: List<NearbyUser>) {
-        usersAdapter.nearbyUser = nearbyUser.toMutableList()
+        usersAdapter.nearbyUsers = nearbyUser.toMutableList()
         usersAdapter.notifyDataSetChanged()
     }
 
     override fun showNearbyUser(nearbyUser: NearbyUser) {
-        usersAdapter.nearbyUser.add(nearbyUser)
-        usersAdapter.notifyDataSetChanged()
+        val foundUser = usersAdapter.nearbyUsers.any { it.email.equals(nearbyUser.email) }
+        if(!foundUser) {
+            usersAdapter.nearbyUsers.add(nearbyUser)
+            usersAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun removeNearbyUser(nearbyUser: NearbyUser) {
+        val foundUsers = usersAdapter.nearbyUsers.filter { it.email.equals(nearbyUser.email) }
+        if(!foundUsers.isEmpty()) {
+            usersAdapter.nearbyUsers.removeAll(foundUsers)
+            usersAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun showNearbyUsersEmpty() {
-        usersAdapter.nearbyUser = mutableListOf<NearbyUser>()
+        usersAdapter.nearbyUsers = mutableListOf<NearbyUser>()
         usersAdapter.notifyDataSetChanged()
         Toast.makeText(activity, R.string.empty_nearby_users, Toast.LENGTH_LONG).show()
     }

@@ -37,7 +37,7 @@ class UsersNearbyAdapter
 @Inject
 constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
-    var nearbyUser = mutableListOf<NearbyUser>()
+    var nearbyUsers = mutableListOf<NearbyUser>()
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
@@ -49,11 +49,11 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: UsersNearbyAdapter.UserViewHolder, position: Int) {
-        holder.bindUser(nearbyUser[position])
+        holder.bindUser(nearbyUsers[position])
     }
 
     override fun getItemCount(): Int {
-        return nearbyUser.size
+        return nearbyUsers.size
     }
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

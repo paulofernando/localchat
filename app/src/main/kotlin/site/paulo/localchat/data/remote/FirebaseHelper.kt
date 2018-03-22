@@ -320,7 +320,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun registerNewUsersChildEventListener(listener: ChildEventListener): Unit {
-        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.GEOHASHES),
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.GEOHASHES).
+                child(currentUserManager.getUser().geohash),
                 listener, "nearbyUsers")
     }
 

@@ -25,6 +25,7 @@ object UsersNearbyContract {
     interface View : MvpView {
         fun showNearbyUsers(nearbyUser: List<NearbyUser>)
         fun showNearbyUser(nearbyUser: NearbyUser)
+        fun removeNearbyUser(nearbyUser: NearbyUser)
         fun showNearbyUsersEmpty()
         fun showError()
     }
