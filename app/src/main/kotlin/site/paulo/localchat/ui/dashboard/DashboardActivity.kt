@@ -107,7 +107,8 @@ class DashboardActivity: BaseActivity() {
             PackageManager.PERMISSION_GRANTED -> {
                 var userLocationManager: UserLocationManager = UserLocationManager.instance
                 userLocationManager.init(this, dataManager)
-                //TODO update location in datebase after permission granted
+                userLocationManager.start()
+                //TODO update location in database after permission granted
             }
             PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
