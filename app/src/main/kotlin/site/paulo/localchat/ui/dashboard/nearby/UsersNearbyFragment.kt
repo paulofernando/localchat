@@ -65,6 +65,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
             override fun onRefresh() {
                 Handler().postDelayed(Runnable {
                     usersNearbySwipeLayout.setRefreshing(false)
+                    //TODO
                 }, 2000)
             }
 
