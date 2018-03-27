@@ -63,10 +63,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
 
         usersNearbySwipeLayout.setOnRefreshListener(object: SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
-                Handler().postDelayed(Runnable {
-                    usersNearbySwipeLayout.setRefreshing(false)
-                    //TODO
-                }, 2000)
+                presenter.loadUsers({usersNearbySwipeLayout.setRefreshing(false)})
             }
 
         })

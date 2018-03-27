@@ -31,7 +31,7 @@ object UsersNearbyContract {
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {
-        abstract fun loadUsers()
+        abstract fun loadUsers(callback: (() -> Unit)? = null)
         abstract fun listenNearbyUsers()
     }
 }

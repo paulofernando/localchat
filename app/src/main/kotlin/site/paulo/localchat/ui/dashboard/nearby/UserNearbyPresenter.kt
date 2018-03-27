@@ -41,7 +41,7 @@ class UserNearbyPresenter
 constructor(private val dataManager: DataManager, private val firebaseAuth: FirebaseAuth,
     private val currentUser: CurrentUserManager) : UsersNearbyContract.Presenter() {
 
-    override fun loadUsers() {
+    override fun loadUsers(callback: (() -> Unit)?) {
         //TODO change this method to listen for new user.
         dataManager.getUsers()
             .observeOn(AndroidSchedulers.mainThread())
@@ -57,6 +57,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                                 //loaded current user data
                                 currentUser.setUser(user)
                                 UserLocationManager.instance.start({listenNearbyUsers()})
+                                callback?.invoke()
                                 break
                             }
                         }
