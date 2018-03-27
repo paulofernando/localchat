@@ -67,6 +67,10 @@ class DashboardActivity: BaseActivity() {
     @Inject
     lateinit var dataManager: DataManager
 
+    companion object {
+        const val REQUEST_PERMISSION = 1
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -107,9 +111,17 @@ class DashboardActivity: BaseActivity() {
             PackageManager.PERMISSION_GRANTED -> {
                 var userLocationManager: UserLocationManager = UserLocationManager.instance
                 userLocationManager.init(this, dataManager)
-                //TODO update location in datebase after permission granted
             }
             PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_PERMISSION ->  {
+                var userLocationManager: UserLocationManager = UserLocationManager.instance
+                userLocationManager.init(this, dataManager)
+            }
         }
     }
 

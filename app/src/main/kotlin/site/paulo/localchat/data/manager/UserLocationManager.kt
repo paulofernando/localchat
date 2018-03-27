@@ -32,6 +32,7 @@ class UserLocationManager {
     var locationManager: LocationManager? = null
     var dataManager: DataManager? = null
     var context: Context? = null
+    var callNext: (() -> Unit)? = null
 
     private object Holder { val INSTANCE = UserLocationManager() }
 
@@ -44,8 +45,9 @@ class UserLocationManager {
         this.dataManager = dataManager
     }
 
-    fun start() {
+    fun start(callNext: (() -> Unit)? = null) {
         if(context != null && dataManager != null) {
+            this.callNext = callNext
             locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
         } else {
@@ -60,7 +62,7 @@ class UserLocationManager {
     var locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Timber.d("Location: lon -> ${location.longitude} | lat -> ${location.latitude}")
-            dataManager?.updateUserLocation(location)
+            dataManager?.updateUserLocation(location, callNext)
             Timber.d("Location has been sent to server")
             stop()
         }

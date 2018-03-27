@@ -45,6 +45,7 @@ import site.paulo.localchat.data.model.firebase.*
 @Singleton
 class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     val currentUserManager: CurrentUserManager,
+    val currentUser: CurrentUserManager,
     val firebaseAuth: FirebaseAuth) {
 
     object Reference {
@@ -112,7 +113,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         value.put(Child.PIC, "https://api.adorable.io/avatars/240/" + Utils.getFirebaseId(user.email) + ".png")
 
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
-            Timber.e("User " + user.email + "registered")
+            Timber.e("User " + user.email + " registered")
         }
         firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(value, completionListener)
     }
@@ -172,7 +173,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         }
     }
 
-    fun updateUserLocation(location: Location?): Unit {
+    fun updateUserLocation(location: Location?, callNext:(() -> Unit)? = null): Unit {
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Location updated")
         }
@@ -187,6 +188,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
         if((location != null) && (currentUserManager.getUserId() != null)) {
             val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 6)
+            currentUserManager.setGeohash(geoHash)
             val currentUser = currentUserManager.getUser()
 
             if(!geoHash.equals(currentUser.geohash))
@@ -214,6 +216,9 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                     .child(geoHash)
                     .child(currentUserManager.getUserId())
                     .updateChildren(v2, completionListener2)
+
+
+            callNext?.invoke()
         }
     }
 

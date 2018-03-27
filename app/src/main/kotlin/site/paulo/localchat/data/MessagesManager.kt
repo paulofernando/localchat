@@ -49,7 +49,6 @@ class MessagesManager {
             } catch (e: IOException) {
                 Timber.e(e.message)
             }
-            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId, userId)}")
         }
 
         fun readMessages(chatId: String, userId: String) {
@@ -58,7 +57,6 @@ class MessagesManager {
             } catch (e: IOException) {
                 Timber.e(e.message)
             }
-            Timber.i("Unread messages in $chatId -> ${getUnreadMessages(chatId, userId)}")
         }
 
         fun getUnreadMessages(chatId: String, userId: String): Int {

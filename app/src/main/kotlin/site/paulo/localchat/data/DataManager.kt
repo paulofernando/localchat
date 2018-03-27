@@ -58,8 +58,8 @@ class DataManager
         firebaseHelper.updateToken(url)
     }
 
-    fun updateUserLocation(location: Location?): Unit {
-        firebaseHelper.updateUserLocation(location)
+    fun updateUserLocation(location: Location?, callNext:(() -> Unit)? = null): Unit {
+        firebaseHelper.updateUserLocation(location, callNext)
     }
 
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
