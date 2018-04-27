@@ -56,10 +56,11 @@ class DashboardActivity: BaseActivity() {
      * The [ViewPager] that will host the section contents.
      */
     private var mViewPager: ViewPager? = null
-
     private var tabLayout: TabLayout? = null
-
     private val tabIcons = intArrayOf(R.drawable.nearby, R.drawable.chat)
+
+    private val usersNearbyFragment: UsersNearbyFragment = UsersNearbyFragment()
+    private val chatFragment: ChatFragment = ChatFragment()
 
     @Inject
     lateinit var presenter: DashboardPresenter
@@ -121,6 +122,7 @@ class DashboardActivity: BaseActivity() {
             REQUEST_PERMISSION ->  {
                 var userLocationManager: UserLocationManager = UserLocationManager.instance
                 userLocationManager.init(this, dataManager)
+                usersNearbyFragment?.presenter?.loadUsers()
             }
         }
     }
@@ -196,9 +198,8 @@ class DashboardActivity: BaseActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return if(position == 0) UsersNearbyFragment()
-                   else ChatFragment()
-            //else return PlaceholderFragment.newInstance(position + 1)
+            return if (position == 0) usersNearbyFragment
+                   else chatFragment
         }
 
         override fun getCount(): Int {
