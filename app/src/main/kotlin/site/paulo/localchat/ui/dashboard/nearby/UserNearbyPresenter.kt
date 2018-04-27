@@ -57,13 +57,13 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                                 //loaded current user data
                                 currentUser.setUser(user)
                                 UserLocationManager.instance.start({listenNearbyUsers()})
-                                callback?.invoke()
                                 break
                             }
                         }
                     }
-                }
-                .onError {
+                }.onCompleted {
+                    callback?.invoke()
+                }.onError {
                     Timber.e(it, "There was an error loading the users.")
                     view.showError()
                 }
