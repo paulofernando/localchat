@@ -37,7 +37,7 @@ open class BaseFragment : Fragment() {
         val configPersistentComponent = BaseFragment.Companion.componentsMap.getOrPut(activityId, {
             Timber.i("Creating new ConfigPersistentComponent id=%d", activityId)
 
-            val component = (activity.application.applicationContext as BoilerplateApplication).applicationComponent
+            val component = (activity?.application?.applicationContext as BoilerplateApplication).applicationComponent
 
             DaggerConfigPersistentComponent.builder()
                 .applicationComponent(component)
@@ -53,7 +53,7 @@ open class BaseFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (!activity.isChangingConfigurations) {
+        if (!activity!!.isChangingConfigurations) {
             Timber.i("Clearing ConfigPersistentComponent id=%d", activityId)
             BaseFragment.Companion.componentsMap.remove(activityId)
         }

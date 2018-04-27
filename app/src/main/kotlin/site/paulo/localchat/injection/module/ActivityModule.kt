@@ -1,25 +1,24 @@
 package site.paulo.localchat.injection.module
 
-import android.app.Activity
-import android.content.Context
+import android.support.v4.app.FragmentActivity
 import dagger.Module
 import dagger.Provides
 import site.paulo.localchat.injection.ActivityContext
 import site.paulo.localchat.injection.PerActivity
 
 @Module
-class ActivityModule(private val activity: Activity) {
+class ActivityModule(private val activity: FragmentActivity?) {
 
     @Provides
     @PerActivity
-    internal fun provideActivity(): Activity {
+    internal fun provideActivity(): FragmentActivity? {
         return activity
     }
 
     @Provides
     @PerActivity
     @ActivityContext
-    internal fun providesContext(): Context {
+    internal fun providesContext(): FragmentActivity? {
         return activity
     }
 }

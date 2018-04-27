@@ -98,8 +98,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         spinnerDialog?.cancel()
 
         alert(R.string.auth_failed) {
-            title(R.string.auth_failed_title)
-            cancellable(true)
+            title = R.string.auth_failed_title.toString()
         }.show()
 
     }

@@ -57,8 +57,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: RecyclerView
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
         presenter.attachView(this)
         val rootView = inflater!!.inflate(R.layout.fragment_dashboard_chats, container, false)
