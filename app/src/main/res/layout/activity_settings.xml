@@ -42,48 +42,4 @@
             android:layout_toRightOf="@id/profileSettingsImg"/>
 
     </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/settingsContainer"
-        android:layout_width="match_parent"
-        android:layout_margin="@dimen/spacing_large"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/distanceSettingsLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lb_distance"/>
-
-        <TextView
-            android:id="@+id/metersSettingsLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lb_meters"
-            android:layout_alignParentRight="true"/>
-
-        <com.xw.repo.BubbleSeekBar
-            android:id="@+id/distanceSettingsSeekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:bsb_bubble_color="@color/colorAccent"
-            app:bsb_bubble_text_color="@color/color_distance_slider_text"
-            app:bsb_min="100"
-            app:bsb_max="500"
-            app:bsb_progress="0"
-            app:bsb_second_track_color="@color/colorAccent"
-            app:bsb_section_count="4"
-            app:bsb_section_text_position="bottom_sides"
-            app:bsb_show_section_mark="true"
-            app:bsb_show_section_text="true"
-            app:bsb_seek_step_section="true"
-            app:bsb_show_thumb_text="true"
-            app:bsb_track_color="@color/color_distance_slider_track"
-            android:layout_toRightOf="@id/distanceSettingsLabel"
-            android:layout_toLeftOf="@id/metersSettingsLabel"/>
-
-
-    </RelativeLayout>
-
 </LinearLayout>
