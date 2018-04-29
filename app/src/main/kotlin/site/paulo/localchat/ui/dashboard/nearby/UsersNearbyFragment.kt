@@ -49,8 +49,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     @BindView(R.id.usersNearbySwipeLayout)
     lateinit var usersNearbySwipeLayout: SwipeRefreshLayout
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activityComponent.inject(this)
         presenter.attachView(this)
         val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)

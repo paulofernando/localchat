@@ -76,7 +76,7 @@ constructor(private val dataManager: DataManager,
                 .onNext {
                     val childEventListener = object : ChildEventListener {
                         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)
+                            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
                             view.messageReceived(chatMessage, chatId)
                             if((loaded[chatId] != null) && loaded.get(chatId)!!) {//just registered message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
@@ -95,7 +95,7 @@ constructor(private val dataManager: DataManager,
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             loaded[it.id] = true
                             Timber.i("All data loaded from chat ${it.id}")
-                            val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)
+                            val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)!!
                             if(chatMessage.owner != currentUserManager.getUserId())
                                 if(!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
                                     currentUserManager.getUser().chats.put(chatMessage.owner, it.id)

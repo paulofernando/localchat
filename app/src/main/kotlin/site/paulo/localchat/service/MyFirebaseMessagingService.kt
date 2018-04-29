@@ -55,7 +55,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // Check if message contains a notification payload.
         if (remoteMessage.notification != null) {
-            Timber.d("Message Notification Body: " + remoteMessage.notification.body)
+            Timber.d("Message Notification Body: " + remoteMessage.notification!!.body)
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
