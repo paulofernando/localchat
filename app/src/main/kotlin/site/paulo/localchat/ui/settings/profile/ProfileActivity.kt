@@ -155,7 +155,7 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
                 loadingProfileProgress.visibility = View.INVISIBLE
             }
 
-            override fun onError() { }
+            override fun onError(e: Exception) { }
         }
 
         profileProfileImg.loadUrlCircle(url, callback) {
