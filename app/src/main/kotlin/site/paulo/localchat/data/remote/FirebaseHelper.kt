@@ -187,7 +187,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         }
 
         if((location != null) && (currentUserManager.getUserId() != null)) {
-            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 6)
+            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 5)
             currentUserManager.setGeohash(geoHash)
             val currentUser = currentUserManager.getUser()
 

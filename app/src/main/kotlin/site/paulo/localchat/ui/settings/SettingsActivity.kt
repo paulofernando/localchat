@@ -91,6 +91,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
             }
         //}
         nameSettingsTxt.text = user.name
+        locationSettingsTxt.text = user.geohash
     }
 
 }
