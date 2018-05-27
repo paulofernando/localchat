@@ -39,7 +39,7 @@
             android:name=".ui.dashboard.DashboardActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.empty.MainEmptyActivity"
             android:theme="@android:style/Theme.NoDisplay">
@@ -61,7 +61,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.about.AboutActivity"></activity>
+        <activity android:name=".ui.about.AboutActivity" />
     </application>
 
 </manifest>
