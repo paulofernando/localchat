@@ -56,6 +56,7 @@
 
     <string name="profile_image_name">profile_image_name</string>
     <string name="user_name">user_name</string>
+    <string name="user_last_location">last_location</string>
     <string name="user_profile_image">user_profile_image</string>
 
     <string name="number_minimum_chars_user_name" translatable="false"> 3 </string>

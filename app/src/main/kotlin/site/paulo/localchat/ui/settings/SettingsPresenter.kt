@@ -39,7 +39,7 @@ constructor(private val currentUserManager: CurrentUserManager,
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {}
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {
-                Timber.i("registerProfileListener:", dataSnapshot.getValue(User::class.java))
+                Timber.i("registerProfileListener: %s", dataSnapshot.getValue(User::class.java))
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}

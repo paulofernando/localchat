@@ -30,10 +30,10 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     override fun signIn(email: String, password: String) {
         dataManager.authenticateUser(email, password)
             .subscribe({
-                Timber.i("signIn", "signInWithEmail:onComplete")
+                Timber.i("signIn: signInWithEmail:onComplete")
                 view.showSuccessFullSignIn()
             }, {
-                Timber.e("signIn", "signInWithEmail:failed")
+                Timber.e("signIn: signInWithEmail:failed")
                 view.showFailSignIn()
             })
     }
@@ -41,7 +41,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     override fun isAuthenticated() {
         firebaseAuth.addAuthStateListener { firebaseAuth ->
             if (firebaseAuth.currentUser != null) {
-                Log.d("isAuthenticated", "onAuthStateChanged:signed_in:" + firebaseAuth.currentUser?.uid)
+                Timber.d("onAuthStateChanged:signed_in: %s", firebaseAuth.currentUser?.uid)
                 try {
                     view.showSuccessFullSignIn()
                 } catch (e: MvpViewNotAttachedException) {

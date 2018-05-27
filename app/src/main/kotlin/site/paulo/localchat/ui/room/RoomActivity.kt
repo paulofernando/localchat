@@ -143,7 +143,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     override fun messageSent(message: ChatMessage) {
-        Timber.i("Message sent: " + message.message)
+        Timber.i("Message sent: %s", message.message)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

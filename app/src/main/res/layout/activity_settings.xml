@@ -42,4 +42,33 @@
             android:layout_toRightOf="@id/profileSettingsImg"/>
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/component_profile_data_height"
+        android:background="@color/color_profile_information_component"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:paddingLeft="@dimen/spacing_large"
+        android:paddingRight="@dimen/spacing_large">
+
+        <ImageView
+            android:id="@+id/locationSettingsIcon"
+            android:layout_width="@dimen/component_profile_icon"
+            android:layout_height="@dimen/component_profile_icon"
+            android:src="@drawable/location"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/locationSettingsTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            tools:text="email"
+            android:layout_alignBottom="@+id/locationSettingsIcon"
+            android:layout_toEndOf="@+id/locationSettingsIcon"
+            android:layout_marginLeft="@dimen/spacing_large"/>
+
+    </RelativeLayout>
+
+
 </LinearLayout>

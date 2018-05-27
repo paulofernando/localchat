@@ -29,6 +29,7 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import com.squareup.picasso.Callback
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.activity_settings.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
@@ -45,6 +46,7 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     internal val RC_PHOTO_PICKER = 1
 
     lateinit var user: User
+    lateinit var lastLocation: String
 
     var lastValue: String? = null
 

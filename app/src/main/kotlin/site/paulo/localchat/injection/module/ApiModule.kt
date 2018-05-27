@@ -39,7 +39,7 @@ class ApiModule {
             //.baseUrl("http://localhost:1337/user/")
             .build()
 
-        Timber.i("ChatGeoService base URL: " + retrofit.baseUrl());
+        Timber.i("ChatGeoService base URL: %s", retrofit.baseUrl());
 
         return retrofit.create(ChatGeoService::class.java)
     }
