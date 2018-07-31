@@ -7,13 +7,9 @@ Libraries and tools included:
 - [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
 - [Retrofit 2](http://square.github.io/retrofit/)
 - [Dagger 2](http://google.github.io/dagger/)
-- [SqlBrite](https://github.com/square/sqlbrite)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber](https://github.com/JakeWharton/timber)
 - [Picasso](https://github.com/square/picasso)
-- Functional tests with [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/index.html)
-- [Robolectric](http://robolectric.org/)
-- [Mockito](http://mockito.org/)
 
 ## How to run
 
