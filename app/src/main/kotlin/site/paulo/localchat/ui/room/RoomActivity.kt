@@ -58,46 +58,50 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
-        presenter.attachView(this)
-        setContentView(R.layout.activity_room)
+        setupActivity()
 
-        this.chat = intent.getParcelableExtra<Chat>("chat") //just passed from chat fragment
-
-        this.chatId = intent.getStringExtra("chatId") //just passed from nearby users fragment
+        this.chat = intent.getParcelableExtra<Chat>("chat") //only passed from chat fragment
+        this.chatId = intent.getStringExtra("chatId") //only passed from nearby users fragment
         this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
         messagesRoomList.layoutManager = LinearLayoutManager(this)
         (messagesRoomList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
 
-
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
             emptyRoom = true
         } else {
-            if (chat == null) //just have the chat id
+            if (chat == null) //only have the chat id
                 presenter.getChatData(chatId!!)
             else showChat(chat!!)
         }
 
         sendRoomBtn.setOnClickListener {
             if (!emptyRoom)
-                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageRoomTxt.text.toString()), chat?.id ?: chatId!!)
+                presenter.sendMessage(
+                        ChatMessage(currentUserManager.getUserId(), messageRoomTxt.text.toString()),
+                        chat?.id ?: chatId!!)
             else {
                 //first message between users, creates a room before send it
                 chat = presenter.createNewRoom(this.otherUser!!)
                 chatId = chat?.id
-                presenter.sendMessage(ChatMessage(currentUserManager.getUserId(),
-                        messageRoomTxt.text.toString()), chat?.id ?: chatId!!)
+                presenter.sendMessage(
+                        ChatMessage(currentUserManager.getUserId(), messageRoomTxt.text.toString()),
+                        chat?.id ?: chatId!!)
                 presenter.registerMessagesListener(chat?.id ?: chatId!!)
                 emptyRoom = false
             }
         }
+
         MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
         configureToolbar()
+    }
 
+    private fun setupActivity() {
+        activityComponent.inject(this)
+        presenter.attachView(this)
+        setContentView(R.layout.activity_room)
     }
 
     override fun showChat(chat: Chat) {
@@ -192,7 +196,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
             }
         } else if (this.chat != null) {
             var otherUserIndex: Int = 0
-            if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
+
+            if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0)
+                otherUserIndex = 1
+
             var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
             chatId = (chat as Chat)?.id
 

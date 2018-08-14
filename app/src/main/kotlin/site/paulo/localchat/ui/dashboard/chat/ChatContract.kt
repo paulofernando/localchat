@@ -36,7 +36,7 @@ object ChatContract {
         abstract fun loadChatRooms(userId: String)
         abstract fun loadChatRoom(chatId: String)
         /** Listen to new chats the current user is added */
-        abstract fun listenNewChatRooms(chatId: String) //TODO remove chatId param when get user infonration before open the dashboard
+        abstract fun listenNewChatRooms(chatId: String) //TODO remove chatId param when get user information before open the dashboard
         abstract fun loadProfilePicture(chatList: List<Chat>)
     }
 }
