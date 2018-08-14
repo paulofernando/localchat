@@ -74,8 +74,7 @@ class DashboardActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
-        activityComponent.inject(this)
+        setupActivity()
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val params = toolbar.layoutParams as AppBarLayout.LayoutParams
@@ -99,6 +98,11 @@ class DashboardActivity: BaseActivity() {
         //setupTabIcons()
 
         startUserLocationManager()
+    }
+
+    fun setupActivity() {
+        setContentView(R.layout.activity_dashboard)
+        activityComponent.inject(this)
     }
 
     private fun setupTabIcons() {

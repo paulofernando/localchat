@@ -37,19 +37,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
-        presenter.attachView(this)
-
-        if (Build.VERSION.SDK_INT < 16) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        } else {
-            val decorView = window.decorView
-            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
-            decorView.systemUiVisibility = uiOptions
-        }
-
-        setContentView(R.layout.activity_sign_in)
+        setupActivity()
 
         loginSignInBtn.setOnClickListener {
             if(validate()) presenter.signIn(emailSignInTxt.text.toString(), passwordSignInTxt.text.toString())
@@ -70,6 +58,22 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         }
 
         presenter.isAuthenticated() //if authenticated, sign in
+    }
+
+    private fun setupActivity() {
+        activityComponent.inject(this)
+        presenter.attachView(this)
+
+        if (Build.VERSION.SDK_INT < 16) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            val decorView = window.decorView
+            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
+            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+
+        setContentView(R.layout.activity_sign_in)
     }
 
     fun validate(): Boolean {

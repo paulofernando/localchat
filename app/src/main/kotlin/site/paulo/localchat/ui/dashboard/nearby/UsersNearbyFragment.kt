@@ -50,10 +50,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     lateinit var usersNearbySwipeLayout: SwipeRefreshLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        activityComponent.inject(this)
-        presenter.attachView(this)
-        val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
-        ButterKnife.bind(this, rootView)
+        val rootView = setupFragment(inflater, container)
 
         usersNearbyList.adapter = usersAdapter
         usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
@@ -68,6 +65,14 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         })
 
         return rootView
+    }
+
+    private fun setupFragment(inflater: LayoutInflater, container: ViewGroup?): View {
+        activityComponent.inject(this)
+        presenter.attachView(this)
+        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        ButterKnife.bind(this, view)
+        return view
     }
 
     override fun showNearbyUsers(nearbyUser: List<NearbyUser>) {

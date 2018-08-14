@@ -58,6 +58,16 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupActivity()
+
+        user = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
+        var profilePic: Bitmap = intent.getParcelableExtra<Bitmap>(resources.getString(R.string.user_profile_image))
+
+        profileProfileImg.setImageBitmap(profilePic)
+        showCurrentUserData()
+    }
+
+    private fun setupActivity() {
         activityComponent.inject(this)
         presenter.attachView(this)
         setContentView(R.layout.activity_profile)
@@ -66,12 +76,6 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
         setSupportActionBar(toolbarProfile)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        user = intent.getParcelableExtra<User>(resources.getString(R.string.user_name))
-        var profilePic: Bitmap = intent.getParcelableExtra<Bitmap>(resources.getString(R.string.user_profile_image))
-
-        profileProfileImg.setImageBitmap(profilePic)
-        showCurrentUserData()
     }
 
     override fun showCurrentUserData() {

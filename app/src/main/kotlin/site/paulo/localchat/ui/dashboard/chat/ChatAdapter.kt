@@ -49,7 +49,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_chat, parent, false)
+                .inflate(R.layout.item_chat, parent, false)
         chatViewHolder = ChatViewHolder(itemView)
         return chatViewHolder
     }
@@ -63,10 +63,10 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     }
 
     fun setLastMessage(lastMessage: ChatMessage, chatId: String): Unit {
-        if(!chatsMapped.containsKey(chatId)) {
-            //Look if chatMapped was not mapped. It happens when the chat is start for first time
-            for(chat in chats) {
-                if(chat.id == chatId) {
+        if (!chatsMapped.containsKey(chatId)) {
+            //Checks if chatMapped was not mapped. It happens when the chat is start for first time
+            for (chat in chats) {
+                if (chat.id == chatId) {
                     chatsMapped.put(chat.id, chats.indexOf(chat))
                     break
                 }
@@ -78,7 +78,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     }
 
     fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
-        if(chatsMapped.containsKey(chatId)) {
+        if (chatsMapped.containsKey(chatId)) {
             val index: Int = chatsMapped.get(chatId)!!
             //chats.get(index).unreadMessages = unreadMessages.toString()
             this.notifyItemChanged(index)
@@ -88,22 +88,23 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
-
             var otherUserIndex: Int = 0
-            if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0) otherUserIndex = 1
+
+            if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0)
+                otherUserIndex = 1
 
             chatsMapped.put(chat.id, chats.indexOf(chat))
 
             itemView.nameChatTv.text =
-                chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
+                    chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
             itemView.lastMessageChatTv.text = chat.lastMessage.message
             itemView.lastMessageTimeTv.text = Date().formattedTime(itemView.ctx, chat.lastMessage.timestamp)
 
             updateUnreadMessages(chat.id, currentUserManager.getUserId())
 
             itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
-                itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) {
-                request -> request.transform(CircleTransform())
+                    itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) { request ->
+                request.transform(CircleTransform())
             }
 
             itemView.setOnClickListener {
@@ -114,7 +115,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         }
 
         fun updateUnreadMessages(chatId: String, userId: String) {
-            if(MessagesManager.getUnreadMessages(chatId, userId) != 0) {
+            if (MessagesManager.getUnreadMessages(chatId, userId) != 0) {
                 itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId, userId).toString()
                 itemView.unreadChatTv.visibility = View.VISIBLE
             } else {

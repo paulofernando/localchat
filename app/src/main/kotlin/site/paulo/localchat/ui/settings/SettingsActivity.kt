@@ -44,6 +44,14 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupActivity()
+
+        profileContainer.setOnClickListener {
+            launchProfileEditor()
+        }
+    }
+
+    private fun setupActivity() {
         activityComponent.inject(this)
         presenter.attachView(this)
         setContentView(R.layout.activity_settings)
@@ -52,11 +60,6 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
         setSupportActionBar(toolbarSettings)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        profileContainer.setOnClickListener {
-            launchProfileEditor()
-        }
-
     }
 
     override fun onResume() {

@@ -40,19 +40,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
-        presenter.attachView(this)
-
-        if (Build.VERSION.SDK_INT < 16) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        } else {
-            val decorView = window.decorView
-            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
-            decorView.systemUiVisibility = uiOptions
-        }
-
-        setContentView(R.layout.activity_sign_up)
+        setupActivity()
 
         createSignUpBtn.setOnClickListener {
             if(validate()) {
@@ -69,6 +57,22 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
         val adapter = ArrayAdapter.createFromResource(this, R.array.genders, R.layout.spinner_item)
         adapter.setDropDownViewResource(R.layout.spinner_item)
         genderSignUpSpinner.setAdapter(adapter)
+    }
+
+    private fun setupActivity() {
+        activityComponent.inject(this)
+        presenter.attachView(this)
+
+        if (Build.VERSION.SDK_INT < 16) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            val decorView = window.decorView
+            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
+            decorView.systemUiVisibility = uiOptions
+        }
+
+        setContentView(R.layout.activity_sign_up)
     }
 
     override fun showSuccessFullSignUp() {

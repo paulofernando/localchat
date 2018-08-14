@@ -113,7 +113,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         value.put(Child.PIC, "https://api.adorable.io/avatars/240/" + Utils.getFirebaseId(user.email) + ".png")
 
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
-            Timber.e("User " + user.email + " registered")
+            Timber.e("User %s registered", user.email)
         }
         firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(value, completionListener)
     }

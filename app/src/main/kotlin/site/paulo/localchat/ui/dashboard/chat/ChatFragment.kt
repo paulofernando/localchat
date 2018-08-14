@@ -58,10 +58,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     lateinit var chatsList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        activityComponent.inject(this)
-        presenter.attachView(this)
-        val rootView = inflater!!.inflate(R.layout.fragment_dashboard_chats, container, false)
-        ButterKnife.bind(this, rootView)
+        val rootView = setupFragment(inflater, container)
 
         chatsList.adapter = chatsAdapter
         chatsList.layoutManager = LinearLayoutManager(activity as Context?)
@@ -70,6 +67,14 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
 
         return rootView
+    }
+
+    private fun setupFragment(inflater: LayoutInflater, container: ViewGroup?): View {
+        activityComponent.inject(this)
+        presenter.attachView(this)
+        val view = inflater.inflate(R.layout.fragment_dashboard_chats, container, false)
+        ButterKnife.bind(this, view)
+        return view
     }
 
     override fun showChats(chats: List<Chat>) {
