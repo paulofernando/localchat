@@ -46,7 +46,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         } else {
             val decorView = window.decorView
             val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
-            decorView.systemUiVisibility = uiOptions
+            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
 
         setContentView(R.layout.activity_sign_in)

@@ -51,6 +51,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                 Log.d("isAuthenticated", "onAuthStateChanged:signed_out")
             }
         }
+
     }
 
 
