@@ -47,7 +47,7 @@ constructor(private val dataManager: DataManager,
 
     var loaded = mutableMapOf<String, Boolean>()
 
-    override fun loadChatRooms(userId:String) {
+    override fun loadChatRooms(userId: String) {
         dataManager.getUser(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -57,7 +57,7 @@ constructor(private val dataManager: DataManager,
                         view.showChatsEmpty()
                     else
                         for((key) in it.chats)
-                            loaded.put(key, false)
+                            loaded[key] = false
 
                 }
                 .onError {
@@ -78,7 +78,7 @@ constructor(private val dataManager: DataManager,
                         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
                             view.messageReceived(chatMessage, chatId)
-                            if((loaded[chatId] != null) && loaded.get(chatId)!!) {//just registered message delivered if is a new message.
+                            if((loaded[chatId] != null) && loaded[chatId]!!) { //only register message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
                                 if(chatMessage.owner != currentUserManager.getUserId()) //not mine
                                     MessagesManager.unreadMessages(chatId, currentUserManager.getUserId())

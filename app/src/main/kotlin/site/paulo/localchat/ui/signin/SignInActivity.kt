@@ -78,7 +78,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         setContentView(R.layout.activity_sign_in)
     }
 
-    fun validate(): Boolean {
+    private fun validate(): Boolean {
         if(emailSignInTxt.text.toString().equals("")) {
             emailSignInTxt.error = "enter an email address"
             return false

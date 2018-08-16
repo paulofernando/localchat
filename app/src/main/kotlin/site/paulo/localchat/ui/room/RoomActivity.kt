@@ -66,7 +66,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
         messagesRoomList.adapter = roomAdapter
         messagesRoomList.layoutManager = LinearLayoutManager(this)
-        (messagesRoomList.getLayoutManager() as LinearLayoutManager).stackFromEnd = true
+        (messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true
 
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {

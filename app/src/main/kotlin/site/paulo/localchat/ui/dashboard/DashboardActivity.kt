@@ -76,7 +76,7 @@ class DashboardActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setupActivity()
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
         val params = toolbar.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags = 0
         setSupportActionBar(toolbar)
@@ -90,10 +90,10 @@ class DashboardActivity: BaseActivity() {
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container) as ViewPager
+        mViewPager = findViewById(R.id.container)
         mViewPager!!.adapter = mSectionsPagerAdapter
 
-        tabLayout = findViewById(R.id.tabs) as TabLayout
+        tabLayout = findViewById(R.id.tabs)
         tabLayout!!.setupWithViewPager(mViewPager)
         //setupTabIcons()
 
@@ -110,7 +110,7 @@ class DashboardActivity: BaseActivity() {
         tabLayout?.getTabAt(1)?.setIcon(tabIcons[1])
     }
 
-    fun startUserLocationManager() {
+    private fun startUserLocationManager() {
         val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         when (permissionCheck) {
             PackageManager.PERMISSION_GRANTED -> {
@@ -126,7 +126,7 @@ class DashboardActivity: BaseActivity() {
             REQUEST_PERMISSION ->  {
                 var userLocationManager: UserLocationManager = UserLocationManager.instance
                 userLocationManager.init(this, dataManager)
-                usersNearbyFragment?.presenter?.loadUsers()
+                usersNearbyFragment.presenter.loadUsers()
             }
         }
     }
@@ -167,8 +167,7 @@ class DashboardActivity: BaseActivity() {
     class PlaceholderFragment : Fragment() {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            val rootView = inflater!!.inflate(R.layout.fragment_dashboard, container, false)
-            return rootView
+            return inflater.inflate(R.layout.fragment_dashboard, container, false)
         }
 
         companion object {
@@ -176,7 +175,7 @@ class DashboardActivity: BaseActivity() {
              * The fragment argument representing the section number for this
              * fragment.
              */
-            private val ARG_SECTION_NUMBER = "section_number"
+            private const val ARG_SECTION_NUMBER = "section_number"
 
             /**
              * Returns a new instance of this fragment for the given section

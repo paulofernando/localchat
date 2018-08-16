@@ -39,10 +39,10 @@ class ChatAdapter
 constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
-    /* Map of chats to speed up access. <chatId, index> */
+    /** Map of chats to speed up access. <chatId, index> */
     var chatsMapped = mutableMapOf<String, Int>()
 
-    lateinit var chatViewHolder: ChatViewHolder
+    private lateinit var chatViewHolder: ChatViewHolder
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
@@ -67,19 +67,19 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             //Checks if chatMapped was not mapped. It happens when the chat is start for first time
             for (chat in chats) {
                 if (chat.id == chatId) {
-                    chatsMapped.put(chat.id, chats.indexOf(chat))
+                    chatsMapped[chat.id] = chats.indexOf(chat)
                     break
                 }
             }
         }
         val index: Int = chatsMapped.get(chatId)!!
-        chats.get(index).lastMessage = lastMessage
+        chats[index].lastMessage = lastMessage
         this.notifyItemChanged(index)
     }
 
     fun updateUnreadMessages(unreadMessages: Int, chatId: String) {
         if (chatsMapped.containsKey(chatId)) {
-            val index: Int = chatsMapped.get(chatId)!!
+            val index: Int = chatsMapped[chatId]!!
             //chats.get(index).unreadMessages = unreadMessages.toString()
             this.notifyItemChanged(index)
         }
@@ -88,12 +88,12 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
-            var otherUserIndex: Int = 0
+            var otherUserIndex = 0
 
             if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0)
                 otherUserIndex = 1
 
-            chatsMapped.put(chat.id, chats.indexOf(chat))
+            chatsMapped[chat.id] = chats.indexOf(chat)
 
             itemView.nameChatTv.text =
                     chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
@@ -114,7 +114,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             }
         }
 
-        fun updateUnreadMessages(chatId: String, userId: String) {
+        private fun updateUnreadMessages(chatId: String, userId: String) {
             if (MessagesManager.getUnreadMessages(chatId, userId) != 0) {
                 itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId, userId).toString()
                 itemView.unreadChatTv.visibility = View.VISIBLE
@@ -122,6 +122,5 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                 itemView.unreadChatTv.visibility = View.GONE
             }
         }
-
     }
 }

@@ -203,27 +203,27 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
         startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER)
     }
 
-    fun hideAgeConfirmationButton() {
+    private fun hideAgeConfirmationButton() {
         ageUserProfileLabel.visibility = View.VISIBLE
         ageUserEditProfileImg.visibility = View.VISIBLE
         ageUserProfileTxt.visibility = View.GONE
         ageUserEditProfileContainer.visibility = View.GONE
     }
 
-    fun hideNameConfirmationButton() {
+    private fun hideNameConfirmationButton() {
         nameUserProfileLabel.visibility = View.VISIBLE
         nameUserEditProfileImg.visibility = View.VISIBLE
         nameUserProfileTxt.visibility = View.GONE
         nameUserEditProfileContainer.visibility = View.GONE
     }
 
-    fun animateButton() {
+    private fun animateButton() {
         editProfileImageBtn.visibility = View.VISIBLE
         var myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale)
         editProfileImageBtn.startAnimation(myAnim)
     }
 
-    fun animateReverseButton() {
+    private fun animateReverseButton() {
         var myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale_reverse)
         myAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationRepeat(animation: Animation) {}
