@@ -68,7 +68,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
 
     }
 
-    fun launchProfileEditor() {
+    private fun launchProfileEditor() {
         val intent = Intent(this, ProfileActivity::class.java)
 
         intent.putExtra(getString(R.string.user_name), user)

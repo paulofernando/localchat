@@ -48,7 +48,7 @@ constructor(private val dataManager: DataManager,
             .subscribeOn(Schedulers.io())
             .subscribe(FunctionSubscriber<Chat>()
                 .onNext {
-                    if(!it.id.equals("")) view.showChat(it)
+                    if(it.id != "") view.showChat(it)
                     else view.showEmptyChatRoom()
                 }
                 .onError {
@@ -105,7 +105,7 @@ constructor(private val dataManager: DataManager,
 
     override fun uploadImage(selectedImageUri: Uri, roomId: String) {
         // Get a reference to the location where we'll store our photos
-        var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
+        var storageRef = firebaseStorage.getReference("chat_pics")
         // Get a reference to store file at chat_photos/<FILENAME>
         val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
 

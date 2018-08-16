@@ -44,9 +44,9 @@ import site.paulo.localchat.data.model.firebase.*
 
 @Singleton
 class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
-    val currentUserManager: CurrentUserManager,
-    val currentUser: CurrentUserManager,
-    val firebaseAuth: FirebaseAuth) {
+                                         val currentUserManager: CurrentUserManager,
+                                         val currentUser: CurrentUserManager,
+                                         val firebaseAuth: FirebaseAuth) {
 
     object Reference {
         val CHATS = "chats"
@@ -91,7 +91,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     fun getUsers(): Observable<List<User>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.USERS),
-            DataSnapshotMapper.listOf(User::class.java))
+                DataSnapshotMapper.listOf(User::class.java))
     }
 
     fun getNearbyUsers(geoHash: String): Observable<List<Object>> {
@@ -99,49 +99,50 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                 DataSnapshotMapper.listOf(Object::class.java))
     }
 
-    fun getUser(userId:String): Observable<User> {
+    fun getUser(userId: String): Observable<User> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.USERS).child(userId),
-            User::class.java)
+                User::class.java)
     }
 
-    fun registerUser(user:User): Unit {
-        val value = mutableMapOf<String, Any>()
-        value.put(Child.EMAIL, user.email)
-        value.put(Child.NAME, user.name)
-        value.put(Child.AGE, user.age)
-        value.put(Child.GENDER, user.gender)
-        value.put(Child.PIC, "https://api.adorable.io/avatars/240/" + Utils.getFirebaseId(user.email) + ".png")
+    fun registerUser(user: User): Unit {
+        val userData = mutableMapOf<String, Any>()
+        userData[Child.EMAIL] = user.email
+        userData[Child.NAME] = user.name
+        userData[Child.AGE] = user.age
+        userData[Child.GENDER] = user.gender
+        userData[Child.PIC] = "https://api.adorable.io/avatars/240/" + Utils.getFirebaseId(user.email) + ".png"
 
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.e("User %s registered", user.email)
         }
-        firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(value, completionListener)
+
+        firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(userData, completionListener)
     }
 
     fun authenticateUser(email: String, password: String): Observable<AuthResult> {
         return RxFirebaseAuth.signInWithEmailAndPassword(firebaseAuth, email, password)
     }
 
-    fun updateUserData(dataType: UserDataType, value:String, completionListener: DatabaseReference.CompletionListener): Unit {
-        when(dataType) {
+    fun updateUserData(dataType: UserDataType, newValue: String, completionListener: DatabaseReference.CompletionListener): Unit {
+        when (dataType) {
             UserDataType.NAME -> {
-                val v = mutableMapOf<String, Any>()
-                v.put(Child.NAME, value)
+                val newName = mutableMapOf<String, Any>()
+                newName[Child.NAME] = newValue
                 firebaseDatabase.getReference(Reference.USERS)
-                    .child(currentUserManager.getUserId())
-                    .updateChildren(v, completionListener)
+                        .child(currentUserManager.getUserId())
+                        .updateChildren(newName, completionListener)
             }
             UserDataType.AGE -> {
-                val v = mutableMapOf<String, Any>()
-                v.put(Child.AGE, value.toInt())
+                val newAge = mutableMapOf<String, Any>()
+                newAge[Child.AGE] = newValue.toInt()
                 firebaseDatabase.getReference(Reference.USERS)
-                    .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
+                        .child(currentUserManager.getUserId()).updateChildren(newAge, completionListener)
             }
             UserDataType.PIC -> {
-                val v = mutableMapOf<String, Any>()
-                v.put(Child.PIC, value)
+                val newPic = mutableMapOf<String, Any>()
+                newPic[Child.PIC] = newValue
                 firebaseDatabase.getReference(Reference.USERS)
-                    .child(currentUserManager.getUserId()).updateChildren(v, completionListener)
+                        .child(currentUserManager.getUserId()).updateChildren(newPic, completionListener)
             }
             else -> Timber.e("Invalid UserDataType")
         }
@@ -151,12 +152,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Token updated")
         }
-        if(token != null) {
-            val v = mutableMapOf<String, Any>()
-            v.put(Child.TOKEN, token)
+        if (token != null) {
+            val newToken = mutableMapOf<String, Any>()
+            newToken[Child.TOKEN] = token
             firebaseDatabase.getReference(Reference.USERS)
-                .child(currentUserManager.getUserId())
-                .updateChildren(v, completionListener)
+                    .child(currentUserManager.getUserId())
+                    .updateChildren(newToken, completionListener)
         }
     }
 
@@ -164,21 +165,21 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Profile pic updated")
         }
-        if(url != null) {
-            val v = mutableMapOf<String, Any>()
-            v.put(Child.PIC, url)
+        if (url != null) {
+            val newProfilePic = mutableMapOf<String, Any>()
+            newProfilePic[Child.PIC] = url
             firebaseDatabase.getReference(Reference.USERS)
-                .child(currentUserManager.getUserId())
-                .updateChildren(v, completionListener)
+                    .child(currentUserManager.getUserId())
+                    .updateChildren(newProfilePic, completionListener)
         }
     }
 
-    fun updateUserLocation(location: Location?, callNext:(() -> Unit)? = null): Unit {
-        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+    fun updateUserLocation(location: Location?, callNext: (() -> Unit)? = null): Unit {
+        val locationCompletionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Location updated")
         }
 
-        val completionListener2 = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val userInfoCompletionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
             Timber.d("Geohash updated")
         }
 
@@ -186,36 +187,36 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Timber.d("Removed from old area")
         }
 
-        if((location != null) && (currentUserManager.getUserId() != null)) {
-            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location!!.latitude, location!!.longitude, 5)
+        if ((location != null) && (currentUserManager.getUserId() != null)) {
+            val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location.latitude, location.longitude, 5)
             currentUserManager.setGeohash(geoHash)
             val currentUser = currentUserManager.getUser()
 
-            if(!geoHash.equals(currentUser.geohash))
+            if (!geoHash.equals(currentUser.geohash))
                 firebaseDatabase.getReference(Reference.GEOHASHES)
                         .child(currentUser.geohash)
                         .child(currentUserManager.getUserId())
                         .removeValue(removeListener)
 
-            val v = mutableMapOf<String, Any>()
-            v.put(Child.LATITUDE, location.latitude)
-            v.put(Child.LONGITUDE, location.longitude)
-            v.put(Child.ACCURACY, location.accuracy)
-            v.put(Child.GEOHASH, geoHash)
+            val newUserLocation = mutableMapOf<String, Any>()
+            newUserLocation[Child.LATITUDE] = location.latitude
+            newUserLocation[Child.LONGITUDE] = location.longitude
+            newUserLocation[Child.ACCURACY] = location.accuracy
+            newUserLocation[Child.GEOHASH] = geoHash
             firebaseDatabase.getReference(Reference.USERS)
                     .child(currentUserManager.getUserId())
-                    .updateChildren(v, completionListener)
+                    .updateChildren(newUserLocation, locationCompletionListener)
 
-            val v2 = mutableMapOf<String, Any>()
-            v2.put(Child.NAME, currentUser.name)
-            v2.put(Child.PIC, currentUser.pic)
-            v2.put(Child.EMAIL, currentUser.email)
-            v2.put(Child.AGE, currentUser.age)
-            v2.put(Child.LAST_GEO_UPDATE, ServerValue.TIMESTAMP)
+            val newUserInfo = mutableMapOf<String, Any>()
+            newUserInfo[Child.NAME] = currentUser.name
+            newUserInfo[Child.PIC] = currentUser.pic
+            newUserInfo[Child.EMAIL] = currentUser.email
+            newUserInfo[Child.AGE] = currentUser.age
+            newUserInfo[Child.LAST_GEO_UPDATE] = ServerValue.TIMESTAMP
             firebaseDatabase.getReference(Reference.GEOHASHES)
                     .child(geoHash)
                     .child(currentUserManager.getUserId())
-                    .updateChildren(v2, completionListener2)
+                    .updateChildren(newUserInfo, userInfoCompletionListener)
 
 
             callNext?.invoke()
@@ -224,12 +225,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     fun registerUserChildEventListener(listener: ChildEventListener): Unit {
         registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
-            .child(currentUserManager.getUserId()), listener, "User")
+                .child(currentUserManager.getUserId()), listener, "User")
     }
 
     fun registerUserValueEventListener(listener: ValueEventListener): Unit {
         registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.USERS)
-            .child(currentUserManager.getUserId()), listener, "User")
+                .child(currentUserManager.getUserId()), listener, "User")
     }
 
     /*******************************************/
@@ -239,30 +240,30 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {
         val valueMessage = mutableMapOf<String, Any>()
-        valueMessage.put(Child.OWNER, message.owner)
-        valueMessage.put(Child.MESSAGE, message.message)
-        valueMessage.put(Child.TIMESTAMP, ServerValue.TIMESTAMP)
+        valueMessage[Child.OWNER] = message.owner
+        valueMessage[Child.MESSAGE] = message.message
+        valueMessage[Child.TIMESTAMP] = ServerValue.TIMESTAMP
 
         val valueLastMessage = mutableMapOf<String, Any>()
-        valueLastMessage.put(Child.LAST_MESSAGE, message)
+        valueLastMessage[Child.LAST_MESSAGE] = message
 
         firebaseDatabase.getReference(Reference.MESSAGES).child(chatId).push().setValue(valueMessage, completionListener)
         firebaseDatabase.getReference(Reference.CHATS).child(chatId).updateChildren(valueLastMessage)
     }
 
-    fun getChatRoom(chatId:String): Observable<Chat> {
+    fun getChatRoom(chatId: String): Observable<Chat> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.CHATS).child(chatId),
-            Chat::class.java)
+                Chat::class.java)
     }
 
     fun createNewRoom(otherUser: NearbyUser): Chat {
         val summarizedCurrentUser: SummarizedUser = SummarizedUser(currentUserManager.getUser().name,
-            currentUserManager.getUser().pic)
-        val summarizedOtherUser:SummarizedUser = SummarizedUser(otherUser.name, otherUser.pic)
+                currentUserManager.getUser().pic)
+        val summarizedOtherUser: SummarizedUser = SummarizedUser(otherUser.name, otherUser.pic)
 
         var reference = firebaseDatabase.getReference(Reference.CHATS).push()
 
-        val chat:Chat = Chat(reference.key,
+        val chat: Chat = Chat(reference.key,
                 mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
                         Utils.getFirebaseId(otherUser.email) to summarizedOtherUser),
                 ChatMessage("", "", 0L),
@@ -272,21 +273,22 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         reference.setValue(chat)
 
         firebaseDatabase.getReference(Reference.USERS)
-            .child(Utils.getFirebaseId(currentUserManager.getUser().email))
-            .child(Child.CHATS)
-            .updateChildren(mapOf(Utils.getFirebaseId(otherUser.email) to reference.key))
+                .child(Utils.getFirebaseId(currentUserManager.getUser().email))
+                .child(Child.CHATS)
+                .updateChildren(mapOf(Utils.getFirebaseId(otherUser.email) to reference.key))
 
         firebaseDatabase.getReference(Reference.USERS)
-            .child(Utils.getFirebaseId(otherUser.email))
-            .child(Child.CHATS)
-            .updateChildren(mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to reference.key))
+                .child(Utils.getFirebaseId(otherUser.email))
+                .child(Child.CHATS)
+                .updateChildren(mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to reference.key))
 
         return chat
     }
 
     fun registerRoomChildEventListener(listener: ChildEventListener, roomId: String, listenerId: String? = null): Boolean {
         return registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId ?: roomId)
+                .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId
+                ?: roomId)
     }
 
     fun unregisterRoomChildEventListener(listener: ChildEventListener, roomId: String): Unit {
@@ -298,7 +300,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     fun registerRoomValueEventListener(listener: ValueEventListener, roomId: String, listenerId: String? = null): Boolean {
         return registerValueEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.MESSAGES)
-            .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId ?: roomId)
+                .child(roomId).orderByChild(FirebaseHelper.Child.TIMESTAMP), listener, listenerId
+                ?: roomId)
     }
 
     fun addRoomSingleValueEventListener(listener: ValueEventListener, roomId: String): Unit {
@@ -315,7 +318,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     fun registerNewChatRoomChildEventListener(listener: ChildEventListener, _userId: String? = null): Unit {
         var userId: String? = _userId
-        if(userId == null) {
+        if (userId == null) {
             userId = currentUserManager.getUserId()
         }
 
@@ -325,15 +328,12 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun registerNewUsersChildEventListener(listener: ChildEventListener): Unit {
-        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.GEOHASHES).
-                child(currentUserManager.getUser().geohash),
+        registerChildEventListener(firebaseDatabase.getReference(FirebaseHelper.Reference.GEOHASHES).child(currentUserManager.getUser().geohash),
                 listener, "nearbyUsers")
     }
 
     fun messageDelivered(chatId: String): Unit {
-        val mDeliveredRef = firebaseDatabase.getReference(Reference.CHATS).
-                child(chatId).
-                child(Child.DELIVERED_MESSAGES)
+        val mDeliveredRef = firebaseDatabase.getReference(Reference.CHATS).child(chatId).child(Child.DELIVERED_MESSAGES)
 
         mDeliveredRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -353,7 +353,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     /**************** Listeners ****************/
 
     private fun registerChildEventListener(query: Query, listener: ChildEventListener, listenerIdentifier: String): Boolean {
-        if(childEventListeners.containsKey(listenerIdentifier)) {
+        if (childEventListeners.containsKey(listenerIdentifier)) {
             Timber.d("Removing and registering event listener $listenerIdentifier again")
             firebaseDatabase.reference.removeEventListener(listener)
         }
@@ -363,7 +363,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     private fun registerValueEventListener(query: Query, listener: ValueEventListener, listenerIdentifier: String): Boolean {
-        if(!valueEventListeners.containsKey(listenerIdentifier)) {
+        if (!valueEventListeners.containsKey(listenerIdentifier)) {
             Timber.d("Registering value listener... $listenerIdentifier")
             valueEventListeners.put(listenerIdentifier, listener)
             query.addValueEventListener(listener)

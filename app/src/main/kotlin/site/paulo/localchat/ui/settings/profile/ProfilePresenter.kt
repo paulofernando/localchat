@@ -50,7 +50,7 @@ constructor(private val dataManager: DataManager,
 
     override fun uploadPic(selectedImageUri: Uri) {
         // Get a reference to the location where we'll store our photos
-        var storageRef: StorageReference = firebaseStorage.getReference("chat_pics")
+        var storageRef = firebaseStorage.getReference("chat_pics")
         // Get a reference to store file at chat_photos/<FILENAME>
         val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
 
@@ -59,7 +59,7 @@ constructor(private val dataManager: DataManager,
             Timber.i("Image sent successfully!")
             val downloadUrl = taskSnapshot?.downloadUrl
             updateUserData(FirebaseHelper.Companion.UserDataType.PIC, downloadUrl!!.toString())
-            view.updatePic(downloadUrl!!.toString())
+            view.updatePic(downloadUrl.toString())
         }
     }
 

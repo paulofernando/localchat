@@ -47,7 +47,9 @@ class SignInActivity : BaseActivity(), SignInContract.View {
             // If the event is a key-down event on the "enter" button
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform action on key press
-                if(validate()) presenter.signIn(emailSignInTxt.text.toString(), passwordSignInTxt.text.toString())
+                if(validate())
+                    presenter.signIn(emailSignInTxt.text.toString(), passwordSignInTxt.text.toString())
+
                 return@OnKeyListener true
             }
             false
@@ -76,7 +78,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         setContentView(R.layout.activity_sign_in)
     }
 
-    fun validate(): Boolean {
+    private fun validate(): Boolean {
         if(emailSignInTxt.text.toString().equals("")) {
             emailSignInTxt.error = "enter an email address"
             return false

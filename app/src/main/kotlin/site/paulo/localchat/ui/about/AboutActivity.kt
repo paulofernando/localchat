@@ -26,8 +26,6 @@ import android.content.pm.PackageManager
 import android.R.attr.versionName
 import android.content.pm.PackageInfo
 
-
-
 class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

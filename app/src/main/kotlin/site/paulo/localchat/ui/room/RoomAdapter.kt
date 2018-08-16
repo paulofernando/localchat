@@ -19,7 +19,7 @@ class RoomAdapter
 @Inject
 constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
-    var messages =  mutableListOf<ChatMessage>()
+    var messages = mutableListOf<ChatMessage>()
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
@@ -52,7 +52,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
             itemView.messageTimeRoomTv.text = Date().formattedTime(itemView.ctx, message.timestamp)
 
-            if(message.owner.equals(currentUserManager.getUserId())) {
+            if(message.owner == currentUserManager.getUserId()) {
                 itemView.messageBubbleRoom.setArrowPosition(ChatMessageView.ArrowPosition.RIGHT)
                 itemView.messageBubbleRoom.setBackgroundColorRes(R.color.color_room_my_bubble_background,
                     R.color.color_room_my_bubble_pressed_background)

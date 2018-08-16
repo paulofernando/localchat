@@ -60,7 +60,7 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
         fun bindUser(nearbyUser: NearbyUser) {
             with(nearbyUser) {
 
-                if(!pic.equals(""))
+                if(pic != "")
                     itemView.profileNearbyUserImg.loadUrlAndResize(pic,
                         itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt())
                 else

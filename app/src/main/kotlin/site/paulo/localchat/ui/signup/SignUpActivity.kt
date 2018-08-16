@@ -128,7 +128,7 @@ class SignUpActivity : BaseActivity(), SignUpContract.View {
             ageSignUpTxt.error = null
         }
 
-        if(getSelectedGender().equals((""))) {
+        if(getSelectedGender() == ("")) {
             (genderSignUpSpinner.selectedView as TextView).error = resources.getString(R.string.error_gender)
             valid = false
         } else {
