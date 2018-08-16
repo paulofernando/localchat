@@ -16,11 +16,14 @@
 
 package site.paulo.localchat.data.manager
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import site.paulo.localchat.data.DataManager
 import timber.log.Timber
 import javax.inject.Inject
@@ -47,11 +50,18 @@ class UserLocationManager {
 
     fun start(callNext: (() -> Unit)? = null) {
         if(context != null && dataManager != null) {
-            this.callNext = callNext
-            locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+            val permission = ContextCompat.checkSelfPermission(this.context!!,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                Timber.e("Permission to location denied")
+            } else {
+                this.callNext = callNext
+                locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+            }
         } else {
-            Timber.e("Context or DataManager not initiliazed")
+            Timber.e("Context or DataManager not initialized")
         }
     }
 
@@ -59,7 +69,7 @@ class UserLocationManager {
         locationManager?.removeUpdates(locationListener)
     }
 
-    var locationListener: LocationListener = object : LocationListener {
+    private var locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Timber.d("Location: lon -> ${location.longitude} | lat -> ${location.latitude}")
             dataManager?.updateUserLocation(location, callNext)
