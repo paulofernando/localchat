@@ -37,15 +37,15 @@ open class BaseActivity : AppCompatActivity() {
         if (BaseActivity.Companion.componentsMap[activityId] != null)
             Timber.i("Reusing ConfigPersistentComponent id=%d", activityId)
 
-        val configPersistentComponent = BaseActivity.Companion.componentsMap.getOrPut(activityId, {
+        val configPersistentComponent = BaseActivity.Companion.componentsMap.getOrPut(activityId) {
             Timber.i("Creating new ConfigPersistentComponent id=%d", activityId)
 
             val component = (applicationContext as BoilerplateApplication).applicationComponent
 
             DaggerConfigPersistentComponent.builder()
-                .applicationComponent(component)
-                .build()
-        })
+                    .applicationComponent(component)
+                    .build()
+        }
 
         activityComponent = configPersistentComponent.activityComponent(ActivityModule(this))
     }

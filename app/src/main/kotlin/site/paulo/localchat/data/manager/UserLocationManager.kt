@@ -49,7 +49,7 @@ class UserLocationManager {
     }
 
     fun start(callNext: (() -> Unit)? = null) {
-        if(context != null && dataManager != null) {
+        if(this.context != null && dataManager != null) {
             val permission = ContextCompat.checkSelfPermission(this.context!!,
                     Manifest.permission.ACCESS_FINE_LOCATION)
 
@@ -57,7 +57,7 @@ class UserLocationManager {
                 Timber.e("Permission to location denied")
             } else {
                 this.callNext = callNext
-                locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                locationManager = this.context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
             }
         } else {
