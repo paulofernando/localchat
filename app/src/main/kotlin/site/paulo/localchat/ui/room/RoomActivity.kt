@@ -19,7 +19,7 @@ package site.paulo.localchat.ui.room
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -65,8 +65,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
-        messagesRoomList.layoutManager = LinearLayoutManager(this)
-        (messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true
+        messagesRoomList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        (messagesRoomList.layoutManager as androidx.recyclerview.widget.LinearLayoutManager).stackFromEnd = true
 
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {

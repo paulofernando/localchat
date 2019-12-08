@@ -1,6 +1,6 @@
 package site.paulo.localchat.ui.room
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class RoomAdapter
 @Inject
-constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
+constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
     var messages = mutableListOf<ChatMessage>()
 
@@ -38,7 +38,7 @@ constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
         return messages.size
     }
 
-    inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RoomViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         fun bindMessages(message: ChatMessage) {
             itemView.messageUserNameRoomTv.text = message.owner
 

@@ -18,9 +18,9 @@ package site.paulo.localchat.ui.dashboard.nearby
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,13 +55,13 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     lateinit var firebaseAuth: FirebaseAuth
 
     @BindView(R.id.chatRoomsList)
-    lateinit var chatsList: RecyclerView
+    lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = setupFragment(inflater, container)
 
         chatsList.adapter = chatsAdapter
-        chatsList.layoutManager = LinearLayoutManager(activity as Context?)
+        chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?)
 
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))

@@ -1,10 +1,11 @@
 package site.paulo.localchat.data.model.firebase
 
 import android.graphics.Bitmap
-import nz.bradcampbell.paperparcel.PaperParcel
-import nz.bradcampbell.paperparcel.PaperParcelable
+import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
-@PaperParcel
+@Parcelize
 data class User(
     val name: String = "",
     val age: Long = 0L,
@@ -16,12 +17,9 @@ data class User(
     val lon: Long = 0L,
     val geohash: String = "",
     val chats: MutableMap<String, String> = mutableMapOf<String, String>())
-    : PaperParcelable {
+    : Parcelable {
 
-    companion object {
-        @JvmField val CREATOR = PaperParcelable.Creator(User::class.java)
-    }
-
+    @IgnoredOnParcel
     @Transient var userPicBitmap: Bitmap? = null
 
 }

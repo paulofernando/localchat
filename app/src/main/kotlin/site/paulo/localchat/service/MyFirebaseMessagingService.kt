@@ -21,12 +21,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import site.paulo.localchat.R
 import site.paulo.localchat.ui.dashboard.DashboardActivity
 import timber.log.Timber
+
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -34,7 +34,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         private val TAG = "MyFirebaseMsgService"
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
         // [START_EXCLUDE]
         // There are two types of messages data messages and notification messages. Data messages are handled
@@ -46,7 +46,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Timber.d("From: " + remoteMessage!!.from)
+        Timber.d("From: " + remoteMessage.from)
 
         // Check if message contains a data payload.
         if (remoteMessage.data.size > 0) {
@@ -75,7 +75,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this)
-            .setSmallIcon(R.drawable.logo)
+            //.setSmallIcon(R.drawable.logo)
             .setContentTitle("FCM Message")
             .setContentText(messageBody)
             .setAutoCancel(true)
@@ -85,6 +85,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+    }
+
+    override fun onNewToken(s: String) {
+        super.onNewToken(s)
+        Timber.d(String.format("New token: %s", s))
     }
 
 

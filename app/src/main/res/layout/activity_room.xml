@@ -8,7 +8,7 @@
                 android:background="@color/color_room_background"
                 tools:context=".ui.room.RoomActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbarRoom"
         android:layout_width="match_parent"
@@ -27,9 +27,9 @@
             android:padding="@dimen/spacing_micro"
             tools:src="@drawable/user_default" />
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesRoomList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

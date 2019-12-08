@@ -1,7 +1,7 @@
 package site.paulo.localchat
 
 import android.app.Application
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import site.paulo.localchat.injection.component.ApplicationComponent
 import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule

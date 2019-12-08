@@ -1,15 +1,8 @@
 package site.paulo.localchat.data.model.firebase
 
-import com.google.firebase.database.Exclude
-import nz.bradcampbell.paperparcel.PaperParcel
-import nz.bradcampbell.paperparcel.PaperParcelable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-@PaperParcel
+@Parcelize
 data class ChatMessage(val owner: String = "", val message: String = "",
-    val timestamp: Long = 0L) : PaperParcelable {
-
-    companion object {
-       @JvmField val CREATOR = PaperParcelable.Creator(ChatMessage::class.java)
-    }
-    
-}
+    val timestamp: Long = 0L) : Parcelable { }

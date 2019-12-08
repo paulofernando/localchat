@@ -1,4 +1,4 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/usersNearbySwipeLayout"
     android:layout_width="match_parent"
@@ -8,10 +8,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="site.paulo.localchat.ui.dashboard.DashboardActivity$PlaceholderFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/usersNearbyList"
         android:background="@color/color_nearby_users_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"/>
-</android.support.v4.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

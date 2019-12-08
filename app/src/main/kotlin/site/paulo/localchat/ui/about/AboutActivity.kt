@@ -16,7 +16,7 @@
 
 package site.paulo.localchat.ui.about
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_about.*
 import org.jetbrains.anko.ctx
