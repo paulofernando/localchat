@@ -5,7 +5,6 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "site.paulo.localchat"
@@ -24,7 +23,7 @@ android {
         warning 'InvalidPackage'
     }
 
-    signingConfigs {
+    /*signingConfigs {
         // You must set up an environment var before release signing
         // Run: export APP_KEY={password}
         // TODO Add your release keystore in /keystore folder
@@ -41,11 +40,11 @@ android {
             storePassword 'android'
             keyPassword 'android'
         }
-    }
+    }*/
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
             //debuggable true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -103,7 +102,7 @@ dependencies {
         force = true;
     }
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.27.0-eap13'
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     implementation "com.github.grandstaish.paperparcel:paperparcel:$PAPERPARCEL_VERSION"
