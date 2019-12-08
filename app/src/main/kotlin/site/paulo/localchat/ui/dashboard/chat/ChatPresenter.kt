@@ -45,7 +45,7 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
-    var loaded = mutableMapOf<String, Boolean>()
+    var loaded = mutableMapOf<String?, Boolean>()
 
     override fun loadChatRooms(userId: String) {
         dataManager.getUser(userId)
@@ -98,10 +98,11 @@ constructor(private val dataManager: DataManager,
                             val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)!!
                             if(chatMessage.owner != currentUserManager.getUserId())
                                 if(!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
-                                    currentUserManager.getUser().chats.put(chatMessage.owner, it.id)
+                                    currentUserManager.getUser().chats.put(chatMessage.owner, it.id!!)
                                 }
                         }
-                        override fun onCancelled(dataSnapshot: DatabaseError?) { }
+
+                        override fun onCancelled(dataSnapshot: DatabaseError) { }
 
                     }
 
@@ -125,7 +126,7 @@ constructor(private val dataManager: DataManager,
                 loadChatRoom(dataSnapshot.value.toString())
                 if (((loaded[dataSnapshot.value.toString()] != null) && (loaded[dataSnapshot.value.toString()]!!))
                         && (!currentUserManager.getUser().chats.containsKey(dataSnapshot.key)))
-                    currentUserManager.getUser().chats.put(dataSnapshot.key, dataSnapshot.value.toString())
+                    currentUserManager.getUser().chats.put(dataSnapshot.key!!, dataSnapshot.value.toString())
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) { }

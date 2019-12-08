@@ -40,7 +40,7 @@ constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<ChatAdapter.Ch
 
     var chats = mutableListOf<Chat>()
     /** Map of chats to speed up access. <chatId, index> */
-    var chatsMapped = mutableMapOf<String, Int>()
+    var chatsMapped = mutableMapOf<String?, Int>()
 
     private lateinit var chatViewHolder: ChatViewHolder
 

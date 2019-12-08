@@ -105,7 +105,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     override fun showChat(chat: Chat) {
-        presenter.registerMessagesListener(chat.id)
+        presenter.registerMessagesListener(chat.id!!)
     }
 
     override fun showError() {
@@ -175,9 +175,9 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
-            presenter.uploadImage(data.data, this.chatId!!)
+            presenter.uploadImage(data?.data!!, this.chatId!!)
         }
     }
 

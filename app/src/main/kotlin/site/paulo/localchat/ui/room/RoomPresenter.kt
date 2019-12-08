@@ -114,7 +114,7 @@ constructor(private val dataManager: DataManager,
         // Upload file to Firebase Storage
         photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
             Timber.i("Image sent successfully!")
-            val downloadUrl = taskSnapshot?.downloadUrl
+            val downloadUrl = taskSnapshot.storage.downloadUrl
             sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), roomId)
             view.hideLoadingImage()
         }
