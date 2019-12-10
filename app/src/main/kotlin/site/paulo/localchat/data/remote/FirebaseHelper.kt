@@ -94,9 +94,9 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                 DataSnapshotMapper.listOf(User::class.java))
     }
 
-    fun getNearbyUsers(geoHash: String): Observable<List<Object>> {
+    fun getNearbyUsers(geoHash: String): Observable<List<Any>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.GEOHASHES).child(geoHash),
-                DataSnapshotMapper.listOf(Object::class.java))
+                DataSnapshotMapper.listOf(Any::class.java))
     }
 
     fun getUser(userId: String): Observable<User> {
@@ -112,7 +112,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         userData[Child.GENDER] = user.gender
         userData[Child.PIC] = "https://api.adorable.io/avatars/240/" + Utils.getFirebaseId(user.email) + ".png"
 
-        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val completionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.e("User %s registered", user.email)
         }
 
@@ -149,7 +149,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun updateToken(token: String?): Unit {
-        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val completionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.d("Token updated")
         }
         if (token != null) {
@@ -162,7 +162,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun updateProfilePic(url: String?): Unit {
-        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val completionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.d("Profile pic updated")
         }
         if (url != null) {
@@ -175,15 +175,15 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun updateUserLocation(location: Location?, callNext: (() -> Unit)? = null): Unit {
-        val locationCompletionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val locationCompletionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.d("Location updated")
         }
 
-        val userInfoCompletionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val userInfoCompletionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.d("Geohash updated")
         }
 
-        val removeListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val removeListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.d("Removed from old area")
         }
 
@@ -382,11 +382,11 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun removeAllListeners(): Unit {
-        for ((listenerIdentifier, listener) in childEventListeners) {
+        for ((_, listener) in childEventListeners) {
             firebaseDatabase.reference.removeEventListener(listener)
         }
 
-        for ((listenerIdentifier, listener) in valueEventListeners) {
+        for ((_, listener) in valueEventListeners) {
             firebaseDatabase.reference.removeEventListener(listener)
         }
     }

@@ -98,7 +98,7 @@ constructor(private val dataManager: DataManager,
                             val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)!!
                             if(chatMessage.owner != currentUserManager.getUserId())
                                 if(!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
-                                    currentUserManager.getUser().chats.put(chatMessage.owner, it.id!!)
+                                    currentUserManager.getUser().chats.put(chatMessage.owner, it.id)
                                 }
                         }
 

@@ -74,7 +74,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             PendingIntent.FLAG_ONE_SHOT)
 
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this)
+        val notificationBuilder = NotificationCompat.Builder(this, "fcm")
             //.setSmallIcon(R.drawable.logo)
             .setContentTitle("FCM Message")
             .setContentText(messageBody)

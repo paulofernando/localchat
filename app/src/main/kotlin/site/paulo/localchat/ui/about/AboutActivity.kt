@@ -32,7 +32,7 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
-        appNameAboutTxt.text = ctx.getApplicationInfo().loadLabel(ctx.packageManager)
+        appNameAboutTxt.text = this.applicationInfo.loadLabel(this.packageManager)
 
         try {
             val pInfo = this.packageManager.getPackageInfo(packageName, 0)

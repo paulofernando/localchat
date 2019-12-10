@@ -34,7 +34,7 @@ constructor(private val dataManager: DataManager,
     private val firebaseStorage: FirebaseStorage) : ProfileContract.Presenter() {
 
     override fun updateUserData(dataType: FirebaseHelper.Companion.UserDataType, value:String) {
-        val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+        val completionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.i("User data updated")
             when(dataType) {
                 FirebaseHelper.Companion.UserDataType.NAME -> currentUserManager.setUserName(value)
@@ -56,7 +56,7 @@ constructor(private val dataManager: DataManager,
         photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
             Timber.i("Image sent successfully!")
             val downloadUrl = taskSnapshot.storage.downloadUrl
-            updateUserData(FirebaseHelper.Companion.UserDataType.PIC, downloadUrl!!.toString())
+            updateUserData(FirebaseHelper.Companion.UserDataType.PIC, downloadUrl.toString())
             view.updatePic(downloadUrl.toString())
         }
     }

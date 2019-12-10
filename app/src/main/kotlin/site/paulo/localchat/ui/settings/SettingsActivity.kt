@@ -88,7 +88,7 @@ class SettingsActivity: BaseActivity(), SettingsContract.View   {
                 request.transform(CircleTransform())
             }
         } else {*/
-        profileSettingsImg.loadUrlAndResizeCircle(user.pic, ctx.resources.getDimension(R.dimen.image_width_settings).toInt()) {
+        profileSettingsImg.loadUrlAndResizeCircle(user.pic, this.resources.getDimension(R.dimen.image_width_settings).toInt()) {
                 request ->
                 request.transform(CircleTransform())
             }

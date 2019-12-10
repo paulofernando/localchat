@@ -105,7 +105,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     override fun showChat(chat: Chat) {
-        presenter.registerMessagesListener(chat.id!!)
+        presenter.registerMessagesListener(chat.id)
     }
 
     override fun showError() {
@@ -201,7 +201,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 otherUserIndex = 1
 
             var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
-            chatId = (chat as Chat)?.id
+            chatId = (chat as Chat).id
 
             toolbarRoom.title = summarizedUser?.name
             otherUserImg.loadUrlCircle(summarizedUser?.pic) {
