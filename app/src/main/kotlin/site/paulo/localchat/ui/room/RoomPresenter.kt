@@ -57,23 +57,23 @@ constructor(private val dataManager: DataManager,
             )
     }
 
-    override fun sendMessage(message: ChatMessage, roomId: String) {
+    override fun sendMessage(message: ChatMessage, chatId: String) {
         if(!message.message.equals("")) {
-            val completionListener = DatabaseReference.CompletionListener { _, _ ->
+            val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
                 view.messageSent(message)
             }
-            dataManager.sendMessage(message, roomId, completionListener)
+            dataManager.sendMessage(message, chatId, completionListener)
             view.cleanMessageField()
         }
     }
 
-    override fun registerMessagesListener(chatId: String) {
+    override fun registerMessagesListener(roomId: String) {
         childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java)!!
                 messageReceived(chatMessage)
                 if(!chatMessage.owner.equals(currentUserManager.getUserId()))
-                    Timber.d("Message received in $chatId-intern")
+                    Timber.d("Message received in $roomId-intern")
 
             }
 
@@ -83,13 +83,13 @@ constructor(private val dataManager: DataManager,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, chatId, chatId + "-intern")
-        Timber.d("Listening chat room $chatId-intern")
+        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, roomId, roomId + "-intern")
+        Timber.d("Listening chat room $roomId-intern")
     }
 
-    override fun unregisterMessagesListener(chatId: String) {
+    override fun unregisterMessagesListener(roomId: String) {
         if(childEventListener != null)
-            dataManager.unregisterRoomChildEventListener(childEventListener!!, chatId)
+            dataManager.unregisterRoomChildEventListener(childEventListener!!, roomId)
     }
 
     /*override fun registerMessagesListener(roomId: String) {
