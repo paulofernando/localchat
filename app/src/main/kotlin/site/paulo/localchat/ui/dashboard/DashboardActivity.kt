@@ -40,6 +40,8 @@ import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.settings.SettingsActivity
 import javax.inject.Inject
 
+import kotlinx.android.synthetic.main.activity_dashboard.*
+
 class DashboardActivity: BaseActivity() {
 
     /**
@@ -76,7 +78,6 @@ class DashboardActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setupActivity()
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         val params = toolbar.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags = 0
         setSupportActionBar(toolbar)
@@ -90,11 +91,9 @@ class DashboardActivity: BaseActivity() {
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container)
-        mViewPager!!.adapter = mSectionsPagerAdapter
+        container.adapter = mSectionsPagerAdapter
 
-        tabLayout = findViewById(R.id.tabs)
-        tabLayout!!.setupWithViewPager(mViewPager)
+        tabs.setupWithViewPager(container)
         //setupTabIcons()
 
         startUserLocationManager()
