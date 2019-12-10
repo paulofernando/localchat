@@ -7,7 +7,7 @@ import android.net.ConnectivityManager
 
 fun Context.isNetworkConnected(): Boolean {
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    return cm.activeNetworkInfo?.isConnectedOrConnecting ?: false
+    return cm.activeNetworkInfo?.isConnectedOrConnecting!!
 }
 
 fun Context.toggleAndroidComponent(componentClass: Class<*>, enable: Boolean) {

@@ -19,7 +19,7 @@ package site.paulo.localchat.ui.room
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -65,8 +65,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
-        messagesRoomList.layoutManager = LinearLayoutManager(this)
-        (messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true
+        messagesRoomList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        (messagesRoomList.layoutManager as androidx.recyclerview.widget.LinearLayoutManager).stackFromEnd = true
 
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
@@ -175,9 +175,9 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
-            presenter.uploadImage(data.data, this.chatId!!)
+            presenter.uploadImage(data?.data!!, this.chatId!!)
         }
     }
 
@@ -201,7 +201,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 otherUserIndex = 1
 
             var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
-            chatId = (chat as Chat)?.id
+            chatId = (chat as Chat).id
 
             toolbarRoom.title = summarizedUser?.name
             otherUserImg.loadUrlCircle(summarizedUser?.pic) {

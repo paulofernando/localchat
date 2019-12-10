@@ -1,6 +1,6 @@
 package site.paulo.localchat.ui.base
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.os.Bundle
 import site.paulo.localchat.BoilerplateApplication
 import site.paulo.localchat.injection.component.ActivityComponent

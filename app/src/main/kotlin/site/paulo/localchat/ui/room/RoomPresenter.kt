@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.FunctionSubscriber
 import rx.schedulers.Schedulers
@@ -58,23 +57,23 @@ constructor(private val dataManager: DataManager,
             )
     }
 
-    override fun sendMessage(message: ChatMessage, chatId: String) {
+    override fun sendMessage(message: ChatMessage, roomId: String) {
         if(!message.message.equals("")) {
-            val completionListener = DatabaseReference.CompletionListener { databaseError, databaseReference ->
+            val completionListener = DatabaseReference.CompletionListener { _, _ ->
                 view.messageSent(message)
             }
-            dataManager.sendMessage(message, chatId, completionListener)
+            dataManager.sendMessage(message, roomId, completionListener)
             view.cleanMessageField()
         }
     }
 
-    override fun registerMessagesListener(roomId: String) {
+    override fun registerMessagesListener(chatId: String) {
         childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java)!!
                 messageReceived(chatMessage)
                 if(!chatMessage.owner.equals(currentUserManager.getUserId()))
-                    Timber.d("Message received in $roomId-intern")
+                    Timber.d("Message received in $chatId-intern")
 
             }
 
@@ -84,13 +83,13 @@ constructor(private val dataManager: DataManager,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, roomId, roomId + "-intern")
-        Timber.d("Listening chat room $roomId-intern")
+        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, chatId, chatId + "-intern")
+        Timber.d("Listening chat room $chatId-intern")
     }
 
-    override fun unregisterMessagesListener(roomId: String) {
+    override fun unregisterMessagesListener(chatId: String) {
         if(childEventListener != null)
-            dataManager.unregisterRoomChildEventListener(childEventListener!!, roomId)
+            dataManager.unregisterRoomChildEventListener(childEventListener!!, chatId)
     }
 
     /*override fun registerMessagesListener(roomId: String) {
@@ -114,8 +113,8 @@ constructor(private val dataManager: DataManager,
         // Upload file to Firebase Storage
         photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->
             Timber.i("Image sent successfully!")
-            val downloadUrl = taskSnapshot?.downloadUrl
-            sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl!!.toString()), roomId)
+            val downloadUrl = taskSnapshot.storage.downloadUrl
+            sendMessage(ChatMessage(currentUserManager.getUserId(), downloadUrl.toString()), roomId)
             view.hideLoadingImage()
         }
     }

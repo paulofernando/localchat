@@ -38,12 +38,12 @@ constructor(private val currentUserManager: CurrentUserManager,
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {}
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
                 Timber.i("registerProfileListener: %s", dataSnapshot.getValue(User::class.java))
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 

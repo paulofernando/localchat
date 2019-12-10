@@ -4,16 +4,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "site.paulo.localchat"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     lintOptions {
@@ -24,7 +23,7 @@ android {
         warning 'InvalidPackage'
     }
 
-    signingConfigs {
+    /*signingConfigs {
         // You must set up an environment var before release signing
         // Run: export APP_KEY={password}
         // TODO Add your release keystore in /keystore folder
@@ -41,11 +40,11 @@ android {
             storePassword 'android'
             keyPassword 'android'
         }
-    }
+    }*/
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
             //debuggable true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -83,9 +82,8 @@ repositories {
 }
 
 dependencies {
-    final DAGGER_VERSION = '2.14.1'
-    final BUTTERKNIFE_VERSION = '8.8.1'
-    final PAPERPARCEL_VERSION = '1.0.1'
+    final DAGGER_VERSION = '2.25.2'
+    final BUTTERKNIFE_VERSION = '10.2.0'
     final RETROFIT_VERSION = '2.4.0'
     final HAMCREST_VERSION = '1.3'
     def daggerCompiler = "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
@@ -94,42 +92,40 @@ dependencies {
     // App Dependencies
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.android.support:recyclerview-v7:27.1.1"
-    implementation "com.android.support:cardview-v7:27.1.1"
-    implementation "com.android.support:support-annotations:27.1.1"
-    implementation "com.android.support:design:27.1.1"
-    implementation ('com.android.support:exifinterface:27.1.1') {
-        force = true;
+    //noinspection GradleCompatible
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation ('androidx.exifinterface:exifinterface:1.0.0') {
+        force = true
     }
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.27.0-eap13'
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-    implementation "com.github.grandstaish.paperparcel:paperparcel:$PAPERPARCEL_VERSION"
-    implementation "com.github.grandstaish.paperparcel:paperparcel-kotlin:$PAPERPARCEL_VERSION"
     implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     implementation "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
     implementation 'io.reactivex:rxandroid:1.2.1'
-    implementation 'io.reactivex:rxjava:1.1.6'
+    implementation 'io.reactivex:rxjava:1.3.0'
     implementation 'io.reactivex:rxkotlin:0.60.0'
     implementation 'com.jakewharton.timber:timber:4.7.0'
     implementation 'com.squareup.sqlbrite:sqlbrite:1.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.github.markushi:circlebutton:1.1'
     implementation 'com.anupcowkur:reservoir:3.1.0'
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'
-    implementation 'com.google.firebase:firebase-database:15.0.0'
-    implementation 'com.google.firebase:firebase-auth:15.1.0'
-    implementation 'com.google.firebase:firebase-storage:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:20.0.1'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.kelvinapps:rxfirebase:0.0.15'
     testImplementation 'org.robolectric:robolectric:3.1.4'
 
     kapt daggerCompiler
-    kapt "com.github.grandstaish.paperparcel:compiler:$PAPERPARCEL_VERSION"
     kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
 
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
@@ -143,7 +139,7 @@ dependencies {
     testImplementation "org.hamcrest:hamcrest-integration:$HAMCREST_VERSION"
     // Instrumentation test dependencies
     androidTestImplementation jUnit
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

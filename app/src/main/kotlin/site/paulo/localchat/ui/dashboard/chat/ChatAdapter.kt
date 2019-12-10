@@ -16,7 +16,7 @@
 
 package site.paulo.localchat.ui.user
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,11 +36,11 @@ import javax.inject.Inject
 
 class ChatAdapter
 @Inject
-constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
     /** Map of chats to speed up access. <chatId, index> */
-    var chatsMapped = mutableMapOf<String, Int>()
+    var chatsMapped = mutableMapOf<String?, Int>()
 
     private lateinit var chatViewHolder: ChatViewHolder
 
@@ -85,7 +85,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         }
     }
 
-    inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ChatViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
             var otherUserIndex = 0

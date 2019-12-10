@@ -19,15 +19,15 @@ package site.paulo.localchat.ui.dashboard
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.TabLayout
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.widget.Toolbar
 import android.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
@@ -39,6 +39,8 @@ import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.settings.SettingsActivity
 import javax.inject.Inject
+
+import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity: BaseActivity() {
 
@@ -76,7 +78,6 @@ class DashboardActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setupActivity()
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         val params = toolbar.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags = 0
         setSupportActionBar(toolbar)
@@ -90,11 +91,9 @@ class DashboardActivity: BaseActivity() {
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container)
-        mViewPager!!.adapter = mSectionsPagerAdapter
+        container.adapter = mSectionsPagerAdapter
 
-        tabLayout = findViewById(R.id.tabs)
-        tabLayout!!.setupWithViewPager(mViewPager)
+        tabs.setupWithViewPager(container)
         //setupTabIcons()
 
         startUserLocationManager()
@@ -195,7 +194,8 @@ class DashboardActivity: BaseActivity() {
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.

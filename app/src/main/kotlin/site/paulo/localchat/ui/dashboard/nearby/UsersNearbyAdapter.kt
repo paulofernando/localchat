@@ -16,7 +16,7 @@
 
 package site.paulo.localchat.ui.user
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +35,7 @@ import javax.inject.Inject
 
 class UsersNearbyAdapter
 @Inject
-constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
+constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
 
     var nearbyUsers = mutableListOf<NearbyUser>()
 
@@ -56,7 +56,7 @@ constructor() : RecyclerView.Adapter<UsersNearbyAdapter.UserViewHolder>() {
         return nearbyUsers.size
     }
 
-    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class UserViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         fun bindUser(nearbyUser: NearbyUser) {
             with(nearbyUser) {
 

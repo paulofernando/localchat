@@ -38,7 +38,7 @@ class DataManager
         return firebaseHelper.getUsers()
     }
 
-    fun getNearbyUsers(geoHash: String): Observable<List<Object>> {
+    fun getNearbyUsers(geoHash: String): Observable<List<Any>> {
         return firebaseHelper.getNearbyUsers(geoHash)
     }
 
