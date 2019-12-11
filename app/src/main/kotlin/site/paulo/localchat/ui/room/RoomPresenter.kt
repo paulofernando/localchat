@@ -106,7 +106,7 @@ constructor(private val dataManager: DataManager,
         // Get a reference to the location where we'll store our photos
         var storageRef = firebaseStorage.getReference("chat_pics")
         // Get a reference to store file at chat_photos/<FILENAME>
-        val photoRef = storageRef.child(selectedImageUri.lastPathSegment)
+        val photoRef = storageRef.child(selectedImageUri.lastPathSegment!!)
 
         view.showLoadingImage()
 

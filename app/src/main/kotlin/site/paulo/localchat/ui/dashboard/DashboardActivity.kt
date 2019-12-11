@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.widget.Toolbar
 import android.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
@@ -35,7 +34,7 @@ import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.ui.about.AboutActivity
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
+import site.paulo.localchat.ui.dashboard.chat.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.settings.SettingsActivity
 import javax.inject.Inject
