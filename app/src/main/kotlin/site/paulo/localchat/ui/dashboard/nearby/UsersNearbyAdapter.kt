@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.user
+package site.paulo.localchat.ui.dashboard.nearby
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,13 +41,13 @@ constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<UsersNearbyAda
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersNearbyAdapter.UserViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)
         return UserViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: UsersNearbyAdapter.UserViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bindUser(nearbyUsers[position])
     }
 

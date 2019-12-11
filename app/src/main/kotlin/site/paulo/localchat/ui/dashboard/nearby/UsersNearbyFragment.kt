@@ -17,22 +17,16 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import android.os.Bundle
-import android.os.Handler
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.ui.base.BaseFragment
-import site.paulo.localchat.ui.user.UserNearbyPresenter
-import site.paulo.localchat.ui.user.UsersNearbyAdapter
 import javax.inject.Inject
 
 class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {

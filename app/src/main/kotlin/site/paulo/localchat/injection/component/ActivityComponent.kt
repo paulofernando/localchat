@@ -1,11 +1,10 @@
 package site.paulo.localchat.injection.component
 
 import dagger.Subcomponent
-import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.injection.PerActivity
 import site.paulo.localchat.injection.module.ActivityModule
 import site.paulo.localchat.ui.dashboard.DashboardActivity
-import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
+import site.paulo.localchat.ui.dashboard.chat.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.settings.SettingsActivity

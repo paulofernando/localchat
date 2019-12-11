@@ -14,33 +14,26 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.dashboard.nearby
+package site.paulo.localchat.ui.dashboard.chat
 
 import android.content.Context
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseFragment
-import site.paulo.localchat.ui.user.ChatAdapter
-import site.paulo.localchat.ui.user.ChatPresenter
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
-import timber.log.Timber
-import java.util.HashMap
 import javax.inject.Inject
 
 class ChatFragment : BaseFragment(), ChatContract.View {
@@ -100,10 +93,27 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
+
+        if (!isResumed) { //only notify user if chats fragment is not being shown at moment
+            messageNotification(chatMessage, chatId)
+        }
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
         chatsAdapter.setLastMessage(chatMessage, chatId)
+    }
+
+    override fun messageNotification(chatMessage: ChatMessage, chatId: String) {
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(chatMessage.owner)
+                .setContentText(chatMessage.message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        val notificationManager = NotificationManagerCompat.from(context!!)
+
+        // notificationId must be an unique int for each notification
+        notificationManager.notify(chatId.hashCode(), builder.build())
     }
 
 }

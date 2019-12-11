@@ -17,7 +17,10 @@
 package site.paulo.localchat.ui.dashboard
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
@@ -27,7 +30,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.widget.Toolbar
 import android.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
@@ -35,7 +37,7 @@ import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.ui.about.AboutActivity
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.dashboard.nearby.ChatFragment
+import site.paulo.localchat.ui.dashboard.chat.ChatFragment
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyFragment
 import site.paulo.localchat.ui.settings.SettingsActivity
 import javax.inject.Inject
@@ -78,6 +80,8 @@ class DashboardActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setupActivity()
 
+        createNotificationChannel()
+
         val params = toolbar.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags = 0
         setSupportActionBar(toolbar)
@@ -97,6 +101,19 @@ class DashboardActivity: BaseActivity() {
         //setupTabIcons()
 
         startUserLocationManager()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = getString(R.string.channel_name)
+            val description = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("MessageReceivedChannel", name, importance)
+            channel.description = description
+
+            val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     fun setupActivity() {
