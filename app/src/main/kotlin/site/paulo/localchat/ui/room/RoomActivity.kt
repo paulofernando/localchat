@@ -24,6 +24,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.R
@@ -96,6 +97,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         }
 
         MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
+        cleanNotifications()
         configureToolbar()
     }
 
@@ -145,6 +147,11 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     override fun cleanMessageField() {
         messageRoomTxt.text.clear()
+    }
+
+    override fun cleanNotifications() {
+        val notificationManager = NotificationManagerCompat.from(this)
+        notificationManager.cancel(chatId.hashCode())
     }
 
     override fun messageSent(message: ChatMessage) {
