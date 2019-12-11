@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.user
+package site.paulo.localchat.ui.dashboard.chat
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_chat.view.*
-import kotlinx.android.synthetic.main.item_user.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
@@ -36,7 +34,7 @@ import javax.inject.Inject
 
 class ChatAdapter
 @Inject
-constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
     /** Map of chats to speed up access. <chatId, index> */
@@ -47,14 +45,14 @@ constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<ChatAdapter.Ch
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_chat, parent, false)
         chatViewHolder = ChatViewHolder(itemView)
         return chatViewHolder
     }
 
-    override fun onBindViewHolder(holder: ChatAdapter.ChatViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         holder.bindChat(chats[position])
     }
 

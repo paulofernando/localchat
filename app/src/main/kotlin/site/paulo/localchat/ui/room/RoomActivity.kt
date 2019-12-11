@@ -19,11 +19,12 @@ package site.paulo.localchat.ui.room
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
@@ -65,8 +66,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
-        messagesRoomList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        (messagesRoomList.layoutManager as androidx.recyclerview.widget.LinearLayoutManager).stackFromEnd = true
+        messagesRoomList.layoutManager = LinearLayoutManager(this)
+        (messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true
 
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
@@ -176,6 +177,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
             presenter.uploadImage(data?.data!!, this.chatId!!)
         }

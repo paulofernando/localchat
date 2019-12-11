@@ -17,7 +17,10 @@
 package site.paulo.localchat.ui.dashboard
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
@@ -77,6 +80,8 @@ class DashboardActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setupActivity()
 
+        createNotificationChannel()
+
         val params = toolbar.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags = 0
         setSupportActionBar(toolbar)
@@ -96,6 +101,19 @@ class DashboardActivity: BaseActivity() {
         //setupTabIcons()
 
         startUserLocationManager()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = getString(R.string.channel_name)
+            val description = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("MessageReceivedChannel", name, importance)
+            channel.description = description
+
+            val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     fun setupActivity() {

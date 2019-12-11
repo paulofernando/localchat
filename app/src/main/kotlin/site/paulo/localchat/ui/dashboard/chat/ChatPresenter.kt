@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.user
+package site.paulo.localchat.ui.dashboard.chat
 
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -32,9 +32,6 @@ import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
-import site.paulo.localchat.ui.dashboard.nearby.ChatContract
-import site.paulo.localchat.ui.utils.Utils
-import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
 import javax.inject.Inject
 

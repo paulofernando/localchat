@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.dashboard.nearby
+package site.paulo.localchat.ui.dashboard.chat
 
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage

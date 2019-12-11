@@ -16,10 +16,7 @@
 
 package site.paulo.localchat.ui.dashboard.chat
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,9 +32,6 @@ import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.base.BaseFragment
-import site.paulo.localchat.ui.dashboard.nearby.ChatContract
-import site.paulo.localchat.ui.user.ChatAdapter
-import site.paulo.localchat.ui.user.ChatPresenter
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Inject
@@ -100,31 +94,19 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
 
-        createNotificationChannel()
-        messageNotification(chatMessage, chatId)
+        if (!isResumed) { //only notify user if chats fragment is not being shown at moment
+            messageNotification(chatMessage, chatId)
+        }
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
         chatsAdapter.setLastMessage(chatMessage, chatId)
     }
 
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name: CharSequence = getString(R.string.channel_name)
-            val description = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("MessageReceivedChannel", name, importance)
-            channel.description = description
-
-            val notificationManager: NotificationManager = context!!.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
     override fun messageNotification(chatMessage: ChatMessage, chatId: String) {
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
                 .setSmallIcon(R.drawable.logo)
-                .setContentTitle("Message")
+                .setContentTitle(chatMessage.owner)
                 .setContentText(chatMessage.message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 

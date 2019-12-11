@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-
 package site.paulo.localchat.ui.utils
-
-import site.paulo.localchat.data.model.firebase.Chat
 
 class Utils {
     companion object {}

@@ -19,7 +19,7 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyContract
-import site.paulo.localchat.ui.user.UserNearbyPresenter
+import site.paulo.localchat.ui.dashboard.nearby.UserNearbyPresenter
 import site.paulo.localchat.util.RxSchedulersOverrideRule
 
 @RunWith(MockitoJUnitRunner::class)

@@ -18,8 +18,8 @@ import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.test.common.TestDataFactory
-import site.paulo.localchat.ui.dashboard.nearby.ChatContract
-import site.paulo.localchat.ui.user.ChatPresenter
+import site.paulo.localchat.ui.dashboard.chat.ChatContract
+import site.paulo.localchat.ui.dashboard.chat.ChatPresenter
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import site.paulo.localchat.util.RxSchedulersOverrideRule
