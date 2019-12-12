@@ -28,7 +28,7 @@ class BoilerplateApplication : Application() {
         try {
             Reservoir.init(this, 2048) //in bytes
         } catch (e: IOException) {
-            Timber.e(e.message)
+            Timber.e(e)
         }
 
 
