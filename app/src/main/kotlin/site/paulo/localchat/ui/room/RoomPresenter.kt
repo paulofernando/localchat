@@ -41,6 +41,8 @@ constructor(private val dataManager: DataManager,
 
     private var childEventListener: ChildEventListener? = null
 
+    /** Get data from an specific chat room. We can use it in case of some issue
+     * while storing chat data locally. **/
     override fun getChatData(chatId: String) {
         dataManager.getChatRoom(chatId)
             .observeOn(AndroidSchedulers.mainThread())

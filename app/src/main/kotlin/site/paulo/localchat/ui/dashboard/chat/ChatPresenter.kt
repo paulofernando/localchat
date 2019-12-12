@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.dashboard.chat
 
+import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,6 +34,7 @@ import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 
@@ -102,6 +104,8 @@ constructor(private val dataManager: DataManager,
                         override fun onCancelled(dataSnapshot: DatabaseError) { }
 
                     }
+
+                    Reservoir.put(it.id, it) //persisting chats
 
                     //register room if it is not registered
                     dataManager.registerRoomChildEventListener(childEventListener, it.id)
