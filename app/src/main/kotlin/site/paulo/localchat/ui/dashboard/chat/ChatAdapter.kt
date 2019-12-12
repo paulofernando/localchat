@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.user
+package site.paulo.localchat.ui.dashboard.chat
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_chat.view.*
-import kotlinx.android.synthetic.main.item_user.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
@@ -40,21 +38,21 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var chats = mutableListOf<Chat>()
     /** Map of chats to speed up access. <chatId, index> */
-    var chatsMapped = mutableMapOf<String, Int>()
+    var chatsMapped = mutableMapOf<String?, Int>()
 
     private lateinit var chatViewHolder: ChatViewHolder
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ChatViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_chat, parent, false)
         chatViewHolder = ChatViewHolder(itemView)
         return chatViewHolder
     }
 
-    override fun onBindViewHolder(holder: ChatAdapter.ChatViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         holder.bindChat(chats[position])
     }
 
@@ -85,7 +83,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         }
     }
 
-    inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ChatViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
             var otherUserIndex = 0
@@ -108,7 +106,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             }
 
             itemView.setOnClickListener {
-                itemView.ctx.startActivity<RoomActivity>("chat" to chat)
+                itemView.ctx.startActivity<RoomActivity>("chatId" to chat.id)
                 MessagesManager.readMessages(chat.id, currentUserManager.getUserId())
                 updateUnreadMessages(chat.id, currentUserManager.getUserId())
             }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.user
+package site.paulo.localchat.ui.dashboard.chat
 
+import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -32,10 +33,8 @@ import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
-import site.paulo.localchat.ui.dashboard.nearby.ChatContract
-import site.paulo.localchat.ui.utils.Utils
-import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 
@@ -45,7 +44,7 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
-    var loaded = mutableMapOf<String, Boolean>()
+    var loaded = mutableMapOf<String?, Boolean>()
 
     override fun loadChatRooms(userId: String) {
         dataManager.getUser(userId)
@@ -101,9 +100,12 @@ constructor(private val dataManager: DataManager,
                                     currentUserManager.getUser().chats.put(chatMessage.owner, it.id)
                                 }
                         }
-                        override fun onCancelled(dataSnapshot: DatabaseError?) { }
+
+                        override fun onCancelled(dataSnapshot: DatabaseError) { }
 
                     }
+
+                    Reservoir.put(it.id, it) //persisting chats
 
                     //register room if it is not registered
                     dataManager.registerRoomChildEventListener(childEventListener, it.id)
@@ -125,7 +127,7 @@ constructor(private val dataManager: DataManager,
                 loadChatRoom(dataSnapshot.value.toString())
                 if (((loaded[dataSnapshot.value.toString()] != null) && (loaded[dataSnapshot.value.toString()]!!))
                         && (!currentUserManager.getUser().chats.containsKey(dataSnapshot.key)))
-                    currentUserManager.getUser().chats.put(dataSnapshot.key, dataSnapshot.value.toString())
+                    currentUserManager.getUser().chats.put(dataSnapshot.key!!, dataSnapshot.value.toString())
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) { }

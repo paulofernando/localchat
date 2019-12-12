@@ -17,22 +17,16 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import android.os.Bundle
-import android.os.Handler
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.ui.base.BaseFragment
-import site.paulo.localchat.ui.user.UserNearbyPresenter
-import site.paulo.localchat.ui.user.UsersNearbyAdapter
 import javax.inject.Inject
 
 class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
@@ -44,7 +38,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
     lateinit var usersAdapter: UsersNearbyAdapter
 
     @BindView(R.id.usersNearbyList)
-    lateinit var usersNearbyList: RecyclerView
+    lateinit var usersNearbyList: androidx.recyclerview.widget.RecyclerView
 
     @BindView(R.id.usersNearbySwipeLayout)
     lateinit var usersNearbySwipeLayout: SwipeRefreshLayout
@@ -53,7 +47,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         val rootView = setupFragment(inflater, container)
 
         usersNearbyList.adapter = usersAdapter
-        usersNearbyList.layoutManager = GridLayoutManager(activity, 3)
+        usersNearbyList.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3)
 
         presenter.loadUsers()
 

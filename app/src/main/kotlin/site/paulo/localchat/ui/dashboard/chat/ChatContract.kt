@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.dashboard.nearby
+package site.paulo.localchat.ui.dashboard.chat
 
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -30,6 +30,7 @@ object ChatContract {
         fun showError()
         fun messageReceived(chatMessage: ChatMessage, chatId: String)
         fun updateLastMessage(chatMessage: ChatMessage, chatId: String)
+        fun messageNotification(chatMessage: ChatMessage, chatId: String)
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {

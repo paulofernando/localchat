@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.user
+package site.paulo.localchat.ui.dashboard.nearby
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -31,7 +31,6 @@ import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
-import site.paulo.localchat.ui.dashboard.nearby.UsersNearbyContract
 import timber.log.Timber
 import javax.inject.Inject
 

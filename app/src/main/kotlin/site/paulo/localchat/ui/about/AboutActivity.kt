@@ -16,7 +16,7 @@
 
 package site.paulo.localchat.ui.about
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_about.*
 import org.jetbrains.anko.ctx
@@ -32,7 +32,7 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
-        appNameAboutTxt.text = ctx.getApplicationInfo().loadLabel(ctx.packageManager)
+        appNameAboutTxt.text = this.applicationInfo.loadLabel(this.packageManager)
 
         try {
             val pInfo = this.packageManager.getPackageInfo(packageName, 0)

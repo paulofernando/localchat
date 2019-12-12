@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-package site.paulo.localchat.ui.dashboard.nearby
+package site.paulo.localchat.ui.dashboard.chat
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.base.BaseFragment
-import site.paulo.localchat.ui.user.ChatAdapter
-import site.paulo.localchat.ui.user.ChatPresenter
+import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
-import timber.log.Timber
-import java.util.HashMap
 import javax.inject.Inject
 
 class ChatFragment : BaseFragment(), ChatContract.View {
@@ -55,13 +51,13 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     lateinit var firebaseAuth: FirebaseAuth
 
     @BindView(R.id.chatRoomsList)
-    lateinit var chatsList: RecyclerView
+    lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = setupFragment(inflater, container)
 
         chatsList.adapter = chatsAdapter
-        chatsList.layoutManager = LinearLayoutManager(activity as Context?)
+        chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?)
 
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
@@ -100,10 +96,33 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
+
+        if (!isResumed) { //only notify user if chats fragment is not being shown at moment
+            messageNotification(chatMessage, chatId)
+        }
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
         chatsAdapter.setLastMessage(chatMessage, chatId)
+    }
+
+    override fun messageNotification(chatMessage: ChatMessage, chatId: String) {
+        //Intent to be open when the user clicks on notification
+        val intent = Intent(context!!, RoomActivity::class.java)
+        intent.putExtra("chatId", chatId)
+        val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(chatMessage.owner)
+                .setContentText(chatMessage.message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+
+        val notificationManager = NotificationManagerCompat.from(context!!)
+
+        // notificationId must be an unique int for each notification
+        notificationManager.notify(chatId.hashCode(), builder.build())
     }
 
 }

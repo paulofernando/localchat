@@ -189,10 +189,10 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
             loadingProfileProgress.visibility = View.VISIBLE
-            presenter.uploadPic(data.data)
+            presenter.uploadPic(data?.data!!)
         }
     }
 

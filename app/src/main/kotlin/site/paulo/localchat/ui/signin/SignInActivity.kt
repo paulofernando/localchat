@@ -43,7 +43,7 @@ class SignInActivity : BaseActivity(), SignInContract.View {
             if(validate()) presenter.signIn(emailSignInTxt.text.toString(), passwordSignInTxt.text.toString())
         }
 
-        passwordSignInTxt.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        passwordSignInTxt.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             // If the event is a key-down event on the "enter" button
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Perform action on key press
@@ -71,7 +71,6 @@ class SignInActivity : BaseActivity(), SignInContract.View {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN)
         } else {
             val decorView = window.decorView
-            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
             decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
 

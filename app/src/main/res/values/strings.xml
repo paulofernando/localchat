@@ -71,4 +71,7 @@
     <string name="spinner_gender_male"> male </string>
     <string name="spinner_gender_non_binary"> non binary </string>
 
+    <string name="channel_name">Message channel</string>
+    <string name="channel_description">Message received notification channel</string>
+
 </resources>

@@ -36,6 +36,7 @@ object RoomContract {
         fun showLoadingImage()
         fun hideLoadingImage()
         fun cleanMessageField()
+        fun cleanNotifications()
     }
 
     abstract class Presenter : BaseMvpPresenter<View>(), MessagesListener {

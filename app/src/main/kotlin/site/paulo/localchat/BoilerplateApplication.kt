@@ -1,7 +1,7 @@
 package site.paulo.localchat
 
 import android.app.Application
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import site.paulo.localchat.injection.component.ApplicationComponent
 import site.paulo.localchat.injection.component.DaggerApplicationComponent
 import site.paulo.localchat.injection.module.ApplicationModule
@@ -28,7 +28,7 @@ class BoilerplateApplication : Application() {
         try {
             Reservoir.init(this, 2048) //in bytes
         } catch (e: IOException) {
-            Timber.e(e.message)
+            Timber.e(e)
         }
 
 

@@ -2,7 +2,7 @@ package site.paulo.localchat.ui.base
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import timber.log.Timber
 import site.paulo.localchat.BoilerplateApplication
 import site.paulo.localchat.injection.component.ActivityComponent

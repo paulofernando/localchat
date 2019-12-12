@@ -19,11 +19,13 @@ package site.paulo.localchat.ui.room
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.NotificationManagerCompat
+import com.anupcowkur.reservoir.Reservoir
 import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
@@ -50,7 +52,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     @Inject
     lateinit var roomAdapter: RoomAdapter
 
-    var emptyRoom: Boolean = false
+    private var emptyRoom: Boolean = false
     var chat: Chat? = null
     var otherUser: NearbyUser? = null
     var chatId: String? = null
@@ -60,8 +62,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         super.onCreate(savedInstanceState)
         setupActivity()
 
-        this.chat = intent.getParcelableExtra<Chat>("chat") //only passed from chat fragment
-        this.chatId = intent.getStringExtra("chatId") //only passed from nearby users fragment
+        this.chatId = intent.getStringExtra("chatId")
+        this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
         this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
@@ -71,11 +73,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
             emptyRoom = true
-        } else {
-            if (chat == null) //only have the chat id
-                presenter.getChatData(chatId!!)
-            else showChat(chat!!)
-        }
+        } else showChat(chat!!)
 
         sendRoomBtn.setOnClickListener {
             if (!emptyRoom)
@@ -95,6 +93,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         }
 
         MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
+        cleanNotifications()
         configureToolbar()
     }
 
@@ -146,6 +145,11 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         messageRoomTxt.text.clear()
     }
 
+    override fun cleanNotifications() {
+        val notificationManager = NotificationManagerCompat.from(this)
+        notificationManager.cancel(chatId.hashCode())
+    }
+
     override fun messageSent(message: ChatMessage) {
         Timber.i("Message sent: %s", message.message)
     }
@@ -175,9 +179,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
-            presenter.uploadImage(data.data, this.chatId!!)
+            presenter.uploadImage(data?.data!!, this.chatId!!)
         }
     }
 
@@ -201,7 +206,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 otherUserIndex = 1
 
             var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
-            chatId = (chat as Chat)?.id
+            chatId = (chat as Chat).id
 
             toolbarRoom.title = summarizedUser?.name
             otherUserImg.loadUrlCircle(summarizedUser?.pic) {
