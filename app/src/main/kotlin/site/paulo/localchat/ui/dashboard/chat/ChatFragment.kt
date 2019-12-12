@@ -28,14 +28,18 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getChatFriend
 import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Inject
 
@@ -49,6 +53,9 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
 
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
