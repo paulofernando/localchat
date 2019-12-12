@@ -16,7 +16,9 @@
 
 package site.paulo.localchat.ui.dashboard.chat
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +34,7 @@ import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.base.BaseFragment
+import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Inject
@@ -104,11 +107,17 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     }
 
     override fun messageNotification(chatMessage: ChatMessage, chatId: String) {
+        //Intent to be open when the user clicks on notification
+        val intent = Intent(context!!, RoomActivity::class.java)
+        intent.putExtra("chatId", chatId)
+        val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle(chatMessage.owner)
                 .setContentText(chatMessage.message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
 
         val notificationManager = NotificationManagerCompat.from(context!!)
 

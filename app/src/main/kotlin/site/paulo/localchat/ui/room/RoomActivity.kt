@@ -25,7 +25,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
-import androidx.recyclerview.widget.RecyclerView
+import com.anupcowkur.reservoir.Reservoir
 import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
@@ -52,7 +52,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     @Inject
     lateinit var roomAdapter: RoomAdapter
 
-    var emptyRoom: Boolean = false
+    private var emptyRoom: Boolean = false
     var chat: Chat? = null
     var otherUser: NearbyUser? = null
     var chatId: String? = null
@@ -62,8 +62,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         super.onCreate(savedInstanceState)
         setupActivity()
 
-        this.chat = intent.getParcelableExtra<Chat>("chat") //only passed from chat fragment
-        this.chatId = intent.getStringExtra("chatId") //only passed from nearby users fragment
+        this.chatId = intent.getStringExtra("chatId")
+        this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
         this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
 
         messagesRoomList.adapter = roomAdapter
@@ -73,11 +73,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         if ((otherUser != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
             emptyRoom = true
-        } else {
-            if (chat == null) //only have the chat id
-                presenter.getChatData(chatId!!)
-            else showChat(chat!!)
-        }
+        } else showChat(chat!!)
 
         sendRoomBtn.setOnClickListener {
             if (!emptyRoom)
