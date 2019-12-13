@@ -60,8 +60,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         setupActivity()
 
         this.chatId = intent.getStringExtra("chatId")
-        this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
         this.chatFriend = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
+        if (Reservoir.contains(chatId)) {
+            this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        }
 
         messagesRoomList.adapter = roomAdapter
         messagesRoomList.layoutManager = LinearLayoutManager(this)
@@ -70,7 +72,11 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         if ((chatFriend != null) && //come from nearby users fragment
                 !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(chatFriend!!.email))) {
             emptyRoom = true
-        } else showChat(chat!!)
+        } else {
+            if (chat == null) //only have the chat id
+                presenter.getChatData(chatId!!)
+            else showChat(chat!!)
+        }
 
         sendRoomBtn.setOnClickListener {
             if (!emptyRoom)

@@ -111,23 +111,39 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     override fun notifyUser(chatMessage: ChatMessage, chatId: String) {
         if (!isResumed) { //only notify user if chats fragment is not being shown at moment
-            //Intent to be open when the user clicks on notification
-            val intent = Intent(context!!, RoomActivity::class.java)
-            intent.putExtra("chatId", chatId)
-            val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val chatFriend = getFriendUser(chatId)
+            if (chatFriend != null) {
+                //Intent to be open when the user clicks on notification
+                val intent = Intent(context!!, RoomActivity::class.java)
+                intent.putExtra("chatId", chatId)
+                val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
-                    .setSmallIcon(R.drawable.logo)
-                    .setContentTitle(chatMessage.owner)
-                    .setContentText(chatMessage.message)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentIntent(pendingIntent)
+                val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
+                        .setSmallIcon(R.drawable.logo)
+                        .setContentTitle(chatFriend.name)
+                        .setContentText(chatMessage.message)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setContentIntent(pendingIntent)
 
-            val notificationManager = NotificationManagerCompat.from(context!!)
+                val notificationManager = NotificationManagerCompat.from(context!!)
 
-            // notificationId must be an unique int for each notification
-            notificationManager.notify(chatId.hashCode(), builder.build())
+                // notificationId must be an unique int for each notification
+                notificationManager.notify(chatId.hashCode(), builder.build())
+            }
         }
+    }
+
+    private fun getFriendUser(chatId: String): SummarizedUser? {
+        var currentChat: Chat? = null
+        if (Reservoir.contains(chatId)) {
+            currentChat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        }
+
+        if (currentChat != null) {
+            return Utils.getChatFriend(currentUserManager.getUserId(), currentChat)
+        }
+
+        return null
     }
 
 }
