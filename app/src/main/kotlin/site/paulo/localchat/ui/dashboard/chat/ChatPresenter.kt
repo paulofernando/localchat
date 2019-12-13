@@ -79,9 +79,10 @@ constructor(private val dataManager: DataManager,
                             view.messageReceived(chatMessage, chatId)
                             if((loaded[chatId] != null) && loaded[chatId]!!) { //only register message delivered if is a new message.
                                 dataManager.messageDelivered(chatId)
-                                view.notifyUser(chatMessage, chatId)
-                                if(chatMessage.owner != currentUserManager.getUserId()) //not mine
+                                if(chatMessage.owner != currentUserManager.getUserId()) { //not mine
                                     MessagesManager.unreadMessages(chatId, currentUserManager.getUserId())
+                                    view.notifyUser(chatMessage, chatId)
+                                }
                             }
                         }
 
