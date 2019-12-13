@@ -16,11 +16,15 @@
 
 package site.paulo.localchat.ui.signin
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.jetbrains.anko.*
 import site.paulo.localchat.R
@@ -59,7 +63,15 @@ class SignInActivity : BaseActivity(), SignInContract.View {
             startActivity<SignUpActivity>()
         }
 
+        askForLocationPermission()
         presenter.isAuthenticated() //if authenticated, sign in
+    }
+
+    private fun askForLocationPermission() {
+        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        when (permissionCheck) {
+            PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
     }
 
     private fun setupActivity() {
