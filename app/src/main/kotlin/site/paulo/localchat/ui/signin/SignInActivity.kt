@@ -78,14 +78,8 @@ class SignInActivity : BaseActivity(), SignInContract.View {
         activityComponent.inject(this)
         presenter.attachView(this)
 
-        if (Build.VERSION.SDK_INT < 16) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        } else {
-            val decorView = window.decorView
-            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
-
+        val decorView = window.decorView
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         setContentView(R.layout.activity_sign_in)
     }
 
