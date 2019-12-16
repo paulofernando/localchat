@@ -29,7 +29,7 @@ class DatabaseHelperTest {
     @Rule @JvmField
     val overrideSchedulersRule = RxSchedulersOverrideRule()
 
-    /*@Mock //talvez aqui cause erro
+    /*@Mock
     lateinit var mockFirebaseHelper: FirebaseHelper
 
     @Test

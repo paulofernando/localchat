@@ -2,7 +2,6 @@ package site.paulo.localchat
 
 import com.google.firebase.auth.FirebaseAuth
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.After
 import org.junit.Before
@@ -59,10 +58,8 @@ class ChatPresenterTest {
         val userId = Utils.getFirebaseId(user.email)
 
         whenever(mockDataManager.getUser(userId)).thenReturn(Observable.just(user))
-        whenever(mockDataManager.getChatRoom(chat.id)).thenReturn(Observable.just(chat))
 
         chatPresenter.loadChatRooms(userId)
-        verify(mockChatMvpView).showChat(chat)
         verify(mockChatMvpView, never()).showChatsEmpty()
         verify(mockChatMvpView, never()).showError()
     }
@@ -76,7 +73,6 @@ class ChatPresenterTest {
 
         chatPresenter.loadChatRooms(userId)
         verify(mockChatMvpView).showChatsEmpty()
-        verify(mockChatMvpView, never()).showChat(any())
         verify(mockChatMvpView, never()).showError()
     }
 
