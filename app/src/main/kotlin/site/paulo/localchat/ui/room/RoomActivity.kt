@@ -32,10 +32,7 @@ import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.*
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.utils.CircleTransform
-import site.paulo.localchat.ui.utils.Utils
-import site.paulo.localchat.ui.utils.getFirebaseId
-import site.paulo.localchat.ui.utils.loadUrlCircle
+import site.paulo.localchat.ui.utils.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -54,7 +51,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     private var emptyRoom: Boolean = false
     var chat: Chat? = null
-    var otherUser: NearbyUser? = null
+    var chatFriend: NearbyUser? = null
     var chatId: String? = null
 
 
@@ -63,17 +60,23 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         setupActivity()
 
         this.chatId = intent.getStringExtra("chatId")
-        this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
-        this.otherUser = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
+        this.chatFriend = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
+        if (Reservoir.contains(chatId)) {
+            this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        }
 
         messagesRoomList.adapter = roomAdapter
         messagesRoomList.layoutManager = LinearLayoutManager(this)
         (messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true
 
-        if ((otherUser != null) && //come from nearby users fragment
-                !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(otherUser!!.email))) {
+        if ((chatFriend != null) && //come from nearby users fragment
+                !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(chatFriend!!.email))) {
             emptyRoom = true
-        } else showChat(chat!!)
+        } else {
+            if (chat == null) //only have the chat id
+                presenter.getChatData(chatId!!)
+            else showChat(chat!!)
+        }
 
         sendRoomBtn.setOnClickListener {
             if (!emptyRoom)
@@ -82,7 +85,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                         chat?.id ?: chatId!!)
             else {
                 //first message between users, creates a room before send it
-                chat = presenter.createNewRoom(this.otherUser!!)
+                chat = presenter.createNewRoom(this.chatFriend!!)
                 chatId = chat?.id
                 presenter.sendMessage(
                         ChatMessage(currentUserManager.getUserId(), messageRoomTxt.text.toString()),
@@ -194,18 +197,13 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     }
 
     private fun configureToolbar() {
-        if (this.otherUser != null) {
-            toolbarRoom.title = otherUser?.name ?: ""
-            otherUserImg.loadUrlCircle(otherUser?.pic) {
+        if (chatFriend != null) {
+            toolbarRoom.title = chatFriend?.name ?: ""
+            otherUserImg.loadUrlCircle(chatFriend?.pic) {
                 request -> request.transform(CircleTransform())
             }
-        } else if (this.chat != null) {
-            var otherUserIndex: Int = 0
-
-            if ((chat as Chat).users.keys.indexOf(currentUserManager.getUserId()) == 0)
-                otherUserIndex = 1
-
-            var summarizedUser: SummarizedUser? = (this.chat as Chat).users.get((chat as Chat).users.keys.elementAt(otherUserIndex))
+        } else if (chat != null) { //configure toolbar when user come from chat list //TODO improve it
+            val summarizedUser = Utils.getChatFriend(currentUserManager.getUserId(), chat as Chat)
             chatId = (chat as Chat).id
 
             toolbarRoom.title = summarizedUser?.name

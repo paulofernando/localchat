@@ -86,22 +86,16 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     inner class ChatViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         fun bindChat(chat: Chat) {
-            var otherUserIndex = 0
-
-            if (chat.users.keys.indexOf(currentUserManager.getUserId()) == 0)
-                otherUserIndex = 1
-
+            val chatFriend = Utils.getChatFriend(currentUserManager.getUserId(), chat)
             chatsMapped[chat.id] = chats.indexOf(chat)
 
-            itemView.nameChatTv.text =
-                    chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.name ?: ""
+            itemView.nameChatTv.text = chatFriend?.name ?: ""
             itemView.lastMessageChatTv.text = chat.lastMessage.message
             itemView.lastMessageTimeTv.text = Date().formattedTime(itemView.ctx, chat.lastMessage.timestamp)
 
             updateUnreadMessages(chat.id, currentUserManager.getUserId())
 
-            itemView.chatImg.loadUrlAndResizeCircle(chat.users.get(chat.users.keys.elementAt(otherUserIndex))?.pic,
-                    itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) { request ->
+            itemView.chatImg.loadUrlAndResizeCircle(chatFriend?.pic, itemView.ctx.resources.getDimension(R.dimen.image_width_chat).toInt()) { request ->
                 request.transform(CircleTransform())
             }
 
