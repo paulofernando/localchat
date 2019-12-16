@@ -66,7 +66,7 @@ constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<UsersNearbyAda
                     itemView.profileNearbyUserImg.loadResourceAndResize(R.drawable.nearby_user_default,
                         itemView.ctx.resources.getDimension(R.dimen.image_width_user).toInt())
 
-                itemView.firstNameUserTv.text = name + ", " + age.toString()
+                itemView.firstNameUserTv.text = String.format("%s, %s", name, age.toString())
                 //itemView.ageUserTv.text = age.toString()
 
                 itemView.setOnClickListener {
