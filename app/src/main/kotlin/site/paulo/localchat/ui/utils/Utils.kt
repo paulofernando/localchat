@@ -16,11 +16,25 @@
 
 package site.paulo.localchat.ui.utils
 
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.SummarizedUser
+
 class Utils {
     companion object {}
 }
 
-fun Utils.Companion.getFirebaseId(email:String): String {
+fun Utils.Companion.getFirebaseId(email: String): String {
     if(!email.equals("")) return email.replace(".", "_", false)
     else return ""
+}
+
+/**
+ * Get the other user of a specific chat
+ */
+fun Utils.Companion.getChatFriend(loggedUserId: String, chat: Chat): SummarizedUser? {
+    var userIndex = 0
+    if (chat.users.keys.indexOf(loggedUserId) == 0)
+        userIndex = 1
+
+    return chat.users.get(chat.users.keys.elementAt(userIndex))
 }

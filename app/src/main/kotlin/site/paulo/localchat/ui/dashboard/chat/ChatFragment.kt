@@ -28,14 +28,18 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
+import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.ui.base.BaseFragment
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getChatFriend
 import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Inject
 
@@ -49,6 +53,9 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var currentUserManager: CurrentUserManager
 
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
@@ -96,33 +103,47 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
         MessagesManager.add(chatMessage, chatId)
         updateLastMessage(chatMessage, chatId)
-
-        if (!isResumed) { //only notify user if chats fragment is not being shown at moment
-            messageNotification(chatMessage, chatId)
-        }
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
         chatsAdapter.setLastMessage(chatMessage, chatId)
     }
 
-    override fun messageNotification(chatMessage: ChatMessage, chatId: String) {
-        //Intent to be open when the user clicks on notification
-        val intent = Intent(context!!, RoomActivity::class.java)
-        intent.putExtra("chatId", chatId)
-        val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    override fun notifyUser(chatMessage: ChatMessage, chatId: String) {
+        if (!isResumed) { //only notify user if chats fragment is not being shown at moment
+            val chatFriend = getFriendUser(chatId)
+            if (chatFriend != null) {
+                //Intent to be open when the user clicks on notification
+                val intent = Intent(context!!, RoomActivity::class.java)
+                intent.putExtra("chatId", chatId)
+                val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle(chatMessage.owner)
-                .setContentText(chatMessage.message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
+                val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
+                        .setSmallIcon(R.drawable.logo)
+                        .setContentTitle(chatFriend.name)
+                        .setContentText(chatMessage.message)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setContentIntent(pendingIntent)
 
-        val notificationManager = NotificationManagerCompat.from(context!!)
+                val notificationManager = NotificationManagerCompat.from(context!!)
 
-        // notificationId must be an unique int for each notification
-        notificationManager.notify(chatId.hashCode(), builder.build())
+                // notificationId must be an unique int for each notification
+                notificationManager.notify(chatId.hashCode(), builder.build())
+            }
+        }
+    }
+
+    private fun getFriendUser(chatId: String): SummarizedUser? {
+        var currentChat: Chat? = null
+        if (Reservoir.contains(chatId)) {
+            currentChat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        }
+
+        if (currentChat != null) {
+            return Utils.getChatFriend(currentUserManager.getUserId(), currentChat)
+        }
+
+        return null
     }
 
 }

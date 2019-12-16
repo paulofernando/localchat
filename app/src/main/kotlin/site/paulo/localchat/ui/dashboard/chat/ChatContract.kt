@@ -30,7 +30,7 @@ object ChatContract {
         fun showError()
         fun messageReceived(chatMessage: ChatMessage, chatId: String)
         fun updateLastMessage(chatMessage: ChatMessage, chatId: String)
-        fun messageNotification(chatMessage: ChatMessage, chatId: String)
+        fun notifyUser(chatMessage: ChatMessage, chatId: String)
     }
 
     abstract class Presenter : BaseMvpPresenter<View>() {

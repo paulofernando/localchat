@@ -4,25 +4,31 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
 import android.text.format.DateUtils
-import android.view.PixelCopy.request
 import android.widget.ImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.RequestCreator
-import kotlinx.android.synthetic.main.item_user.view.*
 import site.paulo.localchat.R
 import java.util.*
+
 
 fun Date.formattedTime(context: Context, time: Long): String {
     val cal = Calendar.getInstance(Locale.ENGLISH)
     cal.timeInMillis = time
 
-    var date: String?
+    val oneYearAgo = Calendar.getInstance(Locale.ENGLISH)
+    oneYearAgo.add(Calendar.YEAR, -1)
+
+    val date: String?
     if (DateUtils.isToday(time)) {
         date = context.resources.getString(R.string.lb_today) + DateFormat.format(", kk:mm", cal).toString()
     } else {
-        date = DateFormat.format("d MMM, kk:mm", cal).toString()
+        if (cal.before(oneYearAgo)) {
+            date = DateFormat.format("d MMM, yyyy, kk:mm", cal).toString()
+        } else {
+            date = DateFormat.format("d MMM, kk:mm", cal).toString()
+        }
     }
     return date
 }

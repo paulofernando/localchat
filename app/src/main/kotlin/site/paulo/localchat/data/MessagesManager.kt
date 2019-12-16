@@ -67,7 +67,7 @@ class MessagesManager {
                 }
                 return Reservoir.get<AtomicInteger>(key, AtomicInteger::class.java).get()
             } catch (e: Exception) {
-                Timber.e(e.message)
+                Timber.e(e)
             }
             return 0
         }
