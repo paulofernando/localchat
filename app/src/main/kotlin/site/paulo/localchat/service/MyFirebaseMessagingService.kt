@@ -16,15 +16,8 @@
 
 package site.paulo.localchat.service
 
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.media.RingtoneManager
-import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import site.paulo.localchat.ui.dashboard.DashboardActivity
 import timber.log.Timber
 
 
@@ -60,31 +53,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-    }
-
-    /**
-     * Create and show a simple notification containing the received FCM message.
-
-     * @param messageBody FCM message body received.
-     */
-    private fun sendNotification(messageBody: String) {
-        val intent = Intent(this, DashboardActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT)
-
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this, "fcm")
-            //.setSmallIcon(R.drawable.logo)
-            .setContentTitle("FCM Message")
-            .setContentText(messageBody)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
     }
 
     override fun onNewToken(s: String) {
