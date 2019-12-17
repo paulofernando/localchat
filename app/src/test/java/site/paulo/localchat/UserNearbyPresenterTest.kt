@@ -1,6 +1,7 @@
 package site.paulo.localchat
 
 import com.google.firebase.auth.FirebaseAuth
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 
 import org.junit.After
@@ -51,34 +52,35 @@ class UserNearbyPresenterTest {
     }
 
     @Test
-    fun loadNearbyUsersReturnNearbyUsers() {
+    fun loadUsersReturnNearbyUsers() {
         val users = TestDataFactory.makeListUsers(10)
+        val nearbyUsers = TestDataFactory.makeListNearbyUsers(10)
         whenever(mockDataManager.getUsers()).thenReturn(Observable.just(users))
 
-        usersNearbyPresenter.loadNearbyUsers()
-        verify(mockUsersNearbyMvpView).showNearbyUsers(users)
+        usersNearbyPresenter.loadUsers()
+        verify(mockUsersNearbyMvpView, never()).showNearbyUsers(nearbyUsers)
         verify(mockUsersNearbyMvpView, never()).showNearbyUsersEmpty()
         verify(mockUsersNearbyMvpView, never()).showError()
     }
 
     @Test
-    fun loadNearbyUsersReturnsEmptyList() {
+    fun loadUsersReturnsEmptyList() {
         whenever(mockDataManager.getUsers()).thenReturn(Observable.just(emptyList<User>()))
 
-        usersNearbyPresenter.loadNearbyUsers()
+        usersNearbyPresenter.loadUsers()
         verify(mockUsersNearbyMvpView).showNearbyUsersEmpty()
-        verify(mockUsersNearbyMvpView, never()).showNearbyUsers(anyListOf(User::class.java))
+        verify(mockUsersNearbyMvpView, never()).showNearbyUsers(any())
         verify(mockUsersNearbyMvpView, never()).showError()
     }
 
     @Test
-    fun loadNearbyUsersFails() {
+    fun loadUsersFails() {
         whenever(mockDataManager.getUsers()).thenReturn(Observable.error<List<User>>(RuntimeException()))
 
-        usersNearbyPresenter.loadNearbyUsers()
+        usersNearbyPresenter.loadUsers()
         verify(mockUsersNearbyMvpView).showError()
         verify(mockUsersNearbyMvpView, never()).showNearbyUsersEmpty()
-        verify(mockUsersNearbyMvpView, never()).showNearbyUsers(anyListOf(User::class.java))
+        verify(mockUsersNearbyMvpView, never()).showNearbyUsers(any())
     }
 
 }

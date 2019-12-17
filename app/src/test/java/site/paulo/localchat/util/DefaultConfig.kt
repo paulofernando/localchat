@@ -1,5 +1,5 @@
 package site.paulo.localchat.util
 
 object DefaultConfig {
-    const val EMULATE_SDK = 23
+    const val EMULATE_SDK = 28
 }
