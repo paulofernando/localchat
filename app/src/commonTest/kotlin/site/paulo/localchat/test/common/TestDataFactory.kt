@@ -72,6 +72,13 @@ object TestDataFactory {
             users = mapOf("abc" to makeSummarizedUser("s1")))
     }
 
+    @JvmStatic fun makeChatMessage(): ChatMessage {
+        return ChatMessage(
+                owner = "p@p_com",
+                message = "Test message",
+                timestamp = 123456789L)
+    }
+
     @JvmStatic fun makeSummarizedUser(uniqueSuffix: String): SummarizedUser {
         return SummarizedUser(
             name = "name$uniqueSuffix",

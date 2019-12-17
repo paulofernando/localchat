@@ -1,7 +1,7 @@
 package site.paulo.localchat
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.After
 import org.junit.Before
@@ -9,8 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.mockito.runners.MockitoJUnitRunner
 import rx.Observable
 import site.paulo.localchat.data.DataManager
@@ -21,6 +20,7 @@ import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.room.RoomContract
 import site.paulo.localchat.ui.room.RoomPresenter
 import site.paulo.localchat.util.RxSchedulersOverrideRule
+
 
 @RunWith(MockitoJUnitRunner::class)
 class RoomPresenterTest {
@@ -84,5 +84,23 @@ class RoomPresenterTest {
         verify(mockChatMvpView, never()).showChat(chat)
         verify(mockChatMvpView, never()).showEmptyChatRoom()
         verify(mockChatMvpView).showError()
+    }
+
+    @Test
+    fun sendMessageSuccess() {
+        val chatMessage = TestDataFactory.makeChatMessage()
+
+        roomPresenter.sendMessage(chatMessage, "chatId")
+        verify(mockDataManager, times(1)).sendMessage(any(), any(), any())
+        verify(mockChatMvpView).cleanMessageField()
+    }
+
+    @Test
+    fun sendMessageEmptyMessage() {
+        val chatMessage = ChatMessage(owner = "p@p_com", message = "", timestamp = 123456789L)
+
+        roomPresenter.sendMessage(chatMessage, "chatId")
+        verify(mockDataManager, times(0)).sendMessage(any(), any(), any())
+        verify(mockChatMvpView, never()).cleanMessageField()
     }
 }
