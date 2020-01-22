@@ -20,10 +20,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.FunctionSubscriber
-import rx.lang.kotlin.addTo
-import rx.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
@@ -45,8 +46,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
         dataManager.getUsers()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<List<User>>()
-                .onNext {
+            .subscribeBy(onNext = {
                     val userEmail = firebaseAuth.currentUser?.email
                     if (it.isEmpty()) {
                         view.showNearbyUsersEmpty()
@@ -60,13 +60,13 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                             }
                         }
                     }
-                }.onCompleted {
+                }, onComplete = {
                     callback?.invoke()
-                }.onError {
+                }, onError = {
                     Timber.e(it, "There was an error loading the users.")
                     view.showError()
                 }
-            ).addTo(compositeSubscription)
+            ).addTo(compositeDisposable)
     }
 
     override fun listenNearbyUsers() {
@@ -98,11 +98,11 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
         Timber.i("Listening for nearby users...")
     }
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun detachView() {
         super.detachView()
-        compositeSubscription.clear()
+        compositeDisposable.clear()
     }
 
 }

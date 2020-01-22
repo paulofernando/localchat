@@ -29,7 +29,6 @@ import com.google.firebase.database.ValueEventListener
 import com.kelvinapps.rxfirebase.DataSnapshotMapper
 import com.kelvinapps.rxfirebase.RxFirebaseAuth
 import com.kelvinapps.rxfirebase.RxFirebaseDatabase
-import rx.Observable
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
@@ -39,6 +38,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
+import io.reactivex.Observable
 import site.paulo.localchat.data.model.firebase.*
 
 

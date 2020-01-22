@@ -21,7 +21,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import rx.Observable
+import io.reactivex.Observable
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.NearbyUser

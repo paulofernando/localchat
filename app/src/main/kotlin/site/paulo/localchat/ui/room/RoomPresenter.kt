@@ -22,9 +22,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.FunctionSubscriber
-import rx.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
@@ -36,8 +38,8 @@ import javax.inject.Inject
 class RoomPresenter
 @Inject
 constructor(private val dataManager: DataManager,
-    private val currentUserManager: CurrentUserManager,
-    private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
+            private val currentUserManager: CurrentUserManager,
+            private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
 
     private var childEventListener: ChildEventListener? = null
 
@@ -45,18 +47,16 @@ constructor(private val dataManager: DataManager,
      * while storing chat data locally. **/
     override fun getChatData(chatId: String) {
         dataManager.getChatRoom(chatId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<Chat>()
-                .onNext {
-                    if(it.id != "") view.showChat(it)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(onNext = {
+                    if (it.id != "") view.showChat(it)
                     else view.showEmptyChatRoom()
-                }
-                .onError {
+                }, onError = {
                     Timber.e(it, "There was an error loading a chat room.")
                     view.showError()
                 }
-            )
+                ).addTo(compositeDisposable)
     }
 
     override fun sendMessage(message: ChatMessage, chatId: String) {
@@ -123,6 +123,13 @@ constructor(private val dataManager: DataManager,
 
     override fun createNewRoom(otherUser: NearbyUser): Chat {
         return dataManager.createNewRoom(otherUser)
+    }
+
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun detachView() {
+        super.detachView()
+        compositeDisposable.clear()
     }
 
 }

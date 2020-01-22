@@ -21,20 +21,18 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.FunctionSubscriber
-import rx.lang.kotlin.addTo
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 
@@ -50,20 +48,17 @@ constructor(private val dataManager: DataManager,
         dataManager.getUser(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<User>()
-                .onNext {
-                    if(it.chats.isEmpty())
-                        view.showChatsEmpty()
-                    else
-                        for((key) in it.chats)
-                            loaded[key] = false
+            .subscribeBy(onNext = {
+                if(it.chats.isEmpty())
+                    view.showChatsEmpty()
+                else
+                    for((key) in it.chats)
+                        loaded[key] = false
 
-                }
-                .onError {
-                    view.showError()
-                    Timber.e(it, "There was an error loading chats from an user.")
-                }
-            ).addTo(compositeSubscription)
+            }, onError = {
+            view.showError()
+            Timber.e(it, "There was an error loading chats from an user.")
+        }).addTo(compositeDisposable)
 
     }
 
@@ -71,8 +66,7 @@ constructor(private val dataManager: DataManager,
         dataManager.getChatRoom(chatId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<Chat>()
-                .onNext {
+            .subscribeBy( onNext = {
                     val childEventListener = object : ChildEventListener {
                         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
@@ -115,12 +109,11 @@ constructor(private val dataManager: DataManager,
                     dataManager.addRoomSingleValueEventListener(allLoadedListener, it.id)
 
                     view.showChat(it)
-                }
-                .onError {
+                }, onError = {
                     Timber.e(it, "There was an error loading a chat room.")
                     view.showError()
                 }
-            ).addTo(compositeSubscription)
+            ).addTo(compositeDisposable)
     }
 
     override fun listenNewChatRooms(userId: String) {
@@ -146,11 +139,11 @@ constructor(private val dataManager: DataManager,
         //TODO
     }
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun detachView() {
         super.detachView()
-        compositeSubscription.clear()
+        compositeDisposable.clear()
     }
 
 }

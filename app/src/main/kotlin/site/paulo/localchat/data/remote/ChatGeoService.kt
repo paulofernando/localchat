@@ -17,7 +17,7 @@
 package site.paulo.localchat.data.remote
 
 import retrofit2.http.GET
-import rx.Observable
+import io.reactivex.Observable
 import site.paulo.localchat.data.model.firebase.User
 
 interface ChatGeoService {
