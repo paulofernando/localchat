@@ -119,7 +119,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
-    implementation 'com.kelvinapps:rxfirebase:0.0.17'
+    implementation 'com.github.FrangSierra:RxFirebase:1.5.6'
     testImplementation 'org.robolectric:robolectric:4.3.1'
 
     kapt 'com.google.dagger:dagger-compiler:2.25.3'

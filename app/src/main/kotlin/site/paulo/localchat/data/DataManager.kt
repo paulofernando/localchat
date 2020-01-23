@@ -21,7 +21,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import io.reactivex.Observable
+import io.reactivex.Maybe
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.NearbyUser
@@ -34,15 +34,15 @@ import javax.inject.Singleton
 class DataManager
 @Inject constructor(private val firebaseHelper: FirebaseHelper) {
 
-    fun getUsers(): Observable<List<User>> {
+    fun getUsers(): Maybe<List<User>> {
         return firebaseHelper.getUsers()
     }
 
-    fun getNearbyUsers(geoHash: String): Observable<List<Any>> {
+    fun getNearbyUsers(geoHash: String): Maybe<List<Any>> {
         return firebaseHelper.getNearbyUsers(geoHash)
     }
 
-    fun getUser(userId: String): Observable<User> {
+    fun getUser(userId: String): Maybe<User> {
         return firebaseHelper.getUser(userId)
     }
 
@@ -62,7 +62,7 @@ class DataManager
         firebaseHelper.updateUserLocation(location, callNext)
     }
 
-    fun authenticateUser(email: String, password: String): Observable<AuthResult> {
+    fun authenticateUser(email: String, password: String): Maybe<AuthResult> {
         return firebaseHelper.authenticateUser(email, password)
     }
 
@@ -71,7 +71,7 @@ class DataManager
         firebaseHelper.updateUserData(dataType, value, completionListener)
     }
 
-    fun getChatRoom(chatId:String): Observable<Chat> {
+    fun getChatRoom(chatId:String): Maybe<Chat> {
         return firebaseHelper.getChatRoom(chatId)
     }
 

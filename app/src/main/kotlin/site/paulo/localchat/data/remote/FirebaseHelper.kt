@@ -26,9 +26,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
-import com.kelvinapps.rxfirebase.DataSnapshotMapper
-import com.kelvinapps.rxfirebase.RxFirebaseAuth
-import com.kelvinapps.rxfirebase.RxFirebaseDatabase
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
@@ -38,7 +35,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
-import io.reactivex.Observable
+import durdinapps.rxfirebase2.DataSnapshotMapper
+import durdinapps.rxfirebase2.RxFirebaseAuth
+import durdinapps.rxfirebase2.RxFirebaseDatabase
+import io.reactivex.Maybe
 import site.paulo.localchat.data.model.firebase.*
 
 
@@ -89,17 +89,17 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     /**************** User *********************/
 
-    fun getUsers(): Observable<List<User>> {
+    fun getUsers(): Maybe<List<User>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.USERS),
                 DataSnapshotMapper.listOf(User::class.java))
     }
 
-    fun getNearbyUsers(geoHash: String): Observable<List<Any>> {
+    fun getNearbyUsers(geoHash: String): Maybe<List<Any>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.GEOHASHES).child(geoHash),
                 DataSnapshotMapper.listOf(Any::class.java))
     }
 
-    fun getUser(userId: String): Observable<User> {
+    fun getUser(userId: String): Maybe<User> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.USERS).child(userId),
                 User::class.java)
     }
@@ -119,7 +119,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         firebaseDatabase.getReference(Reference.USERS).child(Utils.getFirebaseId(user.email)).setValue(userData, completionListener)
     }
 
-    fun authenticateUser(email: String, password: String): Observable<AuthResult> {
+    fun authenticateUser(email: String, password: String): Maybe<AuthResult> {
         return RxFirebaseAuth.signInWithEmailAndPassword(firebaseAuth, email, password)
     }
 
@@ -250,7 +250,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         firebaseDatabase.getReference(Reference.CHATS).child(chatId).updateChildren(valueLastMessage)
     }
 
-    fun getChatRoom(chatId: String): Observable<Chat> {
+    fun getChatRoom(chatId: String): Maybe<Chat> {
         val storeRedChat = firebaseDatabase.getReference(Reference.CHATS).child(chatId)
         storeRedChat.keepSynced(true)
         return RxFirebaseDatabase.observeSingleValueEvent(storeRedChat, Chat::class.java)

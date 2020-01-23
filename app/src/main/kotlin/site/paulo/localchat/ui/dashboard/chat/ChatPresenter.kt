@@ -45,7 +45,7 @@ constructor(private val dataManager: DataManager,
     var loaded = mutableMapOf<String?, Boolean>()
 
     override fun loadChatRooms(userId: String) {
-        dataManager.getUser(userId)
+        dataManager.getUser(userId).toObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribeBy(onNext = {
@@ -63,7 +63,7 @@ constructor(private val dataManager: DataManager,
     }
 
     override fun loadChatRoom(chatId: String) {
-        dataManager.getChatRoom(chatId)
+        dataManager.getChatRoom(chatId).toObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribeBy( onNext = {

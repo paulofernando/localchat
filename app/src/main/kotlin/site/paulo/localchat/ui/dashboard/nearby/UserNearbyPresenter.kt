@@ -43,7 +43,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
 
     override fun loadUsers(callback: (() -> Unit)?) {
         //TODO change this method to listen for new user.
-        dataManager.getUsers()
+        dataManager.getUsers().toObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribeBy(onNext = {

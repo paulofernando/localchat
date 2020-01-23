@@ -2,7 +2,7 @@ package site.paulo.localchat.ui.dashboard.chat
 
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.reactivex.Observable
+import io.reactivex.Maybe
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
@@ -53,8 +53,8 @@ class ChatPresenterTest {
         val user = TestDataFactory.makeUser("u1", chat.id)
         val userId = Utils.getFirebaseId(user.email)
 
-        every {dataManagerMock.getUser(userId)} returns Observable.just(user)
-        every {dataManagerMock.getChatRoom(chat.id)} returns Observable.just(chat)
+        every {dataManagerMock.getUser(userId)} returns Maybe.just(user)
+        every {dataManagerMock.getChatRoom(chat.id)} returns Maybe.just(chat)
 
         chatPresenter.loadChatRooms(userId)
         confirmVerified(chatPresenter)

@@ -46,7 +46,7 @@ constructor(private val dataManager: DataManager,
     /** Get data from an specific chat room. We can use it in case of some issue
      * while storing chat data locally. **/
     override fun getChatData(chatId: String) {
-        dataManager.getChatRoom(chatId)
+        dataManager.getChatRoom(chatId).toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(onNext = {
