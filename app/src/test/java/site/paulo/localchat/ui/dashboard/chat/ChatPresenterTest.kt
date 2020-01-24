@@ -2,6 +2,7 @@ package site.paulo.localchat.ui.dashboard.chat
 
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.reactivex.Maybe
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
@@ -15,36 +16,31 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
+import java.lang.RuntimeException
 
 class ChatPresenterTest {
+
+    lateinit var chatPresenter: ChatContract.Presenter
 
     //Mocks
     private val dataManagerMock: DataManager = mockk()
     private val currentUserManagerMock: CurrentUserManager = mockk()
-
-    @MockK
-    lateinit var chatPresenter: ChatContract.Presenter
-
-    @MockK
-    lateinit var chatMvpViewMock: ChatContract.View
-
-    @BeforeClass
-    internal fun setUpRxSchedulers() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
-        RxJavaPlugins.setInitNewThreadSchedulerHandler { Schedulers.trampoline() }
-
-    }
+    @RelaxedMockK lateinit var chatMvpViewMock: ChatContract.View
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
+        MockKAnnotations.init(this)
+
         chatPresenter = ChatPresenter(dataManagerMock, currentUserManagerMock)
-        //chatPresenter.attachView(chatMvpViewMock)
+        chatPresenter.attachView(chatMvpViewMock)
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
+        RxJavaPlugins.setInitNewThreadSchedulerHandler { Schedulers.trampoline() }
     }
 
     @AfterEach
     internal fun tearDown() {
-        //chatPresenter.detachView()
+        chatPresenter.detachView()
     }
 
     @Test
@@ -57,7 +53,47 @@ class ChatPresenterTest {
         every {dataManagerMock.getChatRoom(chat.id)} returns Maybe.just(chat)
 
         chatPresenter.loadChatRooms(userId)
-        confirmVerified(chatPresenter)
+
+        verify(exactly = 0) {
+            chatMvpViewMock.showChatsEmpty()
+            chatMvpViewMock.showError()
+        }
+    }
+
+    @Test
+    fun `loadChatRooms - success - show empty chat`() {
+        val user = TestDataFactory.makeUserEmptyChatList("u1")
+        val userId = Utils.getFirebaseId(user.email)
+
+        every {dataManagerMock.getUser(userId)} returns Maybe.just(user)
+
+        chatPresenter.loadChatRooms(userId)
+
+        verify(exactly = 1) {
+            chatMvpViewMock.showChatsEmpty()
+        }
+        verify(exactly = 0) {
+            chatMvpViewMock.showError()
+        }
+
+    }
+
+    @Test
+    fun `loadChatRooms - failure`() {
+        val user = TestDataFactory.makeUser("u1")
+        val userId = Utils.getFirebaseId(user.email)
+
+        every {dataManagerMock.getUser(userId)} returns Maybe.error(RuntimeException())
+
+        chatPresenter.loadChatRooms(userId)
+
+        verify(exactly = 1) {
+            chatMvpViewMock.showError()
+        }
+        verify(exactly = 0) {
+            chatMvpViewMock.showChatsEmpty()
+        }
+
     }
 
 }
