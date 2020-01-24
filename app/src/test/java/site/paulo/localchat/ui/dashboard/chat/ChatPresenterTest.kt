@@ -1,13 +1,11 @@
 package site.paulo.localchat.ui.dashboard.chat
 
 import io.mockk.*
-import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.reactivex.Maybe
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import org.junit.BeforeClass
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,6 +32,7 @@ class ChatPresenterTest {
 
         chatPresenter = ChatPresenter(dataManagerMock, currentUserManagerMock)
         chatPresenter.attachView(chatMvpViewMock)
+
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
         RxJavaPlugins.setInitNewThreadSchedulerHandler { Schedulers.trampoline() }
     }
@@ -44,7 +43,7 @@ class ChatPresenterTest {
     }
 
     @Test
-    fun `loadChatRooms - success - return ChatRoom`() {
+    fun `loadChatRooms - success`() {
         val chat = TestDataFactory.makeChat("c1")
         val user = TestDataFactory.makeUser("u1", chat.id)
         val userId = Utils.getFirebaseId(user.email)
