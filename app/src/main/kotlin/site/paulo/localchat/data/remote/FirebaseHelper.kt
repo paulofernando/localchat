@@ -45,7 +45,6 @@ import site.paulo.localchat.data.model.firebase.*
 @Singleton
 class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                                          val currentUserManager: CurrentUserManager,
-                                         val currentUser: CurrentUserManager,
                                          val firebaseAuth: FirebaseAuth) {
 
     object Reference {

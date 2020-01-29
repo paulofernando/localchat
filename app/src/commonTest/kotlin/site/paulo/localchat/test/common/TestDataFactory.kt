@@ -91,14 +91,14 @@ object TestDataFactory {
 
     @JvmStatic fun makeChatMessage(): ChatMessage {
         return ChatMessage(
-                owner = "p@p_com",
+                owner = getOwner(),
                 message = "Test message",
                 timestamp = 123456789L)
     }
 
     @JvmStatic fun makeEmptyChatMessage(): ChatMessage {
         return ChatMessage(
-                owner = "p@p_com",
+                owner = getOwner(),
                 message = "",
                 timestamp = 123456789L)
     }
@@ -107,6 +107,10 @@ object TestDataFactory {
         return SummarizedUser(
             name = "name$uniqueSuffix",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png")
+    }
+
+    @JvmStatic fun getOwner(): String {
+        return "test@test_com"
     }
 
 }
