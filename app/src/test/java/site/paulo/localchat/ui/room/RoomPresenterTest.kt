@@ -54,7 +54,6 @@ class RoomPresenterTest {
         verify {
             roomMvpViewMock.showChat(chat)
         }
-
         verify(exactly = 0) {
             roomMvpViewMock.showEmptyChatRoom()
             roomMvpViewMock.showError()
@@ -73,7 +72,6 @@ class RoomPresenterTest {
         verify {
             roomMvpViewMock.showEmptyChatRoom()
         }
-
         verify(exactly = 0) {
             roomMvpViewMock.showChat(chat)
             roomMvpViewMock.showError()
@@ -92,7 +90,6 @@ class RoomPresenterTest {
         verify {
             roomMvpViewMock.showError()
         }
-
         verify(exactly = 0) {
             roomMvpViewMock.showChat(chat)
             roomMvpViewMock.showEmptyChatRoom()

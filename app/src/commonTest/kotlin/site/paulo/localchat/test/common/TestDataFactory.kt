@@ -46,6 +46,16 @@ object TestDataFactory {
             chats = mutableMapOf("a@a_com" to "cHjyfgh"))
     }
 
+    @JvmStatic fun makeUser(uniqueSuffix: String, chatId: String, email: String): User {
+        return User(
+                name = "name$uniqueSuffix",
+                age = 29,
+                email = email,
+                gender = "m",
+                pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+                chats = mutableMapOf("a@a_com" to "cHjyfgh"))
+    }
+
     @JvmStatic fun makeNearbyUser(uniqueSuffix: String): NearbyUser {
         return NearbyUser(
                 name = "name$uniqueSuffix",

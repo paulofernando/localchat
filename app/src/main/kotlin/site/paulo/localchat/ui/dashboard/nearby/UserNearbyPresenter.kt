@@ -25,12 +25,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.data.model.firebase.NearbyUser
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
 import javax.inject.Inject
@@ -70,30 +68,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     }
 
     override fun listenNearbyUsers() {
-        val childEventListener = object : ChildEventListener {
-
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-                if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
-                    view.showNearbyUser(nearbyUser)
-            }
-
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-                val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-                if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email))
-                    view.showNearbyUser(nearbyUser)
-            }
-
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-                if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
-                    view.removeNearbyUser(nearbyUser)
-            }
-
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
-            override fun onCancelled(databaseError: DatabaseError) {}
-        }
-
+        val childEventListener = NearbyUserChildEventListener(firebaseAuth, this)
         dataManager.registerNewUsersChildEventListener(childEventListener)
         Timber.i("Listening for nearby users...")
     }
@@ -103,6 +78,32 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     override fun detachView() {
         super.detachView()
         compositeDisposable.clear()
+    }
+
+    private class NearbyUserChildEventListener
+    constructor(private val firebaseAuth: FirebaseAuth,
+                private val presenter: UsersNearbyContract.Presenter) : ChildEventListener {
+
+        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
+                presenter.view.showNearbyUser(nearbyUser)
+        }
+
+        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email))
+                presenter.view.showNearbyUser(nearbyUser)
+        }
+
+        override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
+                presenter.view.removeNearbyUser(nearbyUser)
+        }
+
+        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+        override fun onCancelled(databaseError: DatabaseError) {}
     }
 
 }
