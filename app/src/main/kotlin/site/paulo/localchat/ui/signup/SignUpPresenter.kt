@@ -17,7 +17,9 @@
 package site.paulo.localchat.ui.signup
 
 import com.google.firebase.auth.FirebaseAuth
-import com.kelvinapps.rxfirebase.RxFirebaseAuth
+import durdinapps.rxfirebase2.RxFirebaseAuth
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.model.firebase.User
 import timber.log.Timber
@@ -37,10 +39,17 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
             }, {
                 Timber.e("Sign up failed")
                 view.showFailSignUp()
-            })
+            }).addTo(compositeDisposable)
     }
 
     private fun registerUser(user: User) {
         dataManager.registerUser(user)
+    }
+
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun detachView() {
+        super.detachView()
+        compositeDisposable.clear()
     }
 }

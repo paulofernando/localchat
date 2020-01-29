@@ -31,14 +31,14 @@ class MessagesManager {
         val chatListeners = mutableMapOf<String, MessagesListener>()
 
         fun add(chatMessage: ChatMessage, chatId: String) {
+            if(!chatMessages.containsKey(chatId)) {
+                chatMessages.put(chatId, mutableListOf())
+            }
             chatMessages[chatId]?.add(chatMessage)
             chatListeners[chatId]?.messageReceived(chatMessage)
         }
 
         fun unreadMessages(chatId: String, userId: String) {
-            if(!chatMessages.containsKey(chatId)) {
-                chatMessages.put(chatId, mutableListOf<ChatMessage>())
-            }
             try {
                 val key = "$chatId-unread-$userId"
                 if(!Reservoir.contains(key)) {
@@ -47,7 +47,7 @@ class MessagesManager {
                 val unread = Reservoir.get<AtomicInteger>(key, AtomicInteger::class.java)
                 Reservoir.put(key, unread.incrementAndGet())
             } catch (e: IOException) {
-                Timber.e(e.message)
+                Timber.e(e)
             }
         }
 
@@ -55,7 +55,7 @@ class MessagesManager {
             try {
                 Reservoir.put("$chatId-unread-$userId", AtomicInteger(0))
             } catch (e: IOException) {
-                Timber.e(e.message)
+                Timber.e(e)
             }
         }
 

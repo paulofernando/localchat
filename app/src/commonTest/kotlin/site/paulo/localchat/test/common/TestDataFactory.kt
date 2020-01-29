@@ -46,6 +46,16 @@ object TestDataFactory {
             chats = mutableMapOf("a@a_com" to "cHjyfgh"))
     }
 
+    @JvmStatic fun makeUser(uniqueSuffix: String, chatId: String, email: String): User {
+        return User(
+                name = "name$uniqueSuffix",
+                age = 29,
+                email = email,
+                gender = "m",
+                pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png",
+                chats = mutableMapOf("a@a_com" to "cHjyfgh"))
+    }
+
     @JvmStatic fun makeNearbyUser(uniqueSuffix: String): NearbyUser {
         return NearbyUser(
                 name = "name$uniqueSuffix",
@@ -72,10 +82,24 @@ object TestDataFactory {
             users = mapOf("abc" to makeSummarizedUser("s1")))
     }
 
+    @JvmStatic fun makeEmptyChat(): Chat {
+        return Chat(
+                id = "",
+                lastMessage = ChatMessage("", "", 0L),
+                users = mapOf("abc" to makeSummarizedUser("s1")))
+    }
+
     @JvmStatic fun makeChatMessage(): ChatMessage {
         return ChatMessage(
-                owner = "p@p_com",
+                owner = getOwner(),
                 message = "Test message",
+                timestamp = 123456789L)
+    }
+
+    @JvmStatic fun makeEmptyChatMessage(): ChatMessage {
+        return ChatMessage(
+                owner = getOwner(),
+                message = "",
                 timestamp = 123456789L)
     }
 
@@ -83,6 +107,10 @@ object TestDataFactory {
         return SummarizedUser(
             name = "name$uniqueSuffix",
             pic = "https://api.adorable.io/avatars/285/$uniqueSuffix@adorable.png")
+    }
+
+    @JvmStatic fun getOwner(): String {
+        return "test@test_com"
     }
 
 }

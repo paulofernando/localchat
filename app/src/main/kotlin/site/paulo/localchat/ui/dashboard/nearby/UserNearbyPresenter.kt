@@ -17,19 +17,19 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.FunctionSubscriber
-import rx.lang.kotlin.addTo
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.data.model.firebase.NearbyUser
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,11 +42,10 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
 
     override fun loadUsers(callback: (() -> Unit)?) {
         //TODO change this method to listen for new user.
-        dataManager.getUsers()
+        dataManager.getUsers().toObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<List<User>>()
-                .onNext {
+            .subscribeBy(onNext = {
                     val userEmail = firebaseAuth.currentUser?.email
                     if (it.isEmpty()) {
                         view.showNearbyUsersEmpty()
@@ -60,49 +59,52 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                             }
                         }
                     }
-                }.onCompleted {
+                }, onComplete = {
                     callback?.invoke()
-                }.onError {
+                }, onError = {
                     Timber.e(it, "There was an error loading the users.")
                     view.showError()
                 }
-            ).addTo(compositeSubscription)
+            ).addTo(compositeDisposable)
     }
 
     override fun listenNearbyUsers() {
-        val childEventListener = object : ChildEventListener {
-
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-                if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
-                    view.showNearbyUser(nearbyUser)
-            }
-
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-                val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-                if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email))
-                    view.showNearbyUser(nearbyUser)
-            }
-
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-                if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
-                    view.removeNearbyUser(nearbyUser)
-            }
-
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
-            override fun onCancelled(databaseError: DatabaseError) {}
-        }
-
+        val childEventListener = NearbyUserChildEventListener(firebaseAuth.currentUser, this)
         dataManager.registerNewUsersChildEventListener(childEventListener)
         Timber.i("Listening for nearby users...")
     }
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun detachView() {
         super.detachView()
-        compositeSubscription.clear()
+        compositeDisposable.clear()
+    }
+
+    private class NearbyUserChildEventListener
+    constructor(private val firebaseUser: FirebaseUser?,
+                private val presenter: UserNearbyPresenter) : ChildEventListener {
+
+        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            if (!firebaseUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
+                presenter.view.showNearbyUser(nearbyUser)
+        }
+
+        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            if (!firebaseUser?.email.equals(nearbyUser.email))
+                presenter.view.showNearbyUser(nearbyUser)
+        }
+
+        override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            if (!firebaseUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
+                presenter.view.removeNearbyUser(nearbyUser)
+        }
+
+        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+        override fun onCancelled(databaseError: DatabaseError) {}
     }
 
 }
