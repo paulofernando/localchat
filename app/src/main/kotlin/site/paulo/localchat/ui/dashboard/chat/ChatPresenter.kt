@@ -42,7 +42,7 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
-    var loaded = mutableMapOf<String?, Boolean>()
+    val loaded = mutableMapOf<String?, Boolean>()
 
     override fun loadChatRooms(userId: String) {
         dataManager.getUser(userId).toObservable()
@@ -67,24 +67,7 @@ constructor(private val dataManager: DataManager,
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(onNext = {
-                    val childEventListener = object : ChildEventListener {
-                        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
-                            view.messageReceived(chatMessage, chatId)
-                            if ((loaded[chatId] != null) && loaded[chatId]!!) { //only register message delivered if is a new message.
-                                dataManager.messageDelivered(chatId)
-                                if (chatMessage.owner != currentUserManager.getUserId()) { //not mine
-                                    MessagesManager.unreadMessages(chatId, currentUserManager.getUserId())
-                                    view.notifyUser(chatMessage, chatId)
-                                }
-                            }
-                        }
-
-                        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
-                        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-                        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
-                        override fun onCancelled(databaseError: DatabaseError) {}
-                    }
+                    val childEventListener = ChatChildEventListener(dataManager, currentUserManager.getUserId(), chatId, this)
 
                     val allLoadedListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -98,7 +81,6 @@ constructor(private val dataManager: DataManager,
                         }
 
                         override fun onCancelled(dataSnapshot: DatabaseError) {}
-
                     }
 
                     Reservoir.put(it.id, it) //persisting chats
@@ -143,6 +125,28 @@ constructor(private val dataManager: DataManager,
     override fun detachView() {
         super.detachView()
         compositeDisposable.clear()
+    }
+
+    private class ChatChildEventListener
+    constructor(private val dataManager: DataManager, private val userId: String,
+                private val chatId: String, private val presenter: ChatPresenter) : ChildEventListener {
+
+        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
+            presenter.view.messageReceived(chatMessage, chatId)
+            if ((presenter.loaded[chatId] != null) && presenter.loaded[chatId]!!) { //only register message delivered if is a new message.
+                dataManager.messageDelivered(chatId)
+                if (chatMessage.owner != userId) { //not mine
+                    MessagesManager.unreadMessages(chatId, userId)
+                    presenter.view.notifyUser(chatMessage, chatId)
+                }
+            }
+        }
+
+        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+        override fun onCancelled(databaseError: DatabaseError) {}
     }
 
 }

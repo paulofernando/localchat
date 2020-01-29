@@ -17,6 +17,7 @@
 package site.paulo.localchat.ui.dashboard.nearby
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -68,7 +69,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     }
 
     override fun listenNearbyUsers() {
-        val childEventListener = NearbyUserChildEventListener(firebaseAuth, this)
+        val childEventListener = NearbyUserChildEventListener(firebaseAuth.currentUser, this)
         dataManager.registerNewUsersChildEventListener(childEventListener)
         Timber.i("Listening for nearby users...")
     }
@@ -81,24 +82,24 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
     }
 
     private class NearbyUserChildEventListener
-    constructor(private val firebaseAuth: FirebaseAuth,
-                private val presenter: UsersNearbyContract.Presenter) : ChildEventListener {
+    constructor(private val firebaseUser: FirebaseUser?,
+                private val presenter: UserNearbyPresenter) : ChildEventListener {
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
             val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-            if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
+            if (!firebaseUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
                 presenter.view.showNearbyUser(nearbyUser)
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
             val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-            if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email))
+            if (!firebaseUser?.email.equals(nearbyUser.email))
                 presenter.view.showNearbyUser(nearbyUser)
         }
 
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
             val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
-            if(!firebaseAuth.currentUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
+            if (!firebaseUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
                 presenter.view.removeNearbyUser(nearbyUser)
         }
 
