@@ -21,20 +21,18 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.FunctionSubscriber
-import rx.lang.kotlin.addTo
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 
@@ -44,67 +42,45 @@ class ChatPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
 
-    var loaded = mutableMapOf<String?, Boolean>()
+    val loaded = mutableMapOf<String?, Boolean>()
 
     override fun loadChatRooms(userId: String) {
-        dataManager.getUser(userId)
+        dataManager.getUser(userId).toObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<User>()
-                .onNext {
-                    if(it.chats.isEmpty())
-                        view.showChatsEmpty()
-                    else
-                        for((key) in it.chats)
-                            loaded[key] = false
+            .subscribeBy(onNext = {
+                if(it.chats.isEmpty())
+                    view.showChatsEmpty()
+                else
+                    for((key) in it.chats)
+                        loaded[key] = false
 
-                }
-                .onError {
-                    view.showError()
-                    Timber.e(it, "There was an error loading chats from an user.")
-                }
-            ).addTo(compositeSubscription)
+            }, onError = {
+                view.showError()
+                Timber.e(it, "There was an error loading chats from an user.")
+            }).addTo(compositeDisposable)
 
     }
 
     override fun loadChatRoom(chatId: String) {
-        dataManager.getChatRoom(chatId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(FunctionSubscriber<Chat>()
-                .onNext {
-                    val childEventListener = object : ChildEventListener {
-                        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
-                            view.messageReceived(chatMessage, chatId)
-                            if((loaded[chatId] != null) && loaded[chatId]!!) { //only register message delivered if is a new message.
-                                dataManager.messageDelivered(chatId)
-                                if(chatMessage.owner != currentUserManager.getUserId()) { //not mine
-                                    MessagesManager.unreadMessages(chatId, currentUserManager.getUserId())
-                                    view.notifyUser(chatMessage, chatId)
-                                }
-                            }
-                        }
-
-                        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
-                        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-                        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
-                        override fun onCancelled(databaseError: DatabaseError) {}
-                    }
+        dataManager.getChatRoom(chatId).toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(onNext = {
+                    val childEventListener = ChatChildEventListener(dataManager, currentUserManager.getUserId(), chatId, this)
 
                     val allLoadedListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             loaded[it.id] = true
                             Timber.i("All data loaded from chat ${it.id}")
                             val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)!!
-                            if(chatMessage.owner != currentUserManager.getUserId())
-                                if(!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
+                            if (chatMessage.owner != currentUserManager.getUserId())
+                                if (!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
                                     currentUserManager.getUser().chats.put(chatMessage.owner, it.id)
                                 }
                         }
 
-                        override fun onCancelled(dataSnapshot: DatabaseError) { }
-
+                        override fun onCancelled(dataSnapshot: DatabaseError) {}
                     }
 
                     Reservoir.put(it.id, it) //persisting chats
@@ -115,12 +91,10 @@ constructor(private val dataManager: DataManager,
                     dataManager.addRoomSingleValueEventListener(allLoadedListener, it.id)
 
                     view.showChat(it)
-                }
-                .onError {
+                }, onError = {
                     Timber.e(it, "There was an error loading a chat room.")
                     view.showError()
-                }
-            ).addTo(compositeSubscription)
+                }).addTo(compositeDisposable)
     }
 
     override fun listenNewChatRooms(userId: String) {
@@ -146,11 +120,33 @@ constructor(private val dataManager: DataManager,
         //TODO
     }
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun detachView() {
         super.detachView()
-        compositeSubscription.clear()
+        compositeDisposable.clear()
+    }
+
+    private class ChatChildEventListener
+    constructor(private val dataManager: DataManager, private val userId: String,
+                private val chatId: String, private val presenter: ChatPresenter) : ChildEventListener {
+
+        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+            val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
+            presenter.view.messageReceived(chatMessage, chatId)
+            if ((presenter.loaded[chatId] != null) && presenter.loaded[chatId]!!) { //only register message delivered if is a new message.
+                dataManager.messageDelivered(chatId)
+                if (chatMessage.owner != userId) { //not mine
+                    MessagesManager.unreadMessages(chatId, userId)
+                    presenter.view.notifyUser(chatMessage, chatId)
+                }
+            }
+        }
+
+        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+        override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+        override fun onCancelled(databaseError: DatabaseError) {}
     }
 
 }

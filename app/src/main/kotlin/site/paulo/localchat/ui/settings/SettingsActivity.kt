@@ -21,7 +21,6 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_settings.*
-import org.jetbrains.anko.ctx
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User

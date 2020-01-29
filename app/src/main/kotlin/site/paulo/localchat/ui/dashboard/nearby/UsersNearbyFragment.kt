@@ -47,7 +47,7 @@ class UsersNearbyFragment : BaseFragment(), UsersNearbyContract.View {
         val rootView = setupFragment(inflater, container)
 
         usersNearbyList.adapter = usersAdapter
-        usersNearbyList.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 3)
+        usersNearbyList.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this.activity, 3)
 
         presenter.loadUsers()
 
