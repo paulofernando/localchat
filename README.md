@@ -4,7 +4,7 @@ Libraries and tools included:
 
 - Support libraries
 - RecyclerViews and CardViews 
-- [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
+- [RxJava 2](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
 - [Retrofit 2](http://square.github.io/retrofit/)
 - [Dagger 2](http://google.github.io/dagger/)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
