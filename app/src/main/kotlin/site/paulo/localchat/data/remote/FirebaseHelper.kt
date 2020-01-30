@@ -88,14 +88,15 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     /**************** User *********************/
 
-    fun getUsers(): Maybe<List<User>> {
+    fun getUsers(): Maybe<LinkedHashMap<String, User>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.USERS),
-                DataSnapshotMapper.listOf(User::class.java))
+                DataSnapshotMapper.mapOf(User::class.java))
     }
 
-    fun getNearbyUsers(geoHash: String): Maybe<List<Any>> {
+    //TODO update to user this function
+    fun getNearbyUsers(geoHash: String): Maybe<LinkedHashMap<String, Any>> {
         return RxFirebaseDatabase.observeSingleValueEvent(firebaseDatabase.getReference(Reference.GEOHASHES).child(geoHash),
-                DataSnapshotMapper.listOf(Any::class.java))
+                DataSnapshotMapper.mapOf(Any::class.java))
     }
 
     fun getUser(userId: String): Maybe<User> {
@@ -174,7 +175,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
 
     fun updateUserLocation(location: Location?, callNext: (() -> Unit)? = null) {
         val locationCompletionListener = DatabaseReference.CompletionListener { _, _ ->
-            Timber.d("Location updated")
+            Timber.d("Location updated: lat %s, lon %s", location?.latitude, location?.longitude)
         }
 
         val userInfoCompletionListener = DatabaseReference.CompletionListener { _, _ ->

@@ -7,16 +7,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class User(
-    val name: String = "",
-    val age: Long = 0L,
-    val email: String = "",
-    val gender: String = "",
-    val pic: String = "",
-    val acc: Long = 0L,
-    val lat: Long = 0L,
-    val lon: Long = 0L,
-    val geohash: String = "",
-    val chats: MutableMap<String, String> = mutableMapOf<String, String>())
+    var name: String = "",
+    var age: Long = 0L,
+    var email: String = "",
+    var gender: String = "",
+    var pic: String = "",
+    var acc: Long = 0L,
+    var lat: Long = 0L,
+    var lon: Long = 0L,
+    var geohash: String = "",
+    var chats: MutableMap<String, String> = mutableMapOf<String, String>())
     : Parcelable {
 
     @IgnoredOnParcel

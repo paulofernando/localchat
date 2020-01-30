@@ -26,22 +26,15 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import site.paulo.localchat.data.DataManager
 import timber.log.Timber
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserLocationManager {
+object UserLocationManager {
 
     var locationManager: LocationManager? = null
     var dataManager: DataManager? = null
     var context: Context? = null
     var callNext: (() -> Unit)? = null
-
-    private object Holder { val INSTANCE = UserLocationManager() }
-
-    companion object {
-        val instance: UserLocationManager by lazy { Holder.INSTANCE }
-    }
 
     fun init(context: Context, dataManager: DataManager) {
         this.context = context
@@ -49,15 +42,15 @@ class UserLocationManager {
     }
 
     fun start(callNext: (() -> Unit)? = null) {
-        if(this.context != null && dataManager != null) {
-            val permission = ContextCompat.checkSelfPermission(this.context!!,
+        if(this.context != null) {
+            val permission = ContextCompat.checkSelfPermission(context!!,
                     Manifest.permission.ACCESS_FINE_LOCATION)
 
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 Timber.e("Permission to location denied")
             } else {
                 this.callNext = callNext
-                locationManager = this.context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
             }
         } else {

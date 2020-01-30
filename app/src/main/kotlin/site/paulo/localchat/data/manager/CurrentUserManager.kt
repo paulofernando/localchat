@@ -24,17 +24,11 @@ import timber.log.Timber
 import javax.inject.Singleton
 
 @Singleton
-class CurrentUserManager {
+object CurrentUserManager {
 
-    private object Holder { val INSTANCE = CurrentUserManager() }
+    private var user: User? = null
 
-    private var user:User? = null
-
-    companion object {
-        val instance: CurrentUserManager by lazy { Holder.INSTANCE }
-    }
-
-    fun getUser(): User { //TODO Increase the quality of nullability code
+    fun getUser(): User {
         return user!!
     }
 
@@ -42,32 +36,32 @@ class CurrentUserManager {
         return Utils.getFirebaseId(user?.email ?: "")
     }
 
-    fun setUser(user:User){
-        this.user = user
+    fun setUser(user: User?) {
+        if (user != null) this.user = user
     }
 
-    fun setGeohash(geohash:String){
-        this.user = User(user?.name ?: "", user!!.age, user!!.email, user!!.gender, user!!.pic, user!!.acc, user!!.lat, user!!.lon, geohash, user!!.chats)
+    fun setGeohash(geohash: String) {
+        if (user != null) user!!.geohash = geohash
         Timber.d("Current user data updated: %s", user.toString())
     }
 
-    fun setUserName(name: String){
-        this.user = User(name, user!!.age, user!!.email, user!!.gender, user!!.pic, user!!.acc, user!!.lat, user!!.lon, user!!.geohash, user!!.chats)
+    fun setUserName(name: String) {
+        if (user != null) user!!.name = name
         Timber.d("Current user data updated: %s", user.toString())
     }
 
-    fun setAge(age: Long){
-        this.user = User(user?.name ?: "", age, user?.email ?: "", user?.gender ?: "", user?.pic ?: "", 0L, 0L, 0L, user!!.geohash, user!!.chats)
+    fun setAge(age: Long) {
+        if (user != null) user!!.age = age
         Timber.d("Current user data updated: %s", user.toString())
     }
 
-    fun setPic(url: String){
-        this.user = User(user?.name ?: "", user?.age ?: 0, user?.email ?: "", user?.gender ?: "", url, 0L, 0L, 0L, user!!.geohash, user!!.chats)
+    fun setPic(url: String) {
+        if (user != null) user!!.pic = url
         Timber.d("Current user data updated: %s", user.toString())
     }
 
-    fun setPic(bmp: Bitmap){
-        this.user?.userPicBitmap = bmp
+    fun setPic(bmp: Bitmap) {
+        user?.userPicBitmap = bmp
         Timber.d("Current user pic (bitmap) updated")
     }
 

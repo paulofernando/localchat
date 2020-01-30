@@ -31,6 +31,8 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.injection.ConfigPersistent
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,16 +49,12 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
             .subscribeOn(Schedulers.io())
             .subscribeBy(onNext = {
                     val userEmail = firebaseAuth.currentUser?.email
-                    if (it.isEmpty()) {
-                        view.showNearbyUsersEmpty()
-                    } else {
-                        for (user in it) {
-                            if (userEmail.equals(user.email)) {
-                                //loaded current user data
-                                currentUser.setUser(user)
-                                UserLocationManager.instance.start({listenNearbyUsers()})
-                                break
-                            }
+                    if(!userEmail.isNullOrEmpty()) {
+                        if (it.isEmpty()) {
+                            view.showNearbyUsersEmpty()
+                        } else {
+                            currentUser.setUser(it[Utils.getFirebaseId(userEmail)])
+                            UserLocationManager.start { listenNearbyUsers() }
                         }
                     }
                 }, onComplete = {

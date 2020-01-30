@@ -104,16 +104,14 @@ class DashboardActivity: BaseActivity() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name: CharSequence = getString(R.string.channel_name)
-            val description = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("MessageReceivedChannel", name, importance)
-            channel.description = description
+        val name: CharSequence = getString(R.string.channel_name)
+        val description = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel("MessageReceivedChannel", name, importance)
+        channel.description = description
 
-            val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun setupActivity() {
@@ -130,8 +128,7 @@ class DashboardActivity: BaseActivity() {
         val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         when (permissionCheck) {
             PackageManager.PERMISSION_GRANTED -> {
-                var userLocationManager: UserLocationManager = UserLocationManager.instance
-                userLocationManager.init(this, dataManager)
+                UserLocationManager.init(this, dataManager)
             }
             PackageManager.PERMISSION_DENIED -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
@@ -140,8 +137,7 @@ class DashboardActivity: BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_PERMISSION ->  {
-                var userLocationManager: UserLocationManager = UserLocationManager.instance
-                userLocationManager.init(this, dataManager)
+                UserLocationManager.init(this, dataManager)
                 usersNearbyFragment.presenter.loadUsers()
             }
         }
