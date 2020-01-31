@@ -20,10 +20,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import site.paulo.localchat.data.DataManager
 import timber.log.Timber
 import javax.inject.Singleton
@@ -31,18 +30,20 @@ import javax.inject.Singleton
 @Singleton
 object UserLocationManager {
 
-    var locationManager: LocationManager? = null
     var dataManager: DataManager? = null
     var context: Context? = null
     var callNext: (() -> Unit)? = null
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     fun init(context: Context, dataManager: DataManager) {
         this.context = context
         this.dataManager = dataManager
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     }
 
     fun start(callNext: (() -> Unit)? = null) {
-        if(this.context != null) {
+        if (this.context != null) {
             val permission = ContextCompat.checkSelfPermission(context!!,
                     Manifest.permission.ACCESS_FINE_LOCATION)
 
@@ -50,29 +51,15 @@ object UserLocationManager {
                 Timber.e("Permission to location denied")
             } else {
                 this.callNext = callNext
-                locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+                fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location: Location? ->
+                            Timber.d("Location: lon -> ${location?.longitude} | lat -> ${location?.latitude}")
+                            dataManager?.updateUserLocation(location, UserLocationManager.callNext)
+                            Timber.d("Location has been sent to server")
+                        }
             }
         } else {
             Timber.e("Context or DataManager not initialized")
         }
     }
-
-    fun stop() {
-        locationManager?.removeUpdates(locationListener)
-    }
-
-    private var locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            Timber.d("Location: lon -> ${location.longitude} | lat -> ${location.latitude}")
-            dataManager?.updateUserLocation(location, callNext)
-            Timber.d("Location has been sent to server")
-            stop()
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
-
 }

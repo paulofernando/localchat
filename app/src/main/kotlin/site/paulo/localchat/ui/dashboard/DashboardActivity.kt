@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import android.view.*
+import com.google.android.gms.location.FusedLocationProviderClient
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.DataManager
@@ -110,8 +111,8 @@ class DashboardActivity: BaseActivity() {
         val channel = NotificationChannel("MessageReceivedChannel", name, importance)
         channel.description = description
 
-        val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
+        val notificationManager: NotificationManager? = this.getSystemService(NotificationManager::class.java)
+        notificationManager?.createNotificationChannel(channel)
     }
 
     fun setupActivity() {

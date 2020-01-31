@@ -16,53 +16,49 @@
 
 package site.paulo.localchat.data.manager
 
-import android.graphics.Bitmap
+import com.anupcowkur.reservoir.Reservoir
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Singleton
 object CurrentUserManager {
 
+    private const val CURRENT_USER = "currentUser"
     private var user: User? = null
 
-    fun getUser(): User {
-        return user!!
+    fun setUser(user: User) {
+        this.user = user
+        Reservoir.put(CURRENT_USER, user)
+    }
+
+    /**
+     * Update current user based on firebaseAuth email, if user is already authenticated
+     */
+    fun setUser(email: String?) {
+        if (email == null) return
+        if (Reservoir.contains(CURRENT_USER)) {
+            val user = Reservoir.get<User>(CURRENT_USER, User::class.java)
+            if (user.email == email) this.user = user
+        }
+    }
+
+    fun getUser(): User? {
+        if (!hasUser()) { //user still not set, get the last successfully stored one
+            if (Reservoir.contains(CURRENT_USER)) {
+                this.user = Reservoir.get<User>(CURRENT_USER, User::class.java)
+            }
+        }
+        return user
     }
 
     fun getUserId(): String {
         return Utils.getFirebaseId(user?.email ?: "")
     }
 
-    fun setUser(user: User?) {
-        if (user != null) this.user = user
-    }
-
-    fun setGeohash(geohash: String) {
-        if (user != null) user!!.geohash = geohash
-        Timber.d("Current user data updated: %s", user.toString())
-    }
-
-    fun setUserName(name: String) {
-        if (user != null) user!!.name = name
-        Timber.d("Current user data updated: %s", user.toString())
-    }
-
-    fun setAge(age: Long) {
-        if (user != null) user!!.age = age
-        Timber.d("Current user data updated: %s", user.toString())
-    }
-
-    fun setPic(url: String) {
-        if (user != null) user!!.pic = url
-        Timber.d("Current user data updated: %s", user.toString())
-    }
-
-    fun setPic(bmp: Bitmap) {
-        user?.userPicBitmap = bmp
-        Timber.d("Current user pic (bitmap) updated")
+    fun hasUser(): Boolean {
+        return this.user != null
     }
 
 }

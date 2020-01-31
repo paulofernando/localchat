@@ -40,6 +40,7 @@ import durdinapps.rxfirebase2.RxFirebaseAuth
 import durdinapps.rxfirebase2.RxFirebaseDatabase
 import io.reactivex.Maybe
 import site.paulo.localchat.data.model.firebase.*
+import site.paulo.localchat.exception.MissingCurrentUserException
 
 
 @Singleton
@@ -174,6 +175,8 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun updateUserLocation(location: Location?, callNext: (() -> Unit)? = null) {
+        val currentUser = currentUserManager.getUser() ?: return
+
         val locationCompletionListener = DatabaseReference.CompletionListener { _, _ ->
             Timber.d("Location updated: lat %s, lon %s", location?.latitude, location?.longitude)
         }
@@ -186,10 +189,9 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
             Timber.d("Removed from old area")
         }
 
-        if ((location != null) && (currentUserManager.getUserId() != null)) {
+        if (location != null) {
             val geoHash = GeoHash.geoHashStringWithCharacterPrecision(location.latitude, location.longitude, 5)
-            currentUserManager.setGeohash(geoHash)
-            val currentUser = currentUserManager.getUser()
+            currentUser.geohash = geoHash
 
             if (!geoHash.equals(currentUser.geohash))
                 firebaseDatabase.getReference(Reference.GEOHASHES)
@@ -257,30 +259,30 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun createNewRoom(otherUser: NearbyUser): Chat {
-        val summarizedCurrentUser = SummarizedUser(currentUserManager.getUser().name,
-                currentUserManager.getUser().pic)
+        val currentUser = currentUserManager.getUser() ?: throw MissingCurrentUserException("No user set as current")
+        val summarizedCurrentUser = SummarizedUser(currentUser.name, currentUser.pic)
         val summarizedOtherUser = SummarizedUser(otherUser.name, otherUser.pic)
 
         var reference = firebaseDatabase.getReference(Reference.CHATS).push()
 
-        val chat: Chat = Chat(reference.key!!,
-                mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to summarizedCurrentUser,
+        val chat = Chat(reference.key!!,
+                mapOf(Utils.getFirebaseId(currentUser.email) to summarizedCurrentUser,
                         Utils.getFirebaseId(otherUser.email) to summarizedOtherUser),
                 ChatMessage("", "", 0L),
-                mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to 0,
+                mapOf(Utils.getFirebaseId(currentUser.email) to 0,
                         Utils.getFirebaseId(otherUser.email) to 0))
 
         reference.setValue(chat)
 
         firebaseDatabase.getReference(Reference.USERS)
-                .child(Utils.getFirebaseId(currentUserManager.getUser().email))
+                .child(Utils.getFirebaseId(currentUser.email))
                 .child(Child.CHATS)
                 .updateChildren(mapOf(Utils.getFirebaseId(otherUser.email) to reference.key))
 
         firebaseDatabase.getReference(Reference.USERS)
                 .child(Utils.getFirebaseId(otherUser.email))
                 .child(Child.CHATS)
-                .updateChildren(mapOf(Utils.getFirebaseId(currentUserManager.getUser().email) to reference.key))
+                .updateChildren(mapOf(Utils.getFirebaseId(currentUser.email) to reference.key))
 
         return chat
     }
@@ -329,8 +331,9 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
     }
 
     fun registerNewUsersChildEventListener(listener: ChildEventListener) {
-        firebaseDatabase.getReference(Reference.GEOHASHES).child(currentUserManager.getUser().geohash).keepSynced(true)
-        registerChildEventListener(firebaseDatabase.getReference(Reference.GEOHASHES).child(currentUserManager.getUser().geohash),
+        val currentUser = currentUserManager.getUser() ?: return
+        firebaseDatabase.getReference(Reference.GEOHASHES).child(currentUser.geohash).keepSynced(true)
+        registerChildEventListener(firebaseDatabase.getReference(Reference.GEOHASHES).child(currentUser.geohash),
                 listener, "nearbyUsers")
     }
 

@@ -31,6 +31,7 @@ import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.exception.MissingCurrentUserException
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
 import javax.inject.Inject
@@ -74,9 +75,10 @@ constructor(private val dataManager: DataManager,
                             loaded[it.id] = true
                             Timber.i("All data loaded from chat ${it.id}")
                             val chatMessage: ChatMessage = dataSnapshot.children.elementAt(0).getValue(ChatMessage::class.java)!!
+                            val currentUser = currentUserManager.getUser()
                             if (chatMessage.owner != currentUserManager.getUserId())
-                                if (!currentUserManager.getUser().chats.containsKey(chatMessage.owner)) {
-                                    currentUserManager.getUser().chats.put(chatMessage.owner, it.id)
+                                if (!currentUser!!.chats.containsKey(chatMessage.owner)) {
+                                    currentUser.chats.put(chatMessage.owner, it.id)
                                 }
                         }
 
@@ -100,10 +102,11 @@ constructor(private val dataManager: DataManager,
     override fun listenNewChatRooms(userId: String) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                val currentUser = currentUserManager.getUser() ?: return
                 loadChatRoom(dataSnapshot.value.toString())
                 if (((loaded[dataSnapshot.value.toString()] != null) && (loaded[dataSnapshot.value.toString()]!!))
-                        && (!currentUserManager.getUser().chats.containsKey(dataSnapshot.key)))
-                    currentUserManager.getUser().chats.put(dataSnapshot.key!!, dataSnapshot.value.toString())
+                        && (!currentUser.chats.containsKey(dataSnapshot.key)))
+                    currentUser.chats[dataSnapshot.key!!] = dataSnapshot.value.toString()
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) { }

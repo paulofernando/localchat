@@ -39,8 +39,7 @@ import javax.inject.Inject
 @ConfigPersistent
 class UserNearbyPresenter
 @Inject
-constructor(private val dataManager: DataManager, private val firebaseAuth: FirebaseAuth,
-    private val currentUser: CurrentUserManager) : UsersNearbyContract.Presenter() {
+constructor(private val dataManager: DataManager, private val firebaseAuth: FirebaseAuth) : UsersNearbyContract.Presenter() {
 
     override fun loadUsers(callback: (() -> Unit)?) {
         //TODO change this method to listen for new user.
@@ -52,10 +51,8 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                     if(!userEmail.isNullOrEmpty()) {
                         if (it.isEmpty()) {
                             view.showNearbyUsersEmpty()
-                        } else {
-                            currentUser.setUser(it[Utils.getFirebaseId(userEmail)])
-                            UserLocationManager.start { listenNearbyUsers() }
                         }
+                        UserLocationManager.start { listenNearbyUsers() }
                     }
                 }, onComplete = {
                     callback?.invoke()
