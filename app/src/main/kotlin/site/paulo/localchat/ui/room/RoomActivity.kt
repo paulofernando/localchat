@@ -31,6 +31,7 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.*
+import site.paulo.localchat.exception.MissingCurrentUserException
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.utils.*
 import timber.log.Timber
@@ -70,7 +71,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         //(messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true //uncomment to add messages from bottom to top
 
         if ((chatFriend != null) && //come from nearby users fragment
-                !currentUserManager.getUser().chats.containsKey(Utils.getFirebaseId(chatFriend!!.email))) {
+                !currentUserManager.getUser()!!.chats.containsKey(Utils.getFirebaseId(chatFriend!!.email))) {
             emptyRoom = true
         } else {
             if (chat == null) //only have the chat id

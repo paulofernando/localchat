@@ -24,6 +24,7 @@ import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.NearbyUser
+import site.paulo.localchat.exception.MissingCurrentUserException
 import site.paulo.localchat.ui.room.RoomActivity
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.ctx
@@ -70,7 +71,8 @@ constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<UsersNearbyAda
                 //itemView.ageUserTv.text = age.toString()
 
                 itemView.setOnClickListener {
-                    val chatId:String = currentUserManager.getUser().chats.get(Utils.getFirebaseId(email)) ?: ""
+                    val currentUser = currentUserManager.getUser() ?: throw MissingCurrentUserException("No user set as current")
+                    val chatId:String = currentUser.chats.get(Utils.getFirebaseId(email)) ?: ""
                     itemView.ctx.startActivity<RoomActivity>("chatId" to chatId, "otherUser" to nearbyUser)
                 }
             }
