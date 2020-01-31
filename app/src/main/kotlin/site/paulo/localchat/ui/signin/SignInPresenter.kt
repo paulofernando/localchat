@@ -43,7 +43,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
             })
     }
 
-    override fun isAuthenticated() {
+    override fun isAuthenticated(callNext: (() -> Unit)) {
         firebaseAuth.addAuthStateListener { firebaseAuth ->
             if (firebaseAuth.currentUser != null) {
                 Timber.d("onAuthStateChanged:signed_in: %s", firebaseAuth.currentUser?.uid)
@@ -66,6 +66,7 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                     Timber.e(e)
                 }
             } else {
+                callNext.invoke()
                 Timber.d("onAuthStateChanged:signed_out")
             }
         }
