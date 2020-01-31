@@ -11,7 +11,7 @@ class ManagerModule {
     @Provides
     @Singleton
     fun provideCurrentUserManager(): CurrentUserManager {
-        return CurrentUserManager.instance
+        return CurrentUserManager
     }
 
 }

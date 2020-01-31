@@ -34,6 +34,7 @@ import site.paulo.localchat.R
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.data.remote.FirebaseHelper
+import site.paulo.localchat.exception.MissingCurrentUserException
 import site.paulo.localchat.ui.base.BaseActivity
 import site.paulo.localchat.ui.settings.ProfilePresenter
 import site.paulo.localchat.ui.utils.CircleTransform
@@ -157,7 +158,8 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     override fun updatePic(url: String) {
         var callback: com.squareup.picasso.Callback =  object: Callback {
             override fun onSuccess() {
-                currentUserManager.setPic((profileProfileImg.drawable as BitmapDrawable).bitmap)
+                val currentUser = currentUserManager.getUser() ?: return
+                currentUser.userPicBitmap = (profileProfileImg.drawable as BitmapDrawable).bitmap
                 loadingProfileProgress.visibility = View.INVISIBLE
             }
 
@@ -194,6 +196,7 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
             loadingProfileProgress.visibility = View.VISIBLE
             presenter.uploadPic(data?.data!!)
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     fun showImagePicker(view: View) {
@@ -219,12 +222,12 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
 
     private fun animateButton() {
         editProfileImageBtn.visibility = View.VISIBLE
-        var myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale)
+        val myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale)
         editProfileImageBtn.startAnimation(myAnim)
     }
 
     private fun animateReverseButton() {
-        var myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale_reverse)
+        val myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale_reverse)
         myAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationRepeat(animation: Animation) {}
 

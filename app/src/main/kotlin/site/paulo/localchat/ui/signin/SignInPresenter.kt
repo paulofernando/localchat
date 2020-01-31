@@ -16,12 +16,18 @@
 
 package site.paulo.localchat.ui.signin
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.manager.CurrentUserManager
+import site.paulo.localchat.ui.utils.Utils
+import site.paulo.localchat.ui.utils.getFirebaseId
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class SignInPresenter
 @Inject
@@ -31,27 +37,47 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
         dataManager.authenticateUser(email, password)
             .subscribe({
                 Timber.i("signIn: signInWithEmail:onComplete")
-                view.showSuccessFullSignIn()
             }, {
                 Timber.e("signIn: signInWithEmail:failed")
                 view.showFailSignIn()
             })
     }
 
-    override fun isAuthenticated() {
+    override fun isAuthenticated(callNext: (() -> Unit)) {
         firebaseAuth.addAuthStateListener { firebaseAuth ->
             if (firebaseAuth.currentUser != null) {
                 Timber.d("onAuthStateChanged:signed_in: %s", firebaseAuth.currentUser?.uid)
                 try {
-                    view.showSuccessFullSignIn()
+                    if (CurrentUserManager.hasUser()) {
+                        CurrentUserManager.setUser(firebaseAuth.currentUser?.email)
+                        view.showSuccessFullSignIn()
+                    } else {
+                        dataManager.getUser(Utils.getFirebaseId(firebaseAuth.currentUser?.email ?: "")).toObservable()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeOn(Schedulers.io())
+                                .subscribeBy(onNext = {
+                                    CurrentUserManager.setUser(it)
+                                    view.showSuccessFullSignIn()
+                                }, onError = {
+                                    Timber.e(it, "There was an error loading current user.")
+                                }).addTo(compositeDisposable)
+                    }
                 } catch (e: MvpViewNotAttachedException) {
-                    Timber.e(e.message)
+                    Timber.e(e)
                 }
             } else {
-                Log.d("isAuthenticated", "onAuthStateChanged:signed_out")
+                callNext.invoke()
+                Timber.d("onAuthStateChanged:signed_out")
             }
         }
 
+    }
+
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun detachView() {
+        super.detachView()
+        compositeDisposable.clear()
     }
 
 

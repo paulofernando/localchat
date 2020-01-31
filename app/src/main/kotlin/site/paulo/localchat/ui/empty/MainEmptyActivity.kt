@@ -31,11 +31,7 @@ class MainEmptyActivity : BaseActivity() {
 
         val activityIntent: Intent
 
-        //if (Util.getToken() != null) {
-        //activityIntent = Intent(this, DashboardActivity::class.java)
-        //} else {
         activityIntent = Intent(this, SignInActivity::class.java)
-        //}
 
         startActivity(activityIntent)
         finish()

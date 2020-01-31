@@ -34,11 +34,11 @@ import javax.inject.Singleton
 class DataManager
 @Inject constructor(private val firebaseHelper: FirebaseHelper) {
 
-    fun getUsers(): Maybe<List<User>> {
+    fun getUsers(): Maybe<LinkedHashMap<String, User>> {
         return firebaseHelper.getUsers()
     }
 
-    fun getNearbyUsers(geoHash: String): Maybe<List<Any>> {
+    fun getNearbyUsers(geoHash: String): Maybe<LinkedHashMap<String, Any>> {
         return firebaseHelper.getNearbyUsers(geoHash)
     }
 

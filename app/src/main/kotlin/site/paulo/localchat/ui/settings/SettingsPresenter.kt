@@ -31,7 +31,8 @@ constructor(private val currentUserManager: CurrentUserManager,
     private val dataManager: DataManager) : SettingsContract.Presenter() {
 
     override fun loadCurrentUser() {
-        view.showCurrentUserData(currentUserManager.getUser())
+        val currentUser = currentUserManager.getUser() ?: return
+        view.showCurrentUserData(currentUser)
     }
 
     override fun registerProfileListener() {
