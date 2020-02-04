@@ -246,41 +246,41 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
         valueMessage[Child.TIMESTAMP] = ServerValue.TIMESTAMP
 
         val valueLastMessage = mutableMapOf<String, Any>()
-        valueLastMessage[Child.LAST_MESSAGE] = message
+        valueLastMessage[Child.LAST_MESSAGE] = valueMessage
 
         firebaseDatabase.getReference(Reference.MESSAGES).child(chatId).push().setValue(valueMessage, completionListener)
         firebaseDatabase.getReference(Reference.CHATS).child(chatId).updateChildren(valueLastMessage)
     }
 
     fun getChatRoom(chatId: String): Maybe<Chat> {
-        val storeRedChat = firebaseDatabase.getReference(Reference.CHATS).child(chatId)
-        storeRedChat.keepSynced(true)
-        return RxFirebaseDatabase.observeSingleValueEvent(storeRedChat, Chat::class.java)
+        val storedChat = firebaseDatabase.getReference(Reference.CHATS).child(chatId)
+        storedChat.keepSynced(true)
+        return RxFirebaseDatabase.observeSingleValueEvent(storedChat, Chat::class.java)
     }
 
-    fun createNewRoom(otherUser: NearbyUser): Chat {
+    fun createNewRoom(otherUser: SummarizedUser, otherEmail: String): Chat {
         val currentUser = currentUserManager.getUser() ?: throw MissingCurrentUserException("No user set as current")
         val summarizedCurrentUser = SummarizedUser(currentUser.name, currentUser.pic)
         val summarizedOtherUser = SummarizedUser(otherUser.name, otherUser.pic)
 
-        var reference = firebaseDatabase.getReference(Reference.CHATS).push()
+        val reference = firebaseDatabase.getReference(Reference.CHATS).push()
 
         val chat = Chat(reference.key!!,
                 mapOf(Utils.getFirebaseId(currentUser.email) to summarizedCurrentUser,
-                        Utils.getFirebaseId(otherUser.email) to summarizedOtherUser),
+                        Utils.getFirebaseId(otherEmail) to summarizedOtherUser),
                 ChatMessage("", "", 0L),
                 mapOf(Utils.getFirebaseId(currentUser.email) to 0,
-                        Utils.getFirebaseId(otherUser.email) to 0))
+                        Utils.getFirebaseId(otherEmail) to 0))
 
         reference.setValue(chat)
 
         firebaseDatabase.getReference(Reference.USERS)
                 .child(Utils.getFirebaseId(currentUser.email))
                 .child(Child.CHATS)
-                .updateChildren(mapOf(Utils.getFirebaseId(otherUser.email) to reference.key))
+                .updateChildren(mapOf(Utils.getFirebaseId(otherEmail) to reference.key))
 
         firebaseDatabase.getReference(Reference.USERS)
-                .child(Utils.getFirebaseId(otherUser.email))
+                .child(Utils.getFirebaseId(otherEmail))
                 .child(Child.CHATS)
                 .updateChildren(mapOf(Utils.getFirebaseId(currentUser.email) to reference.key))
 
@@ -337,7 +337,7 @@ class FirebaseHelper @Inject constructor(val firebaseDatabase: FirebaseDatabase,
                 listener, "nearbyUsers")
     }
 
-    fun messageDelivered(chatId: String): Unit {
+    fun messageDelivered(chatId: String) {
         val mDeliveredRef = firebaseDatabase.getReference(Reference.CHATS).child(chatId).child(Child.DELIVERED_MESSAGES)
 
         mDeliveredRef.addListenerForSingleValueEvent(object : ValueEventListener {

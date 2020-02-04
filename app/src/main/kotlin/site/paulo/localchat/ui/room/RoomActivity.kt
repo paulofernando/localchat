@@ -19,23 +19,29 @@ package site.paulo.localchat.ui.room
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anupcowkur.reservoir.Reservoir
+import com.anupcowkur.reservoir.ReservoirGetCallback
 import kotlinx.android.synthetic.main.activity_room.*
-import site.paulo.localchat.R
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
-import site.paulo.localchat.data.model.firebase.*
-import site.paulo.localchat.exception.MissingCurrentUserException
+import site.paulo.localchat.data.model.firebase.Chat
+import site.paulo.localchat.data.model.firebase.ChatMessage
+import site.paulo.localchat.data.model.firebase.NearbyUser
+import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.ui.base.BaseActivity
-import site.paulo.localchat.ui.utils.*
+import site.paulo.localchat.ui.utils.CircleTransform
+import site.paulo.localchat.ui.utils.loadUrlCircle
 import timber.log.Timber
 import javax.inject.Inject
+import site.paulo.localchat.R
+
 
 class RoomActivity : BaseActivity(), RoomContract.View {
 
@@ -52,7 +58,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     private var emptyRoom: Boolean = false
     var chat: Chat? = null
-    var chatFriend: NearbyUser? = null
+    var chatFriend: SummarizedUser? = null
+    var chatFriendEmail: String? = null
     var chatId: String? = null
 
 
@@ -60,24 +67,21 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         super.onCreate(savedInstanceState)
         setupActivity()
 
-        this.chatId = intent.getStringExtra("chatId")
-        this.chatFriend = intent.getParcelableExtra<NearbyUser>("otherUser") //just passed from nearby users fragment
-        if (Reservoir.contains(chatId)) {
-            this.chat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        if (this.intent.getParcelableExtra<NearbyUser>("otherUser") is NearbyUser) {
+            val otherUser = this.intent.getParcelableExtra<NearbyUser>("otherUser")
+            this.chatFriend = otherUser.getSummarizedUser()
+            this.chatFriendEmail = otherUser.email
+        } else {
+            this.chatFriend = this.intent.getParcelableExtra("otherUser")
         }
+
+        this.chatId = intent.getStringExtra("chatId")
 
         messagesRoomList.adapter = roomAdapter
-        messagesRoomList.layoutManager = LinearLayoutManager(this)
+        messagesRoomList.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
         //(messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true //uncomment to add messages from bottom to top
 
-        if ((chatFriend != null) && //come from nearby users fragment
-                !currentUserManager.getUser()!!.chats.containsKey(Utils.getFirebaseId(chatFriend!!.email))) {
-            emptyRoom = true
-        } else {
-            if (chat == null) //only have the chat id
-                presenter.getChatData(chatId!!)
-            else showChat(chat!!)
-        }
+        if (chatFriendEmail != null) emptyRoom = true
 
         sendRoomBtn.setOnClickListener {
             if (!emptyRoom)
@@ -86,7 +90,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                         chat?.id ?: chatId!!)
             else {
                 //first message between users, creates a room before send it
-                chat = presenter.createNewRoom(this.chatFriend!!)
+                chat = presenter.createNewRoom(this.chatFriend!!, chatFriendEmail!!)
                 chatId = chat?.id
                 presenter.sendMessage(
                         ChatMessage(currentUserManager.getUserId(), messageRoomTxt.text.toString()),
@@ -96,8 +100,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
             }
         }
 
-        MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
-        cleanNotifications()
+        presenter.getChatData(chatId!!)
         configureToolbar()
     }
 
@@ -107,8 +110,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         setContentView(R.layout.activity_room)
     }
 
-    override fun showChat(chat: Chat) {
-        presenter.registerMessagesListener(chat.id)
+    override fun showChat(chatId: String) {
+        presenter.registerMessagesListener(chatId)
+        MessagesManager.readMessages(chatId, currentUserManager.getUserId()) //mark all messages as read
+        cleanNotifications()
     }
 
     override fun showError() {
@@ -203,7 +208,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
             otherUserImg.loadUrlCircle(chatFriend?.pic) {
                 request -> request.transform(CircleTransform())
             }
-        } else if (chat != null) { //configure toolbar when user come from chat list //TODO improve it
+        }/* else if (chat != null) { //configure toolbar when user come from chat list //TODO improve it
             val summarizedUser = Utils.getChatFriend(currentUserManager.getUserId(), chat as Chat)
             chatId = (chat as Chat).id
 
@@ -212,7 +217,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 request ->
                 request.transform(CircleTransform())
             }
-        }
+        }*/
         setSupportActionBar(toolbarRoom)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)

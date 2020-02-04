@@ -17,6 +17,7 @@
 package site.paulo.localchat.ui.room
 
 import android.net.Uri
+import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -32,6 +33,7 @@ import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.NearbyUser
+import site.paulo.localchat.data.model.firebase.SummarizedUser
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,17 +48,25 @@ constructor(private val dataManager: DataManager,
     /** Get data from an specific chat room. We can use it in case of some issue
      * while storing chat data locally. **/
     override fun getChatData(chatId: String) {
-        dataManager.getChatRoom(chatId).toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeBy(onNext = {
-                    if (it.id != "") view.showChat(it)
-                    else view.showEmptyChatRoom()
-                }, onError = {
-                    Timber.e(it, "There was an error loading a chat room.")
-                    view.showError()
-                }
-                ).addTo(compositeDisposable)
+        if (!Reservoir.contains(chatId)) {
+            dataManager.getChatRoom(chatId).toObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribeBy(onNext = {
+                        if (it.id != "") {
+                            view.showChat(it.id)
+                            if (Reservoir.contains(it.id)) {
+                                Reservoir.put(it.id, it)
+                            }
+                        } else view.showEmptyChatRoom()
+                    }, onError = {
+                        Timber.e(it, "There was an error loading a chat room.")
+                        view.showError()
+                    }
+                    ).addTo(compositeDisposable)
+        } else {
+            view.showChat(Reservoir.get<Chat>(chatId, Chat::class.java).id)
+        }
     }
 
     override fun sendMessage(message: ChatMessage, chatId: String) {
@@ -121,8 +131,8 @@ constructor(private val dataManager: DataManager,
         }
     }
 
-    override fun createNewRoom(otherUser: NearbyUser): Chat {
-        return dataManager.createNewRoom(otherUser)
+    override fun createNewRoom(otherUser: SummarizedUser, otherEmail: String): Chat {
+        return dataManager.createNewRoom(otherUser, otherEmail)
     }
 
     private val compositeDisposable = CompositeDisposable()

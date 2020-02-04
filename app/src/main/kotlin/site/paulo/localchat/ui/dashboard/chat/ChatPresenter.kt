@@ -137,8 +137,9 @@ constructor(private val dataManager: DataManager,
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
             presenter.view.messageReceived(chatMessage, chatId)
-            if ((presenter.loaded[chatId] != null) && presenter.loaded[chatId]!!) { //only register message delivered if is a new message.
+            if ((presenter.loaded[chatId] != null) && presenter.loaded[chatId]!!) { //only register message delivered if it is a new message.
                 dataManager.messageDelivered(chatId)
+                presenter.view.updateLastMessage(chatMessage, chatId)
                 if (chatMessage.owner != userId) { //not mine
                     MessagesManager.unreadMessages(chatId, userId)
                     presenter.view.notifyUser(chatMessage, chatId)

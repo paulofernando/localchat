@@ -100,7 +100,7 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             }
 
             itemView.setOnClickListener {
-                itemView.ctx.startActivity<RoomActivity>("chatId" to chat.id)
+                itemView.ctx.startActivity<RoomActivity>("chatId" to chat.id, "otherUser" to chatFriend)
                 MessagesManager.readMessages(chat.id, currentUserManager.getUserId())
                 updateUnreadMessages(chat.id, currentUserManager.getUserId())
             }
