@@ -17,7 +17,6 @@
 package site.paulo.localchat.ui.room
 
 import android.net.Uri
-import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,10 +28,10 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.NearbyUser
 import site.paulo.localchat.data.model.firebase.SummarizedUser
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,22 +40,23 @@ class RoomPresenter
 @Inject
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager,
-            private val firebaseStorage: FirebaseStorage) : RoomContract.Presenter() {
+            private val firebaseStorage: FirebaseStorage,
+            private val localDataManager: LocalDataManager) : RoomContract.Presenter() {
 
     private var childEventListener: ChildEventListener? = null
 
     /** Get data from an specific chat room. We can use it in case of some issue
      * while storing chat data locally. **/
     override fun getChatData(chatId: String) {
-        if (!Reservoir.contains(chatId)) {
+        if (!localDataManager.contains(chatId)) {
             dataManager.getChatRoom(chatId).toObservable()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribeBy(onNext = {
                         if (it.id != "") {
                             view.showChat(it.id)
-                            if (Reservoir.contains(it.id)) {
-                                Reservoir.put(it.id, it)
+                            if (localDataManager.contains(it.id)) {
+                                localDataManager.put(it.id, it)
                             }
                         } else view.showEmptyChatRoom()
                     }, onError = {
@@ -65,7 +65,7 @@ constructor(private val dataManager: DataManager,
                     }
                     ).addTo(compositeDisposable)
         } else {
-            view.showChat(Reservoir.get<Chat>(chatId, Chat::class.java).id)
+            view.showChat(localDataManager.get(chatId, Chat::class.java).id)
         }
     }
 

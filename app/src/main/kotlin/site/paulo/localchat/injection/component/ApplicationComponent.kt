@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Component
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.remote.FirebaseHelper
 import site.paulo.localchat.injection.ApplicationContext
@@ -22,6 +23,7 @@ interface ApplicationComponent {
     @ApplicationContext fun context(): Context
     fun application(): Application
     fun dataManager(): DataManager
+    fun localDataManager(): LocalDataManager
     fun currentUser(): CurrentUserManager
     fun firebaseDatabase(): FirebaseDatabase
     fun firebaseHelper(): FirebaseHelper

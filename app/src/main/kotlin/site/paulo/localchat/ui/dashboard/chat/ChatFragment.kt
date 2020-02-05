@@ -26,11 +26,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.R
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
@@ -57,6 +58,9 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
+    @Inject
+    lateinit var localDataManager: LocalDataManager
+
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
 
@@ -64,7 +68,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         val rootView = setupFragment(inflater, container)
 
         chatsList.adapter = chatsAdapter
-        chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?)
+        chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?) as RecyclerView.LayoutManager?
 
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
@@ -134,8 +138,8 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     private fun getFriendUser(chatId: String): SummarizedUser? {
         var currentChat: Chat? = null
-        if (Reservoir.contains(chatId)) {
-            currentChat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        if (localDataManager.contains(chatId)) {
+            currentChat = localDataManager.get(chatId, Chat::class.java)
         }
 
         if (currentChat != null) {

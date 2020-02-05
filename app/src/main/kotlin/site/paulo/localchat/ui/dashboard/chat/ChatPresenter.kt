@@ -16,7 +16,6 @@
 
 package site.paulo.localchat.ui.dashboard.chat
 
-import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -27,11 +26,11 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.exception.MissingCurrentUserException
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,7 +40,8 @@ import javax.inject.Inject
 class ChatPresenter
 @Inject
 constructor(private val dataManager: DataManager,
-            private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
+            private val currentUserManager: CurrentUserManager,
+            private val localDataManager: LocalDataManager) : ChatContract.Presenter() {
 
     val loaded = mutableMapOf<String?, Boolean>()
 
@@ -85,7 +85,7 @@ constructor(private val dataManager: DataManager,
                         override fun onCancelled(dataSnapshot: DatabaseError) {}
                     }
 
-                    Reservoir.put(it.id, it) //persisting chats
+                    localDataManager.put(it.id, it) //persisting chats
 
                     //register room if it is not registered
                     dataManager.registerRoomChildEventListener(childEventListener, it.id)

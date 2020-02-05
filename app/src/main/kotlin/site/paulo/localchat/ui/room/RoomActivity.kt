@@ -26,8 +26,6 @@ import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.anupcowkur.reservoir.Reservoir
-import com.anupcowkur.reservoir.ReservoirGetCallback
 import kotlinx.android.synthetic.main.activity_room.*
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
