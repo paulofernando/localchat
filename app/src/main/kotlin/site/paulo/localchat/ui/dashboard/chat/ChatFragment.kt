@@ -26,11 +26,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.auth.FirebaseAuth
 import site.paulo.localchat.R
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
@@ -56,6 +57,12 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
+
+    @Inject
+    lateinit var localDataManager: LocalDataManager
+
+    @Inject
+    lateinit var messagesManager: MessagesManager
 
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
@@ -101,8 +108,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     }
 
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
-        MessagesManager.add(chatMessage, chatId)
-        updateLastMessage(chatMessage, chatId)
+        messagesManager.add(chatMessage, chatId)
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {
@@ -135,8 +141,8 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     private fun getFriendUser(chatId: String): SummarizedUser? {
         var currentChat: Chat? = null
-        if (Reservoir.contains(chatId)) {
-            currentChat = Reservoir.get<Chat>(chatId, Chat::class.java)
+        if (localDataManager.contains(chatId)) {
+            currentChat = localDataManager.get(chatId, Chat::class.java)
         }
 
         if (currentChat != null) {

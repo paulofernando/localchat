@@ -22,10 +22,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Maybe
-import site.paulo.localchat.data.model.firebase.Chat
-import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.data.model.firebase.NearbyUser
-import site.paulo.localchat.data.model.firebase.User
+import site.paulo.localchat.data.model.firebase.*
 import site.paulo.localchat.data.remote.FirebaseHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,8 +72,8 @@ class DataManager
         return firebaseHelper.getChatRoom(chatId)
     }
 
-    fun createNewRoom(otherUser: NearbyUser): Chat {
-        return firebaseHelper.createNewRoom(otherUser)
+    fun createNewRoom(otherUser: SummarizedUser, otherEmail: String): Chat {
+        return firebaseHelper.createNewRoom(otherUser, otherEmail)
     }
 
     fun sendMessage(message: ChatMessage, chatId: String, completionListener: DatabaseReference.CompletionListener): Unit {

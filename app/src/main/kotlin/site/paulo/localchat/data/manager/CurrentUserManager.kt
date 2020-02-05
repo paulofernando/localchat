@@ -16,38 +16,50 @@
 
 package site.paulo.localchat.data.manager
 
-import com.anupcowkur.reservoir.Reservoir
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
 import javax.inject.Singleton
 
 @Singleton
-object CurrentUserManager {
+class CurrentUserManager {
 
-    private const val CURRENT_USER = "currentUser"
+    private val CURRENT_USER = "currentUser"
     private var user: User? = null
 
-    fun setUser(user: User) {
+    private object HOLDER {
+        val INSTANCE = CurrentUserManager()
+    }
+
+    companion object {
+        val instance: CurrentUserManager by lazy { HOLDER.INSTANCE }
+    }
+
+    lateinit var localDataManager: LocalDataManager
+
+    fun setUser(user: User, localDataManager: LocalDataManager) {
         this.user = user
-        Reservoir.put(CURRENT_USER, user)
+        this.localDataManager = localDataManager
+        localDataManager.put(CURRENT_USER, user)
     }
 
     /**
      * Update current user based on firebaseAuth email, if user is already authenticated
      */
-    fun setUser(email: String?) {
+    fun setUserByEmail(email: String?, localDataManager: LocalDataManager) {
         if (email == null) return
-        if (Reservoir.contains(CURRENT_USER)) {
-            val user = Reservoir.get<User>(CURRENT_USER, User::class.java)
+        this.localDataManager = localDataManager
+        if (localDataManager.contains(CURRENT_USER)) {
+            val user = localDataManager.get(CURRENT_USER, User::class.java)
             if (user.email == email) this.user = user
         }
     }
 
     fun getUser(): User? {
         if (!hasUser()) { //user still not set, get the last successfully stored one
-            if (Reservoir.contains(CURRENT_USER)) {
-                this.user = Reservoir.get<User>(CURRENT_USER, User::class.java)
+            if (localDataManager.contains(CURRENT_USER)) {
+                this.user = localDataManager.get(CURRENT_USER, User::class.java)
             }
         }
         return user

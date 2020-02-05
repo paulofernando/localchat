@@ -9,4 +9,9 @@ data class NearbyUser(
         val name: String = "",
         val email: String = "",
         val age: Long = 0L,
-        val pic: String = "") : Parcelable { }
+        val pic: String = "") : Parcelable {
+
+    fun getSummarizedUser(): SummarizedUser {
+        return SummarizedUser(this.name, this.pic)
+    }
+}

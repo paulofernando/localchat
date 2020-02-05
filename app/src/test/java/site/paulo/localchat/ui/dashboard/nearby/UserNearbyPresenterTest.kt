@@ -11,7 +11,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
+import site.paulo.localchat.data.manager.UserLocationManager
 import site.paulo.localchat.data.model.firebase.User
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.dashboard.TestUtils
@@ -28,6 +30,8 @@ class UserNearbyPresenterTest {
     @RelaxedMockK
     lateinit var currentUserManagerMock: CurrentUserManager
     @RelaxedMockK
+    lateinit var localDataManager: LocalDataManager
+    @RelaxedMockK
     lateinit var usersNearby: UsersNearbyContract.View
 
     @BeforeEach
@@ -35,7 +39,7 @@ class UserNearbyPresenterTest {
         clearAllMocks()
         MockKAnnotations.init(this)
 
-        usersNearbyPresenter = UserNearbyPresenter(dataManagerMock, firebaseAuthMock, currentUserManagerMock)
+        usersNearbyPresenter = UserNearbyPresenter(dataManagerMock, firebaseAuthMock)
         usersNearbyPresenter.attachView(usersNearby)
 
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
@@ -51,40 +55,15 @@ class UserNearbyPresenterTest {
     fun `loadUsers - success - register current user`() {
         val user = TestDataFactory.makeUser("u1", "chatId", "test@test.com")
         val user2 = TestDataFactory.makeUser("u2", "chatId")
-        val listOfUsers = arrayListOf<User>()
-        listOfUsers.add(user)
-        listOfUsers.add(user2)
+        val hashMapOfUsers = LinkedHashMap<String, User>()
+        hashMapOfUsers["u1"] = user
+        hashMapOfUsers["u2"] = user2
 
-        every {dataManagerMock.getUsers()} returns Maybe.just(listOfUsers)
+        every {dataManagerMock.getUsers()} returns Maybe.just(hashMapOfUsers)
         every {firebaseAuthMock.currentUser} returns TestUtils.getMockFirebaseUser()
 
         usersNearbyPresenter.loadUsers()
 
-        verify {
-            currentUserManagerMock.setUser(user)
-        }
-        verify(exactly = 0) {
-            usersNearby.showNearbyUsersEmpty()
-            usersNearby.showError()
-        }
-    }
-
-    @Test
-    fun `loadUsers - success - register current user not being first in the list`() {
-        val user = TestDataFactory.makeUser("u1", "chatId", "test@test.com")
-        val user2 = TestDataFactory.makeUser("u2", "chatId")
-        val listOfUsers = arrayListOf<User>()
-        listOfUsers.add(user2)
-        listOfUsers.add(user)
-
-        every {dataManagerMock.getUsers()} returns Maybe.just(listOfUsers)
-        every {firebaseAuthMock.currentUser} returns TestUtils.getMockFirebaseUser()
-
-        usersNearbyPresenter.loadUsers()
-
-        verify {
-            currentUserManagerMock.setUser(user)
-        }
         verify(exactly = 0) {
             usersNearby.showNearbyUsersEmpty()
             usersNearby.showError()
@@ -93,7 +72,7 @@ class UserNearbyPresenterTest {
 
     @Test
     fun `loadUsers - failure - show empty list`() {
-        every {dataManagerMock.getUsers()} returns Maybe.just(emptyList())
+        every {dataManagerMock.getUsers()} returns Maybe.just( LinkedHashMap())
         every {firebaseAuthMock.currentUser} returns TestUtils.getMockFirebaseUser()
 
         usersNearbyPresenter.loadUsers()
@@ -102,7 +81,7 @@ class UserNearbyPresenterTest {
             usersNearby.showNearbyUsersEmpty()
         }
         verify(exactly = 0) {
-            currentUserManagerMock.setUser(any())
+            currentUserManagerMock.setUser(any(),localDataManager)
             usersNearby.showError()
         }
     }
@@ -117,7 +96,7 @@ class UserNearbyPresenterTest {
             usersNearby.showError()
         }
         verify(exactly = 0) {
-            currentUserManagerMock.setUser(any())
+            currentUserManagerMock.setUser(any(), localDataManager)
             usersNearby.showNearbyUsersEmpty()
         }
     }

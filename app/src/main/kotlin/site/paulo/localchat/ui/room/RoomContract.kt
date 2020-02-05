@@ -21,6 +21,7 @@ import site.paulo.localchat.data.MessagesListener
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.data.model.firebase.NearbyUser
+import site.paulo.localchat.data.model.firebase.SummarizedUser
 import site.paulo.localchat.ui.base.BaseMvpPresenter
 import site.paulo.localchat.ui.base.MvpView
 
@@ -30,7 +31,7 @@ object RoomContract {
         fun addMessage(message: ChatMessage)
         fun loadOldMessages(messages: MutableList<ChatMessage>?)
         fun messageSent(message: ChatMessage)
-        fun showChat(chat: Chat)
+        fun showChat(chatId: String)
         fun showEmptyChatRoom()
         fun showError()
         fun showLoadingImage()
@@ -44,7 +45,7 @@ object RoomContract {
         abstract fun getChatData(chatId: String)
         abstract fun registerMessagesListener(chatId: String)
         abstract fun unregisterMessagesListener(chatId: String)
-        abstract fun createNewRoom(otherUser: NearbyUser): Chat
+        abstract fun createNewRoom(otherUser: SummarizedUser, otherEmail: String): Chat
         abstract fun uploadImage(selectedImageUri: Uri, roomId: String)
     }
 }

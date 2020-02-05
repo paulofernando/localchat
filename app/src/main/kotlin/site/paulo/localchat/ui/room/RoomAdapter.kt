@@ -17,20 +17,20 @@ import javax.inject.Inject
 
 class RoomAdapter
 @Inject
-constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
+constructor() : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
     var messages = mutableListOf<ChatMessage>()
 
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomAdapter.RoomViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_room_message, parent, false)
         return RoomViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: RoomAdapter.RoomViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         holder.bindMessages(messages[position])
     }
 
@@ -38,7 +38,7 @@ constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<RoomAdapter.Ro
         return messages.size
     }
 
-    inner class RoomViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindMessages(message: ChatMessage) {
             itemView.messageUserNameRoomTv.text = message.owner
 

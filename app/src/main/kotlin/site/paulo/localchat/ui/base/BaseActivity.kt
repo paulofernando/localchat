@@ -32,12 +32,12 @@ open class BaseActivity : AppCompatActivity() {
 
         // Create the ActivityComponent and reuses cached ConfigPersistentComponent if this is
         // being called after a configuration change.
-        activityId = savedInstanceState?.getLong(BaseActivity.Companion.KEY_ACTIVITY_ID) ?: BaseActivity.Companion.NEXT_ID.getAndIncrement()
+        activityId = savedInstanceState?.getLong(KEY_ACTIVITY_ID) ?: NEXT_ID.getAndIncrement()
 
-        if (BaseActivity.Companion.componentsMap[activityId] != null)
+        if (componentsMap[activityId] != null)
             Timber.i("Reusing ConfigPersistentComponent id=%d", activityId)
 
-        val configPersistentComponent = BaseActivity.Companion.componentsMap.getOrPut(activityId) {
+        val configPersistentComponent = componentsMap.getOrPut(activityId) {
             Timber.i("Creating new ConfigPersistentComponent id=%d", activityId)
 
             val component = (applicationContext as BoilerplateApplication).applicationComponent
@@ -52,13 +52,13 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putLong(BaseActivity.Companion.KEY_ACTIVITY_ID, activityId)
+        outState.putLong(KEY_ACTIVITY_ID, activityId)
     }
 
     override fun onDestroy() {
         if (!isChangingConfigurations) {
             Timber.i("Clearing ConfigPersistentComponent id=%d", activityId)
-            BaseActivity.Companion.componentsMap.remove(activityId)
+            componentsMap.remove(activityId)
         }
         super.onDestroy()
     }

@@ -16,7 +16,6 @@
 
 package site.paulo.localchat.ui.dashboard.chat
 
-import com.anupcowkur.reservoir.Reservoir
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -27,11 +26,11 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
-import site.paulo.localchat.exception.MissingCurrentUserException
 import site.paulo.localchat.injection.ConfigPersistent
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,7 +40,9 @@ import javax.inject.Inject
 class ChatPresenter
 @Inject
 constructor(private val dataManager: DataManager,
-            private val currentUserManager: CurrentUserManager) : ChatContract.Presenter() {
+            private val currentUserManager: CurrentUserManager,
+            private val localDataManager: LocalDataManager,
+            private val messagesManager: MessagesManager) : ChatContract.Presenter() {
 
     val loaded = mutableMapOf<String?, Boolean>()
 
@@ -68,7 +69,7 @@ constructor(private val dataManager: DataManager,
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(onNext = {
-                    val childEventListener = ChatChildEventListener(dataManager, currentUserManager.getUserId(), chatId, this)
+                    val childEventListener = ChatChildEventListener(dataManager, currentUserManager.getUserId(), chatId, this, messagesManager)
 
                     val allLoadedListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -85,7 +86,7 @@ constructor(private val dataManager: DataManager,
                         override fun onCancelled(dataSnapshot: DatabaseError) {}
                     }
 
-                    Reservoir.put(it.id, it) //persisting chats
+                    localDataManager.put(it.id, it) //persisting chats
 
                     //register room if it is not registered
                     dataManager.registerRoomChildEventListener(childEventListener, it.id)
@@ -99,7 +100,7 @@ constructor(private val dataManager: DataManager,
                 }).addTo(compositeDisposable)
     }
 
-    override fun listenNewChatRooms(userId: String) {
+    override fun listenNewChatRooms(chatId: String) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 val currentUser = currentUserManager.getUser() ?: return
@@ -115,7 +116,7 @@ constructor(private val dataManager: DataManager,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerNewChatRoomChildEventListener(childEventListener, userId)
+        dataManager.registerNewChatRoomChildEventListener(childEventListener, chatId)
         Timber.i("Listening for new chats...")
     }
 
@@ -132,15 +133,17 @@ constructor(private val dataManager: DataManager,
 
     private class ChatChildEventListener
     constructor(private val dataManager: DataManager, private val userId: String,
-                private val chatId: String, private val presenter: ChatPresenter) : ChildEventListener {
+                private val chatId: String, private val presenter: ChatPresenter,
+                private val messagesManager: MessagesManager) : ChildEventListener {
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
             presenter.view.messageReceived(chatMessage, chatId)
-            if ((presenter.loaded[chatId] != null) && presenter.loaded[chatId]!!) { //only register message delivered if is a new message.
+            if ((presenter.loaded[chatId] != null) && presenter.loaded[chatId]!!) { //only register message delivered if it is a new message.
                 dataManager.messageDelivered(chatId)
+                presenter.view.updateLastMessage(chatMessage, chatId)
                 if (chatMessage.owner != userId) { //not mine
-                    MessagesManager.unreadMessages(chatId, userId)
+                    messagesManager.unreadMessages(chatId, userId)
                     presenter.view.notifyUser(chatMessage, chatId)
                 }
             }
