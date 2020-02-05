@@ -49,6 +49,9 @@ class RoomActivity : BaseActivity(), RoomContract.View {
     lateinit var currentUserManager: CurrentUserManager
 
     @Inject
+    lateinit var messagesManager: MessagesManager
+
+    @Inject
     lateinit var presenter: RoomPresenter
 
     @Inject
@@ -110,7 +113,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     override fun showChat(chatId: String) {
         presenter.registerMessagesListener(chatId)
-        MessagesManager.readMessages(chatId, currentUserManager.getUserId()) //mark all messages as read
+        messagesManager.readMessages(chatId, currentUserManager.getUserId()) //mark all messages as read
         cleanNotifications()
     }
 
@@ -183,7 +186,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         super.onDestroy()
         presenter.unregisterMessagesListener(chat?.id ?: chatId!!)
         presenter.detachView()
-        MessagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
+        messagesManager.readMessages(chat?.id ?: chatId!!, currentUserManager.getUserId()) //mark all messages as read
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -206,16 +209,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
             otherUserImg.loadUrlCircle(chatFriend?.pic) {
                 request -> request.transform(CircleTransform())
             }
-        }/* else if (chat != null) { //configure toolbar when user come from chat list //TODO improve it
-            val summarizedUser = Utils.getChatFriend(currentUserManager.getUserId(), chat as Chat)
-            chatId = (chat as Chat).id
+        }
 
-            toolbarRoom.title = summarizedUser?.name
-            otherUserImg.loadUrlCircle(summarizedUser?.pic) {
-                request ->
-                request.transform(CircleTransform())
-            }
-        }*/
         setSupportActionBar(toolbarRoom)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)

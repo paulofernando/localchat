@@ -21,68 +21,76 @@ import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import com.anupcowkur.reservoir.Reservoir
 import java.io.IOException
+import javax.inject.Singleton
 
-
+@Singleton
 class MessagesManager {
 
-    companion object Factory {
-        /** Every message is stored here */ //TODO just stored the last x messages by chat
-        val chatMessages = mutableMapOf<String, MutableList<ChatMessage>>()
-        val chatListeners = mutableMapOf<String, MessagesListener>()
+    private object HOLDER {
+        val INSTANCE = MessagesManager()
+    }
 
-        fun add(chatMessage: ChatMessage, chatId: String) {
-            if(!chatMessages.containsKey(chatId)) {
-                chatMessages.put(chatId, mutableListOf())
+    companion object {
+        val instance: MessagesManager by lazy { HOLDER.INSTANCE }
+    }
+
+    /** Every message is stored here */ //TODO just stored the last x messages by chat
+    val chatMessages = mutableMapOf<String, MutableList<ChatMessage>>()
+    val chatListeners = mutableMapOf<String, MessagesListener>()
+
+    fun add(chatMessage: ChatMessage, chatId: String) {
+        if(!chatMessages.containsKey(chatId)) {
+            chatMessages.put(chatId, mutableListOf())
+        }
+        chatMessages[chatId]?.add(chatMessage)
+        chatListeners[chatId]?.messageReceived(chatMessage)
+    }
+
+    fun unreadMessages(chatId: String, userId: String) {
+        try {
+            val key = "$chatId-unread-$userId"
+            if(!Reservoir.contains(key)) {
+                Reservoir.put(key, AtomicInteger(0))
             }
-            chatMessages[chatId]?.add(chatMessage)
-            chatListeners[chatId]?.messageReceived(chatMessage)
-        }
-
-        fun unreadMessages(chatId: String, userId: String) {
-            try {
-                val key = "$chatId-unread-$userId"
-                if(!Reservoir.contains(key)) {
-                    Reservoir.put(key, AtomicInteger(0))
-                }
-                val unread = Reservoir.get<AtomicInteger>(key, AtomicInteger::class.java)
-                Reservoir.put(key, unread.incrementAndGet())
-            } catch (e: IOException) {
-                Timber.e(e)
-            }
-        }
-
-        fun readMessages(chatId: String, userId: String) {
-            try {
-                Reservoir.put("$chatId-unread-$userId", AtomicInteger(0))
-            } catch (e: IOException) {
-                Timber.e(e)
-            }
-        }
-
-        fun getUnreadMessages(chatId: String, userId: String): Int {
-            try {
-                val key = "$chatId-unread-$userId"
-                if(!Reservoir.contains(key)) {
-                    Reservoir.put(key, AtomicInteger(0))
-                }
-                return Reservoir.get<AtomicInteger>(key, AtomicInteger::class.java).get()
-            } catch (e: Exception) {
-                Timber.e(e)
-            }
-            return 0
-        }
-
-        fun hasUnread(chatId: String, userId: String): Boolean {
-            return getUnreadMessages(chatId, userId) > 0
-        }
-
-        /**
-         * Register a message listener and returns the messages already received
-         */
-        fun registerListener(messageListener: MessagesListener, chatId: String): MutableList<ChatMessage>? {
-            chatListeners.put(chatId, messageListener)
-            return chatMessages[chatId]
+            val unread = Reservoir.get<AtomicInteger>(key, AtomicInteger::class.java)
+            Reservoir.put(key, unread.incrementAndGet())
+        } catch (e: IOException) {
+            Timber.e(e)
         }
     }
+
+    fun readMessages(chatId: String, userId: String) {
+        try {
+            Reservoir.put("$chatId-unread-$userId", AtomicInteger(0))
+        } catch (e: IOException) {
+            Timber.e(e)
+        }
+    }
+
+    fun getUnreadMessages(chatId: String, userId: String): Int {
+        try {
+            val key = "$chatId-unread-$userId"
+            if(!Reservoir.contains(key)) {
+                Reservoir.put(key, AtomicInteger(0))
+            }
+            return Reservoir.get<AtomicInteger>(key, AtomicInteger::class.java).get()
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+        return 0
+    }
+
+    fun hasUnread(chatId: String, userId: String): Boolean {
+        return getUnreadMessages(chatId, userId) > 0
+    }
+
+    /**
+     * Register a message listener and returns the messages already received
+     */
+    fun registerListener(messageListener: MessagesListener, chatId: String): MutableList<ChatMessage>? {
+        chatListeners.put(chatId, messageListener)
+        return chatMessages[chatId]
+    }
+
 
 }

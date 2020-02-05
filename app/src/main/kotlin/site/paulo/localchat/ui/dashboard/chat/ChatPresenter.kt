@@ -41,7 +41,8 @@ class ChatPresenter
 @Inject
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager,
-            private val localDataManager: LocalDataManager) : ChatContract.Presenter() {
+            private val localDataManager: LocalDataManager,
+            private val messagesManager: MessagesManager) : ChatContract.Presenter() {
 
     val loaded = mutableMapOf<String?, Boolean>()
 
@@ -68,7 +69,7 @@ constructor(private val dataManager: DataManager,
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(onNext = {
-                    val childEventListener = ChatChildEventListener(dataManager, currentUserManager.getUserId(), chatId, this)
+                    val childEventListener = ChatChildEventListener(dataManager, currentUserManager.getUserId(), chatId, this, messagesManager)
 
                     val allLoadedListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -132,7 +133,8 @@ constructor(private val dataManager: DataManager,
 
     private class ChatChildEventListener
     constructor(private val dataManager: DataManager, private val userId: String,
-                private val chatId: String, private val presenter: ChatPresenter) : ChildEventListener {
+                private val chatId: String, private val presenter: ChatPresenter,
+                private val messagesManager: MessagesManager) : ChildEventListener {
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
             val chatMessage: ChatMessage = dataSnapshot.getValue(ChatMessage::class.java)!!
@@ -141,7 +143,7 @@ constructor(private val dataManager: DataManager,
                 dataManager.messageDelivered(chatId)
                 presenter.view.updateLastMessage(chatMessage, chatId)
                 if (chatMessage.owner != userId) { //not mine
-                    MessagesManager.unreadMessages(chatId, userId)
+                    messagesManager.unreadMessages(chatId, userId)
                     presenter.view.notifyUser(chatMessage, chatId)
                 }
             }

@@ -61,6 +61,9 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     @Inject
     lateinit var localDataManager: LocalDataManager
 
+    @Inject
+    lateinit var messagesManager: MessagesManager
+
     @BindView(R.id.chatRoomsList)
     lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
 
@@ -105,7 +108,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     }
 
     override fun messageReceived(chatMessage: ChatMessage, chatId: String) {
-        MessagesManager.add(chatMessage, chatId)
+        messagesManager.add(chatMessage, chatId)
     }
 
     override fun updateLastMessage(chatMessage: ChatMessage, chatId: String) {

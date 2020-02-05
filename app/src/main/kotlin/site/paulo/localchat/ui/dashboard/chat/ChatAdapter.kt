@@ -45,6 +45,9 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     @Inject
     lateinit var currentUserManager: CurrentUserManager
 
+    @Inject
+    lateinit var messagesManager: MessagesManager
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_chat, parent, false)
@@ -101,14 +104,14 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
             itemView.setOnClickListener {
                 itemView.ctx.startActivity<RoomActivity>("chatId" to chat.id, "otherUser" to chatFriend)
-                MessagesManager.readMessages(chat.id, currentUserManager.getUserId())
+                messagesManager.readMessages(chat.id, currentUserManager.getUserId())
                 updateUnreadMessages(chat.id, currentUserManager.getUserId())
             }
         }
 
         private fun updateUnreadMessages(chatId: String, userId: String) {
-            if (MessagesManager.getUnreadMessages(chatId, userId) != 0) {
-                itemView.unreadChatTv.text = MessagesManager.getUnreadMessages(chatId, userId).toString()
+            if (messagesManager.getUnreadMessages(chatId, userId) != 0) {
+                itemView.unreadChatTv.text = messagesManager.getUnreadMessages(chatId, userId).toString()
                 itemView.unreadChatTv.visibility = View.VISIBLE
             } else {
                 itemView.unreadChatTv.visibility = View.GONE
