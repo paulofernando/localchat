@@ -71,7 +71,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         val rootView = setupFragment(inflater, container)
 
         chatsList.adapter = chatsAdapter
-        chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?) as RecyclerView.LayoutManager?
+        chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?)
 
         presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
         presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))

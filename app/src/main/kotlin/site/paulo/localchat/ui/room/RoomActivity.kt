@@ -70,8 +70,8 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
         if (this.intent.getParcelableExtra<NearbyUser>("otherUser") is NearbyUser) {
             val otherUser = this.intent.getParcelableExtra<NearbyUser>("otherUser")
-            this.chatFriend = otherUser.getSummarizedUser()
-            this.chatFriendEmail = otherUser.email
+            this.chatFriend = otherUser?.getSummarizedUser()
+            this.chatFriendEmail = otherUser?.email
         } else {
             this.chatFriend = this.intent.getParcelableExtra("otherUser")
         }
@@ -79,7 +79,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         this.chatId = intent.getStringExtra("chatId")
 
         messagesRoomList.adapter = roomAdapter
-        messagesRoomList.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+        messagesRoomList.layoutManager = LinearLayoutManager(this)
         //(messagesRoomList.layoutManager as LinearLayoutManager).stackFromEnd = true //uncomment to add messages from bottom to top
 
         if (chatFriendEmail != null) emptyRoom = true
@@ -196,7 +196,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         }
     }
 
-    fun showImagePicker(view: View) {
+    fun showImagePicker() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/jpeg"
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)

@@ -100,7 +100,7 @@ constructor(private val dataManager: DataManager,
                 }).addTo(compositeDisposable)
     }
 
-    override fun listenNewChatRooms(userId: String) {
+    override fun listenNewChatRooms(chatId: String) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 val currentUser = currentUserManager.getUser() ?: return
@@ -116,7 +116,7 @@ constructor(private val dataManager: DataManager,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerNewChatRoomChildEventListener(childEventListener, userId)
+        dataManager.registerNewChatRoomChildEventListener(childEventListener, chatId)
         Timber.i("Listening for new chats...")
     }
 
