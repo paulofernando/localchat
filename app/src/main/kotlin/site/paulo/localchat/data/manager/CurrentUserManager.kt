@@ -40,14 +40,16 @@ class CurrentUserManager {
 
     fun setUser(user: User, localDataManager: LocalDataManager) {
         this.user = user
+        this.localDataManager = localDataManager
         localDataManager.put(CURRENT_USER, user)
     }
 
     /**
      * Update current user based on firebaseAuth email, if user is already authenticated
      */
-    fun setUser(email: String?, localDataManager: LocalDataManager) {
+    fun setUserByEmail(email: String?, localDataManager: LocalDataManager) {
         if (email == null) return
+        this.localDataManager = localDataManager
         if (localDataManager.contains(CURRENT_USER)) {
             val user = localDataManager.get(CURRENT_USER, User::class.java)
             if (user.email == email) this.user = user

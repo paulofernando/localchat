@@ -53,7 +53,7 @@ constructor(private val dataManager: DataManager,
                 Timber.d("onAuthStateChanged:signed_in: %s", firebaseAuth.currentUser?.uid)
                 try {
                     if (currentUserManager.hasUser()) {
-                        currentUserManager.setUser(firebaseAuth.currentUser?.email, localDataManager)
+                        currentUserManager.setUserByEmail(firebaseAuth.currentUser?.email, localDataManager)
                         view.showSuccessFullSignIn()
                     } else {
                         dataManager.getUser(Utils.getFirebaseId(firebaseAuth.currentUser?.email ?: "")).toObservable()

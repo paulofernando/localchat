@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.test.common.TestDataFactory
 import site.paulo.localchat.ui.utils.Utils
@@ -23,6 +25,8 @@ class ChatPresenterTest {
     //Mocks
     private val dataManagerMock: DataManager = mockk()
     private val currentUserManagerMock: CurrentUserManager = mockk()
+    private val localDataManagerMock: LocalDataManager = mockk()
+    private val messagesManagerMock: MessagesManager = mockk()
     @RelaxedMockK lateinit var chatMvpViewMock: ChatContract.View
 
     @BeforeEach
@@ -30,7 +34,8 @@ class ChatPresenterTest {
         clearAllMocks()
         MockKAnnotations.init(this)
 
-        chatPresenter = ChatPresenter(dataManagerMock, currentUserManagerMock)
+        chatPresenter = ChatPresenter(dataManagerMock, currentUserManagerMock, localDataManagerMock,
+                messagesManagerMock)
         chatPresenter.attachView(chatMvpViewMock)
 
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
