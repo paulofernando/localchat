@@ -23,6 +23,7 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
+import site.paulo.localchat.data.LocalDataManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.ui.utils.Utils
 import site.paulo.localchat.ui.utils.getFirebaseId
@@ -31,7 +32,10 @@ import javax.inject.Inject
 
 class SignInPresenter
 @Inject
-constructor(private val dataManager: DataManager, private val firebaseAuth: FirebaseAuth) : SignInContract.Presenter() {
+constructor(private val dataManager: DataManager,
+            private val firebaseAuth: FirebaseAuth,
+            private val currentUserManager: CurrentUserManager,
+            private val localDataManager: LocalDataManager) : SignInContract.Presenter() {
 
     override fun signIn(email: String, password: String) {
         dataManager.authenticateUser(email, password)
@@ -48,15 +52,15 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
             if (firebaseAuth.currentUser != null) {
                 Timber.d("onAuthStateChanged:signed_in: %s", firebaseAuth.currentUser?.uid)
                 try {
-                    if (CurrentUserManager.hasUser()) {
-                        CurrentUserManager.setUser(firebaseAuth.currentUser?.email)
+                    if (currentUserManager.hasUser()) {
+                        currentUserManager.setUser(firebaseAuth.currentUser?.email, localDataManager)
                         view.showSuccessFullSignIn()
                     } else {
                         dataManager.getUser(Utils.getFirebaseId(firebaseAuth.currentUser?.email ?: "")).toObservable()
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribeOn(Schedulers.io())
                                 .subscribeBy(onNext = {
-                                    CurrentUserManager.setUser(it)
+                                    currentUserManager.setUser(it, localDataManager)
                                     view.showSuccessFullSignIn()
                                 }, onError = {
                                     Timber.e(it, "There was an error loading current user.")

@@ -24,7 +24,7 @@ interface ApplicationComponent {
     fun application(): Application
     fun dataManager(): DataManager
     fun localDataManager(): LocalDataManager
-    fun currentUser(): CurrentUserManager
+    fun currentUserManager(): CurrentUserManager
     fun firebaseDatabase(): FirebaseDatabase
     fun firebaseHelper(): FirebaseHelper
     fun firebaseAuth(): FirebaseAuth
