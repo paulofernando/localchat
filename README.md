@@ -1,15 +1,6 @@
-Project implemented using the [Ribot Android Boilerplate Kotlin](https://github.com/viniciussoares/ribot-android-boilerplate-kotlin) which is based on [Ribot Boilerplate](https://github.com/ribot/android-boilerplate)
+# Localchat
 
-Libraries and tools included:
-
-- Support libraries
-- RecyclerViews and CardViews 
-- [RxJava 2](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
-- [Retrofit 2](http://square.github.io/retrofit/)
-- [Dagger 2](http://google.github.io/dagger/)
-- [Butterknife](https://github.com/JakeWharton/butterknife)
-- [Timber](https://github.com/JakeWharton/timber)
-- [Picasso](https://github.com/square/picasso)
+Localchat is a chat app that shows just the users nearby your location.
 
 ## How to run
 
