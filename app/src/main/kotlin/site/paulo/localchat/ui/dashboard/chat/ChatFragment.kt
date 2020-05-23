@@ -27,6 +27,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SortedList
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseAuth
@@ -87,19 +88,13 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         return view
     }
 
-    override fun showChats(chats: List<Chat>) {
-        chatsAdapter.chats = chats.toMutableList()
-        chatsAdapter.notifyDataSetChanged()
-    }
-
     override fun showChat(chat: Chat) {
-        chatsAdapter.chats.add(chat)
-        chatsAdapter.notifyItemInserted(chatsAdapter.chats.size - 1)
+        chatsAdapter.addChat(chat)
     }
 
     override fun showChatsEmpty() {
-        chatsAdapter.chats = mutableListOf<Chat>()
-        chatsAdapter.notifyDataSetChanged()
+        //chatsAdapter.addChats(SortedList<Chat>())
+        //chatsAdapter.notifyDataSetChanged()
         //Toast.makeText(activity, R.string.empty_chat, Toast.LENGTH_LONG).show()
     }
 
