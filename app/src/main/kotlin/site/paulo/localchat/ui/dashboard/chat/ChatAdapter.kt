@@ -87,9 +87,11 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             }
         }
         val index: Int = chatsMapped[chatId] ?: return
-        chats[index].lastMessage = lastMessage
+        val updatedChat = chats[index]
+        updatedChat.lastMessage = lastMessage
+        chats.updateItemAt(index, updatedChat)
 
-        this.notifyItemChanged(index)
+        this.notifyDataSetChanged()
     }
 
     fun addChat(chat: Chat) {
