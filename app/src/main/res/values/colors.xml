@@ -7,6 +7,9 @@
     <color name="color_background_default">#eeeeee</color>
     <color name="color_highlight_default">#b8ec78</color>
 
+    <color name="color_icon_default">#ffffff</color>
+    <color name="color_icon_primary">#67799E</color>
+
     <!-- backgrounds -->
     <color name="color_room_background">@color/color_background_default</color>
     <color name="color_room_my_bubble_background">@color/color_highlight_default</color>
