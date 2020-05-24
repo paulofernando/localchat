@@ -16,6 +16,7 @@
 
 package site.paulo.localchat.ui.dashboard.chat
 
+import androidx.recyclerview.widget.SortedList
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
 import site.paulo.localchat.ui.base.BaseMvpPresenter
@@ -24,7 +25,6 @@ import site.paulo.localchat.ui.base.MvpView
 object ChatContract {
 
     interface View : MvpView {
-        fun showChats(chats: List<Chat>)
         fun showChat(chat: Chat)
         fun showChatsEmpty()
         fun showError()

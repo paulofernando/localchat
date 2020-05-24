@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.SortedList
+import androidx.recyclerview.widget.SortedListAdapterCallback
 import kotlinx.android.synthetic.main.item_chat.view.*
 import org.jetbrains.anko.startActivity
 import site.paulo.localchat.R
@@ -36,9 +38,9 @@ class ChatAdapter
 @Inject
 constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
-    var chats = mutableListOf<Chat>()
+    private var chats: SortedList<Chat>
     /** Map of chats to speed up access. <chatId, index> */
-    var chatsMapped = mutableMapOf<String?, Int>()
+    private var chatsMapped = mutableMapOf<String?, Int>()
 
     private lateinit var chatViewHolder: ChatViewHolder
 
@@ -47,6 +49,17 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     @Inject
     lateinit var messagesManager: MessagesManager
+
+    init {
+        chats = SortedList(Chat::class.java, object : SortedListAdapterCallback<Chat>(this) {
+            override fun compare(o1: Chat, o2: Chat): Int =
+                    (o2.lastMessage.timestamp - o1.lastMessage.timestamp).toInt()
+
+            override fun areContentsTheSame(oldItem: Chat, newItem: Chat): Boolean = oldItem.id == newItem.id
+
+            override fun areItemsTheSame(item1: Chat, item2: Chat): Boolean = item1 == item2
+        })
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -60,22 +73,30 @@ constructor() : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return chats.size
+        return chats.size()
     }
 
     fun setLastMessage(lastMessage: ChatMessage, chatId: String): Unit {
         if (!chatsMapped.containsKey(chatId)) {
             //Checks if chatMapped was not mapped. It happens when the chat is start for first time
-            for (chat in chats) {
-                if (chat.id == chatId) {
-                    chatsMapped[chat.id] = chats.indexOf(chat)
+            for (i in 0 until chats.size()) {
+                if (chats[i].id == chatId) {
+                    chatsMapped[chats[i].id] = chats.indexOf(chats[i])
                     break
                 }
             }
         }
-        val index: Int = chatsMapped.get(chatId)!!
-        chats[index].lastMessage = lastMessage
-        this.notifyItemChanged(index)
+        val index: Int = chatsMapped[chatId] ?: return
+        val updatedChat = chats[index]
+        updatedChat.lastMessage = lastMessage
+        chats.updateItemAt(index, updatedChat)
+
+        this.notifyDataSetChanged()
+    }
+
+    fun addChat(chat: Chat) {
+        this.chats.add(chat)
+        notifyDataSetChanged()
     }
 
     fun updateUnreadMessages(unreadMessages: Int, chatId: String) {

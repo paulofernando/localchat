@@ -62,7 +62,7 @@ class DashboardActivity: BaseActivity() {
      */
     private var mViewPager: ViewPager? = null
     private var tabLayout: TabLayout? = null
-    private val tabIcons = intArrayOf(R.drawable.nearby, R.drawable.chat)
+    private val tabIcons = intArrayOf(R.drawable.ic_nearby, R.drawable.ic_chat)
 
     private val usersNearbyFragment: UsersNearbyFragment = UsersNearbyFragment()
     private val chatFragment: ChatFragment = ChatFragment()
