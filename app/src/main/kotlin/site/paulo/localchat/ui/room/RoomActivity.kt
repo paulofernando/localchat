@@ -85,7 +85,7 @@ class RoomActivity : BaseActivity(), RoomContract.View {
         if (chatFriendEmail != null) emptyRoom = true
 
         sendRoomBtn.setOnClickListener {
-            if (!emptyRoom)
+            if (this.chatId != "")
                 presenter.sendMessage(
                         ChatMessage(currentUserManager.getUserId(), messageRoomTxt.text.toString()),
                         chat?.id ?: chatId!!)
