@@ -116,7 +116,8 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
             nameUserProfileTxt.error = resources.getString(R.string.error_chars_bet_numbers, minimumCharsName, maximumCharsName)
         } else {
             nameUserProfileTxt.error = null
-            if (!lastValue!!.equals(nameUserProfileTxt.text.toString())) {
+            val value = lastValue ?: return
+            if (value != nameUserProfileTxt.text.toString()) {
                 nameUserProfileLabel.text = nameUserProfileTxt.text
                 presenter.updateUserData(FirebaseHelper.Companion.UserDataType.NAME, nameUserProfileTxt.text.toString())
             }
@@ -147,7 +148,8 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
             ageUserProfileTxt.error = resources.getString(R.string.error_numbers_bet, minimumAge, maximumAge)
         } else {
             ageUserProfileTxt.error = null
-            if (!lastValue!!.equals(ageUserProfileTxt.text.toString())) {
+            val value = lastValue ?: return
+            if (value != ageUserProfileTxt.text.toString()) {
                 ageUserProfileLabel.text = ageUserProfileTxt.text
                 presenter.updateUserData(FirebaseHelper.Companion.UserDataType.AGE, ageUserProfileTxt.text.toString())
             }
@@ -194,7 +196,8 @@ class ProfileActivity : BaseActivity(), ProfileContract.View {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
             loadingProfileProgress.visibility = View.VISIBLE
-            presenter.uploadPic(data?.data!!)
+            val picUri = data?.data ?: return
+            presenter.uploadPic(picUri)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

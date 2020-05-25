@@ -51,8 +51,9 @@ constructor(private val dataManager: DataManager,
     override fun uploadPic(selectedImageUri: Uri) {
         // Get a reference to the location where we'll store our photos
         var storageRef = firebaseStorage.getReference("chat_pics")
+        val path = selectedImageUri.lastPathSegment ?: return
         // Get a reference to store file at chat_photos/<FILENAME>
-        val photoRef = storageRef.child(selectedImageUri.lastPathSegment!!)
+        val photoRef = storageRef.child(path)
 
         // Upload file to Firebase Storage
         photoRef.putFile(selectedImageUri).addOnSuccessListener { taskSnapshot ->

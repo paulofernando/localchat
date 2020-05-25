@@ -43,23 +43,21 @@ object UserLocationManager {
     }
 
     fun start(callNext: (() -> Unit)? = null) {
-        if (this.context != null) {
-            val permission = ContextCompat.checkSelfPermission(context!!,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
+        val ctx = this.context ?: return
+        val permission = ContextCompat.checkSelfPermission(ctx,
+                Manifest.permission.ACCESS_FINE_LOCATION)
 
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                Timber.e("Permission to location denied")
-            } else {
-                this.callNext = callNext
-                fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location: Location? ->
-                            Timber.d("Location: lon -> ${location?.longitude} | lat -> ${location?.latitude}")
-                            dataManager?.updateUserLocation(location, UserLocationManager.callNext)
-                            Timber.d("Location has been sent to server")
-                        }
-            }
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Timber.e("Permission to location denied")
         } else {
-            Timber.e("Context or DataManager not initialized")
+            this.callNext = callNext
+            fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        Timber.d("Location: lon -> ${location?.longitude} | lat -> ${location?.latitude}")
+                        dataManager?.updateUserLocation(location, UserLocationManager.callNext)
+                        Timber.d("Location has been sent to server")
+                    }
         }
+
     }
 }

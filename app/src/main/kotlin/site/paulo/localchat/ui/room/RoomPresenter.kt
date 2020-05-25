@@ -82,9 +82,9 @@ constructor(private val dataManager: DataManager,
     override fun registerMessagesListener(chatId: String) {
         childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
-                val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java)!!
+                val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
                 messageReceived(chatMessage)
-                if(!chatMessage.owner.equals(currentUserManager.getUserId()))
+                if(chatMessage.owner != currentUserManager.getUserId())
                     Timber.d("Message received in $chatId-intern")
 
             }
@@ -95,13 +95,13 @@ constructor(private val dataManager: DataManager,
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, chatId, chatId + "-intern")
+        dataManager.registerRoomChildEventListener(childEventListener as ChildEventListener, chatId, "$chatId-intern")
         Timber.d("Listening chat room $chatId-intern")
     }
 
     override fun unregisterMessagesListener(chatId: String) {
-        if(childEventListener != null)
-            dataManager.unregisterRoomChildEventListener(childEventListener!!, chatId)
+        val listener = childEventListener ?: return
+        dataManager.unregisterRoomChildEventListener(listener, chatId)
     }
 
     /*override fun registerMessagesListener(roomId: String) {
@@ -116,7 +116,7 @@ constructor(private val dataManager: DataManager,
 
     override fun uploadImage(selectedImageUri: Uri, roomId: String) {
         // Get a reference to the location where we'll store our photos
-        var storageRef = firebaseStorage.getReference("chat_pics")
+        val storageRef = firebaseStorage.getReference("chat_pics")
         // Get a reference to store file at chat_photos/<FILENAME>
         val photoRef = storageRef.child(selectedImageUri.lastPathSegment!!)
 

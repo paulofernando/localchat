@@ -127,13 +127,13 @@ class RoomActivity : BaseActivity(), RoomContract.View {
                 roomAdapter.messages.add(message)
             }
         }
-        messagesRoomList.smoothScrollToPosition(roomAdapter.getItemCount())
+        messagesRoomList.smoothScrollToPosition(roomAdapter.itemCount)
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
     }
 
     override fun addMessage(message: ChatMessage) {
         roomAdapter.messages.add(message)
-        messagesRoomList.smoothScrollToPosition(roomAdapter.getItemCount())
+        messagesRoomList.smoothScrollToPosition(roomAdapter.itemCount)
         roomAdapter.notifyItemInserted(roomAdapter.itemCount - 1)
     }
 
@@ -191,8 +191,10 @@ class RoomActivity : BaseActivity(), RoomContract.View {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val imageData = data?.data ?: return
+        val chatId = this.chatId ?: return
         if (requestCode == RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
-            presenter.uploadImage(data?.data!!, this.chatId!!)
+            presenter.uploadImage(imageData, chatId)
         }
     }
 

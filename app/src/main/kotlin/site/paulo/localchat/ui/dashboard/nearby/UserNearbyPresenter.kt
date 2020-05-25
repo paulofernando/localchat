@@ -81,19 +81,19 @@ constructor(private val dataManager: DataManager, private val firebaseAuth: Fire
                 private val presenter: UserNearbyPresenter) : ChildEventListener {
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java) ?: return
             if (!firebaseUser?.email.equals(nearbyUser.email) && nearbyUser.email.isNotEmpty()) //removing the current user from nearby users.
                 presenter.view.showNearbyUser(nearbyUser)
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java) ?: return
             if (!firebaseUser?.email.equals(nearbyUser.email))
                 presenter.view.showNearbyUser(nearbyUser)
         }
 
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java)!!
+            val nearbyUser: NearbyUser = dataSnapshot.getValue(NearbyUser::class.java) ?: return
             if (!firebaseUser?.email.equals(nearbyUser.email)) //removing the current user from nearby users.
                 presenter.view.removeNearbyUser(nearbyUser)
         }
