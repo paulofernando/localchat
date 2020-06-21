@@ -29,6 +29,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import site.paulo.localchat.data.DataManager
 import site.paulo.localchat.data.LocalDataManager
+import site.paulo.localchat.data.MessagesManager
 import site.paulo.localchat.data.manager.CurrentUserManager
 import site.paulo.localchat.data.model.firebase.Chat
 import site.paulo.localchat.data.model.firebase.ChatMessage
@@ -41,7 +42,8 @@ class RoomPresenter
 constructor(private val dataManager: DataManager,
             private val currentUserManager: CurrentUserManager,
             private val firebaseStorage: FirebaseStorage,
-            private val localDataManager: LocalDataManager) : RoomContract.Presenter() {
+            private val localDataManager: LocalDataManager,
+            private val messagesManager: MessagesManager) : RoomContract.Presenter() {
 
     private var childEventListener: ChildEventListener? = null
 
@@ -84,8 +86,10 @@ constructor(private val dataManager: DataManager,
             override fun onChildAdded(snapshot: DataSnapshot, s: String?) {
                 val chatMessage: ChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
                 messageReceived(chatMessage)
-                if(chatMessage.owner != currentUserManager.getUserId())
+                if(chatMessage.owner != currentUserManager.getUserId()) {
                     Timber.d("Message received in $chatId-intern")
+                    messagesManager.readMessages(chatId, currentUserManager.getUserId())
+                }
 
             }
 
