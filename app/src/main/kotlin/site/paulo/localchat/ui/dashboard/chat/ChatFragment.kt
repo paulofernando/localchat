@@ -66,7 +66,7 @@ class ChatFragment : BaseFragment(), ChatContract.View {
     lateinit var messagesManager: MessagesManager
 
     @BindView(R.id.chatRoomsList)
-    lateinit var chatsList: androidx.recyclerview.widget.RecyclerView
+    lateinit var chatsList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = setupFragment(inflater, container)
@@ -74,8 +74,11 @@ class ChatFragment : BaseFragment(), ChatContract.View {
         chatsList.adapter = chatsAdapter
         chatsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity as Context?)
 
-        presenter.loadChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
-        presenter.listenNewChatRooms(Utils.getFirebaseId(firebaseAuth.getCurrentUser()?.email!!))
+        val email = firebaseAuth.currentUser?.email
+        if (email != null) {
+            presenter.loadChatRooms(Utils.getFirebaseId(email))
+            presenter.listenNewChatRooms(Utils.getFirebaseId(email))
+        }
 
         return rootView
     }
@@ -112,25 +115,25 @@ class ChatFragment : BaseFragment(), ChatContract.View {
 
     override fun notifyUser(chatMessage: ChatMessage, chatId: String) {
         if (!isResumed) { //only notify user if chats fragment is not being shown at moment
-            val chatFriend = getFriendUser(chatId)
-            if (chatFriend != null) {
-                //Intent to be open when the user clicks on notification
-                val intent = Intent(context!!, RoomActivity::class.java)
-                intent.putExtra("chatId", chatId)
-                val pendingIntent = PendingIntent.getActivity(context, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val chatFriend = getFriendUser(chatId) ?: return
+            val ctx = context ?: return
 
-                val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, "MessageReceivedChannel")
-                        .setSmallIcon(R.drawable.logo)
-                        .setContentTitle(chatFriend.name)
-                        .setContentText(chatMessage.message)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContentIntent(pendingIntent)
+            //Intent to be open when the user clicks on notification
+            val intent = Intent(ctx, RoomActivity::class.java)
+            intent.putExtra("chatId", chatId)
+            val pendingIntent = PendingIntent.getActivity(ctx, chatId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                val notificationManager = NotificationManagerCompat.from(context!!)
+            val builder: NotificationCompat.Builder = NotificationCompat.Builder(ctx, "MessageReceivedChannel")
+                    .setSmallIcon(R.drawable.logo)
+                    .setContentTitle(chatFriend.name)
+                    .setContentText(chatMessage.message)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
 
-                // notificationId must be an unique int for each notification
-                notificationManager.notify(chatId.hashCode(), builder.build())
-            }
+            val notificationManager = NotificationManagerCompat.from(ctx)
+
+            // notificationId must be an unique int for each notification
+            notificationManager.notify(chatId.hashCode(), builder.build())
         }
     }
 

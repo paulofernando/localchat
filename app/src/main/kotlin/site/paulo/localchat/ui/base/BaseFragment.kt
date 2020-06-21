@@ -53,7 +53,8 @@ open class BaseFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (!activity!!.isChangingConfigurations) {
+        val act = activity ?: return
+        if (!act.isChangingConfigurations) {
             Timber.i("Clearing ConfigPersistentComponent id=%d", activityId)
             BaseFragment.Companion.componentsMap.remove(activityId)
         }

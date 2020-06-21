@@ -105,9 +105,10 @@ constructor(private val dataManager: DataManager,
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 val currentUser = currentUserManager.getUser() ?: return
                 loadChatRoom(dataSnapshot.value.toString())
+                val key = dataSnapshot.key ?: return
                 if (((loaded[dataSnapshot.value.toString()] != null) && (loaded[dataSnapshot.value.toString()]!!))
-                        && (!currentUser.chats.containsKey(dataSnapshot.key)))
-                    currentUser.chats[dataSnapshot.key!!] = dataSnapshot.value.toString()
+                        && (!currentUser.chats.containsKey(key)))
+                    currentUser.chats[key] = dataSnapshot.value.toString()
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) { }
