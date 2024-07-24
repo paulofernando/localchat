@@ -8,7 +8,7 @@ You need to create a [Firebase](https://firebase.google.com) account and put the
 
 ## Screenshots (22/08/2017)
 
-<img src="http://paulo.site/app/localchat/users.png" width="28%" /> &nbsp; <img src="http://paulo.site/app/localchat/chats.png" width="28%" /> &nbsp; <img src="http://paulo.site/app/localchat/room.png" width="28%" />
+<img src="https://github.com/user-attachments/assets/0afab676-ca14-41ba-b783-3ad320c6c181" width="28%" /> &nbsp; <img src="https://github.com/user-attachments/assets/302054b3-c075-4113-9e80-eae3231def7b" width="28%" /> &nbsp; <img src="https://github.com/user-attachments/assets/d423b3df-d3c5-4383-ac6c-b44c810ab206" width="28%" />
 
 ## License
 
@@ -27,4 +27,3 @@ You need to create a [Firebase](https://firebase.google.com) account and put the
     See the License for the specific language governing permissions and
     limitations under the License.
 ```
-
